@@ -202,9 +202,11 @@ async function prerender() {
     const targetKey = aliasMap[route] || route;
     const seo = seoData[targetKey] || seoData['/'] || {};
 
-    const resolvedCanonical = seo.canonical
-      ? (seo.canonical.startsWith('http') ? seo.canonical : `${SITE_URL}${seo.canonical.startsWith('/') ? '' : '/'}${seo.canonical}`)
-      : (targetKey === '/' ? SITE_URL : `${SITE_URL}${targetKey}`);
+    const resolvedCanonical = seo.canonical === null
+      ? null
+      : (seo.canonical
+          ? (seo.canonical.startsWith('http') ? seo.canonical : `${SITE_URL}${seo.canonical.startsWith('/') ? '' : '/'}${seo.canonical}`)
+          : (targetKey === '/' ? SITE_URL : `${SITE_URL}${targetKey}`));
 
     const robotsContent = seo.noindex ? 'noindex, nofollow' : 'index, follow';
 
@@ -223,11 +225,15 @@ async function prerender() {
       );
     }
 
-    // Replace Canonical
-    pageHtml = pageHtml.replace(
-      /<link rel="canonical" href=".*?"\s*\/?>/,
-      `<link rel="canonical" href="${resolvedCanonical}" />`
-    );
+    // Replace or Remove Canonical
+    if (resolvedCanonical === null) {
+      pageHtml = pageHtml.replace(/\s*<link rel="canonical" href=".*?"\s*\/?>/, '');
+    } else {
+      pageHtml = pageHtml.replace(
+        /<link rel="canonical" href=".*?"\s*\/?>/,
+        `<link rel="canonical" href="${resolvedCanonical}" />`
+      );
+    }
 
     // Replace Robots
     pageHtml = pageHtml.replace(
@@ -256,10 +262,14 @@ async function prerender() {
         `<meta name="twitter:description" content="${escapeHtml(seo.description)}" />`
       );
     }
-    pageHtml = pageHtml.replace(
-      /<meta property="og:url" content=".*?"\s*\/?>/,
-      `<meta property="og:url" content="${resolvedCanonical}" />`
-    );
+    if (resolvedCanonical === null) {
+      pageHtml = pageHtml.replace(/\s*<meta property="og:url" content=".*?"\s*\/?>/, '');
+    } else {
+      pageHtml = pageHtml.replace(
+        /<meta property="og:url" content=".*?"\s*\/?>/,
+        `<meta property="og:url" content="${resolvedCanonical}" />`
+      );
+    }
 
     // Inject JSON-LD if present
     if (seo.jsonLd) {

@@ -13,13 +13,15 @@ export default function SEO({
   type = "website",
   jsonLd,
 }) {
-  const resolvedCanonical = canonical
-    ? (canonical.startsWith("http")
-        ? canonical
-        : `${SITE_URL}${canonical.startsWith("/") ? "" : "/"}${canonical.replace(/\/$/, "")}`)
-    : (path
-        ? (path === "/" ? SITE_URL : `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path.replace(/\/$/, "")}`)
-        : SITE_URL);
+  const resolvedCanonical = canonical === null
+    ? null
+    : (canonical
+        ? (canonical.startsWith("http")
+            ? canonical
+            : `${SITE_URL}${canonical.startsWith("/") ? "" : "/"}${canonical.replace(/\/$/, "")}`)
+        : (path
+            ? (path === "/" ? SITE_URL : `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path.replace(/\/$/, "")}`)
+            : SITE_URL));
 
   const fullImage = image.startsWith("http")
     ? image
@@ -31,7 +33,7 @@ export default function SEO({
     <Helmet>
       {title && <title>{title}</title>}
       {description && <meta name="description" content={description} />}
-      <link rel="canonical" href={resolvedCanonical} />
+      {resolvedCanonical && <link rel="canonical" href={resolvedCanonical} />}
       <meta name="robots" content={robotsContent} />
 
       {/* Open Graph */}

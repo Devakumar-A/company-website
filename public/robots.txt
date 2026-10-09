@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /careers/apply
+Disallow: /certificate/verify
+
+Sitemap: https://cognolynx.com/sitemap.xml

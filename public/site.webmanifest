@@ -1,0 +1,21 @@
+{
+  "name": "Cognolynx",
+  "short_name": "Cognolynx",
+  "description": "Custom Software & AI Product Engineering",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000009",
+  "theme_color": "#000009",
+  "icons": [
+    {
+      "src": "/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

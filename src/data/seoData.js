@@ -299,6 +299,7 @@ export const seoData = {
     path: "/404",
     title: "Page Not Found (404 Error Encountered) | Cognolynx",
     description: "The requested page could not be located on the Cognolynx website. Please check the URL or navigate back to our homepage and explore our services.",
+    canonical: null,
     noindex: true,
   },
 };
