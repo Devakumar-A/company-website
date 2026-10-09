@@ -70,11 +70,15 @@ const routeComponentMap = {
 function getFileLastmod(relativeFilePath) {
   if (!relativeFilePath) return buildDate;
   try {
-    const gitDate = execSync(`git log -1 --format=%cs -- "${relativeFilePath}"`, {
-      cwd: rootDir,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim();
+    // Exclude SEO-only commits to find the last commit that changed actual page content
+    const gitDate = execSync(
+      `git log --invert-grep --grep="^feat(seo)" -1 --format=%cs -- "${relativeFilePath}"`,
+      {
+        cwd: rootDir,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }
+    ).trim();
     return gitDate || buildDate;
   } catch {
     return buildDate;

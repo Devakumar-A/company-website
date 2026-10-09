@@ -303,3 +303,197 @@ export const seoData = {
     noindex: true,
   },
 };
+
+export const SEGMENT_NAMES = {
+  about: "About",
+  services: "Services",
+  solutions: "Solutions",
+  technology: "Technology",
+  contact: "Contact",
+  careers: "Careers",
+  career: "Careers",
+  "case-studies": "Case Studies",
+  blog: "Blog",
+  "privacy-policy": "Privacy Policy",
+  privacy: "Privacy Policy",
+  "terms-conditions": "Terms & Conditions",
+  terms: "Terms & Conditions",
+  support: "Support",
+
+  // Services: Software Engineering
+  "software-engineering": "Software Engineering",
+  "software-development": "Software Development",
+  "web-applications": "Web Applications",
+  "business-software": "Business Software",
+  "cloud-solutions": "Cloud Solutions",
+
+  // Services: Web & Digital
+  "web-digital": "Web & Digital",
+  web: "Web & Digital",
+  "website-development": "Website Development",
+  ecommerce: "Ecommerce",
+  "web-platforms": "Web Platforms",
+  "digital-experiences": "Digital Experiences",
+
+  // Services: Design & Brand
+  "design-brand": "Design & Brand",
+  design: "Design & Brand",
+  "ui-ux-design": "UI/UX Design",
+  "design-systems": "Design Systems",
+  "product-design": "Product Design",
+  "brand-identity": "Brand Identity",
+  "graphic-design": "Brand Identity",
+
+  // Services: Growth & Marketing
+  "growth-marketing": "Growth & Marketing",
+  growth: "Growth & Marketing",
+  "digital-marketing": "Digital Marketing",
+  "performance-marketing": "Performance Marketing",
+  "lead-generation": "Lead Generation",
+  "content-marketing": "Content Marketing",
+
+  // Solutions subpages
+  "digital-products": "Digital Products",
+  "business-systems": "Business Systems",
+  "ai-systems": "AI Systems",
+  "mobile-experiences": "Mobile Experiences",
+
+  // Technology subpages
+  "web-engineering": "Web Engineering",
+  "software-systems": "Software Systems",
+  "mobile-development": "Mobile Development",
+  "cloud-infrastructure": "Cloud Infrastructure",
+  "backend-databases": "Backend & Databases",
+  data: "Backend & Databases",
+  creative: "Design Systems",
+  mobile: "Mobile Development",
+  cloud: "Cloud Infrastructure",
+};
+
+export function getJsonLdForRoute(routePath, seo = {}) {
+  if (seo.noindex) return null;
+
+  const SITE_URL = "https://cognolynx.com";
+  const cleanPath = (routePath || "").replace(/\/$/, "") || "/";
+  const canonicalUrl = seo.canonical || (cleanPath === "/" ? SITE_URL : `${SITE_URL}${cleanPath}`);
+
+  const orgSchema = {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: "Cognolynx",
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon-512.png`,
+    sameAs: [],
+  };
+
+  const webSiteSchema = {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: "Cognolynx",
+    url: SITE_URL,
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+  };
+
+  // 1. Homepage schema
+  if (cleanPath === "/") {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [orgSchema, webSiteSchema],
+    };
+  }
+
+  const graph = [];
+
+  // Determine canonical path for breadcrumb navigation
+  let pathForBreadcrumbs = cleanPath;
+  if (seo.canonical && seo.canonical.startsWith("http")) {
+    try {
+      pathForBreadcrumbs = new URL(seo.canonical).pathname.replace(/\/$/, "") || cleanPath;
+    } catch {
+      // fallback
+    }
+  }
+
+  // 2. BreadcrumbList for every indexable inner page
+  const segments = pathForBreadcrumbs.split("/").filter(Boolean);
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+  ];
+
+  let currentPath = "";
+  segments.forEach((seg, index) => {
+    currentPath += `/${seg}`;
+    const readableName = SEGMENT_NAMES[seg] || seg.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: index + 2,
+      name: readableName,
+      item: `${SITE_URL}${currentPath}`,
+    });
+  });
+
+  graph.push({
+    "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
+    itemListElement: breadcrumbItems,
+  });
+
+  // 3. Page-specific schemas
+  if (cleanPath === "/about") {
+    graph.push({
+      "@type": "AboutPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+  } else if (cleanPath === "/contact") {
+    graph.push({
+      "@type": "ContactPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+  } else if (cleanPath === "/blog" || cleanPath === "/case-studies") {
+    graph.push({
+      "@type": "CollectionPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+  } else if (cleanPath.startsWith("/services")) {
+    const lastSeg = segments[segments.length - 1] || "services";
+    const serviceName = SEGMENT_NAMES[lastSeg] || (seo.title ? seo.title.split("|")[0].trim() : "Service");
+    graph.push({
+      "@type": "Service",
+      "@id": `${canonicalUrl}#service`,
+      name: serviceName,
+      description: seo.description,
+      url: canonicalUrl,
+      provider: {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "Cognolynx",
+        url: SITE_URL,
+      },
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": graph,
+  };
+}
+

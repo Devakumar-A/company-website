@@ -168,7 +168,7 @@ async function prerender() {
 
   const { StaticRouter } = await import('react-router-dom');
   const { HelmetProvider } = await import('react-helmet-async');
-  const { seoData } = await vite.ssrLoadModule('./src/data/seoData.js');
+  const { seoData, getJsonLdForRoute } = await vite.ssrLoadModule('./src/data/seoData.js');
   const Navbar = (await vite.ssrLoadModule('./src/components/Navbar.jsx')).default;
 
   const routes = Object.keys(routeComponentMap);
@@ -197,7 +197,8 @@ async function prerender() {
     const cleanBodyHtml = rawHtml
       .replace(/<title[^>]*>.*?<\/title>/gi, '')
       .replace(/<meta[^>]*\/?>/gi, '')
-      .replace(/<link rel="canonical"[^>]*\/?>/gi, '');
+      .replace(/<link rel="canonical"[^>]*\/?>/gi, '')
+      .replace(/<script type="application\/ld\+json"[^>]*>.*?<\/script>/gi, '');
 
     const targetKey = aliasMap[route] || route;
     const seo = seoData[targetKey] || seoData['/'] || {};
@@ -271,9 +272,13 @@ async function prerender() {
       );
     }
 
-    // Inject JSON-LD if present
-    if (seo.jsonLd) {
-      const jsonLdTag = `  <script type="application/ld+json">${JSON.stringify(seo.jsonLd)}</script>\n  `;
+    // Inject JSON-LD if present or auto-generated for indexable routes
+    const routeJsonLd = seo.jsonLd !== undefined
+      ? seo.jsonLd
+      : (seo.noindex ? null : getJsonLdForRoute(targetKey, { ...seo, canonical: resolvedCanonical }));
+
+    if (routeJsonLd) {
+      const jsonLdTag = `  <script type="application/ld+json">${JSON.stringify(routeJsonLd)}</script>\n  `;
       pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
     }
 

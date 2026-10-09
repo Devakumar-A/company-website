@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { getJsonLdForRoute } from "../data/seoData";
 
 const SITE_URL = "https://cognolynx.com";
 const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.png`;
@@ -29,6 +30,10 @@ export default function SEO({
 
   const robotsContent = noindex ? "noindex, nofollow" : "index, follow";
 
+  const resolvedJsonLd = jsonLd !== undefined
+    ? jsonLd
+    : (noindex ? null : getJsonLdForRoute(path, { title, description, canonical: resolvedCanonical, noindex }));
+
   return (
     <Helmet>
       {title && <title>{title}</title>}
@@ -50,10 +55,10 @@ export default function SEO({
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={fullImage} />
 
-      {/* Optional Structured Data (JSON-LD) */}
-      {jsonLd && (
+      {/* Structured Data (JSON-LD) */}
+      {resolvedJsonLd && (
         <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
+          {JSON.stringify(resolvedJsonLd)}
         </script>
       )}
     </Helmet>
