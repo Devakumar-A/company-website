@@ -1,0 +1,658 @@
+/* =========================================================
+   COGNOLYNX — OUR APPROACH ("HOW WE BUILD")
+   High-end technology company process system.
+   Minimal white / off-white aesthetic with blue/purple accents.
+   ========================================================= */
+
+.approach-section {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+  background: #fbfcfd;
+  color: #070e1b;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  box-sizing: border-box;
+  padding: clamp(55px, 7vh, 80px) 0 clamp(50px, 6vh, 70px);
+  isolation: isolate;
+}
+
+.approach-section *,
+.approach-section *::before,
+.approach-section *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   AMBIENT BACKGROUND (Subtle architectural grid & soft glow)
+   ========================================================= */
+
+.approach-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  z-index: 1;
+}
+
+.approach-grid-layer {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 80%);
+}
+
+.approach-ambient-glow {
+  position: absolute;
+  top: 15%;
+  right: 10%;
+  width: 65vw;
+  height: 65vw;
+  max-width: 800px;
+  max-height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(23, 105, 224, 0.045) 0%,
+    rgba(124, 58, 237, 0.035) 45%,
+    transparent 70%
+  );
+  filter: blur(80px);
+}
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.approach-container {
+  position: relative;
+  z-index: 10;
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   EDITORIAL HEADER ROW
+   ========================================================= */
+
+.approach-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(32px, 5vw, 64px);
+  margin-bottom: clamp(32px, 4vh, 48px);
+  padding-bottom: clamp(20px, 2.5vh, 28px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.approach-header-main {
+  max-width: 580px;
+}
+
+.approach-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.approach-eyebrow-pip {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1769e0;
+  box-shadow: 0 0 12px rgba(23, 105, 224, 0.5);
+}
+
+.approach-eyebrow-pip::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 105, 224, 0.35);
+  animation: approachPipPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes approachPipPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%      { transform: scale(1.6); opacity: 0; }
+}
+
+.approach-eyebrow-text {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  color: #1769e0;
+  text-transform: uppercase;
+}
+
+.approach-title {
+  margin: 0;
+  font-size: clamp(40px, 5.6vw, 76px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  color: #070e1b;
+}
+
+.approach-header-narrative {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.approach-lead {
+  margin: 0;
+  font-size: clamp(15px, 1.25vw, 17px);
+  line-height: 1.65;
+  color: #556275;
+  letter-spacing: -0.01em;
+}
+
+.approach-flow-tracker {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.flow-step {
+  color: #64748b;
+}
+
+.highlight-step {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.flow-arrow {
+  color: rgba(100, 116, 139, 0.45);
+}
+
+/* =========================================================
+   PROCESS GRID (Asymmetric 2-Column with Centerpiece Core)
+   ========================================================= */
+
+.approach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 2.8vw, 32px);
+  margin-bottom: clamp(48px, 6vh, 72px);
+}
+
+/* =========================================================
+   PROCESS CARDS
+   ========================================================= */
+
+.approach-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(28px, 3.2vw, 36px);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 8px 24px -4px rgba(15, 23, 42, 0.04),
+    0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  overflow: hidden;
+}
+
+/* Subtle top indicator bar */
+.approach-card-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #1769e0 0%, #7c3aed 100%);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transform-origin: left;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.approach-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(23, 105, 224, 0.28);
+  box-shadow:
+    0 24px 48px -12px rgba(23, 105, 224, 0.12),
+    0 0 0 1px rgba(124, 58, 237, 0.14),
+    0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.approach-card:hover .approach-card-top-bar {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Card Head */
+.approach-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.approach-card-identity {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.approach-card-number {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: #1769e0;
+  transition: color 0.3s ease;
+}
+
+.approach-card:hover .approach-card-number {
+  color: #7c3aed;
+}
+
+.approach-card-phase {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.approach-card-icon-wrap {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: rgba(23, 105, 224, 0.06);
+  border: 1px solid rgba(23, 105, 224, 0.12);
+  color: #1769e0;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.approach-card:hover .approach-card-icon-wrap {
+  transform: scale(1.08) rotate(-3deg);
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.24);
+  color: #7c3aed;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.2);
+}
+
+/* Card Body */
+.approach-card-body {
+  flex: 1;
+  margin-bottom: 26px;
+}
+
+.approach-card-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.approach-card-title {
+  margin: 0;
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: #070e1b;
+}
+
+.approach-card-badge {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.approach-card-desc {
+  margin: 0;
+  font-size: clamp(14px, 1.1vw, 15.5px);
+  line-height: 1.6;
+  color: #556275;
+}
+
+/* Card Footer / Points Tags */
+.approach-card-footer {
+  padding-top: 18px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.07);
+}
+
+.approach-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.approach-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f4f6fa;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  letter-spacing: -0.01em;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.approach-tag-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1769e0;
+  opacity: 0.7;
+}
+
+.approach-card:hover .approach-tag {
+  background: #edf2f9;
+  border-color: rgba(23, 105, 224, 0.12);
+  color: #1e293b;
+}
+
+.approach-card:hover .approach-tag-dot {
+  background: #7c3aed;
+  opacity: 1;
+}
+
+/* =========================================================
+   FEATURED CENTERPIECE CARD (STAGE 03: BUILD)
+   Spans 2 columns on desktop for sophisticated asymmetry
+   ========================================================= */
+
+.approach-card-featured {
+  grid-column: 1 / -1;
+  background:
+    radial-gradient(
+      ellipse 60% 80% at 90% 50%,
+      rgba(124, 58, 237, 0.045) 0%,
+      transparent 70%
+    ),
+    rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  box-shadow:
+    0 12px 36px -6px rgba(124, 58, 237, 0.06),
+    0 4px 10px rgba(15, 23, 42, 0.02);
+}
+
+.approach-card-featured .approach-card-top-bar {
+  opacity: 1;
+  transform: scaleX(1);
+  background: linear-gradient(90deg, #1769e0 0%, #7c3aed 50%, #1769e0 100%);
+}
+
+.approach-card-featured .approach-card-badge {
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.2);
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.approach-card-featured:hover {
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow:
+    0 28px 56px -12px rgba(124, 58, 237, 0.16),
+    0 0 0 1px rgba(124, 58, 237, 0.25);
+}
+
+/* =========================================================
+   BOTTOM SYNTHESIS: DELIVERY PHILOSOPHY
+   ========================================================= */
+
+.approach-synthesis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding: clamp(26px, 3vw, 34px) clamp(28px, 3.5vw, 42px);
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(23, 105, 224, 0.04) 0%,
+      transparent 50%
+    ),
+    rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.approach-synthesis-left {
+  max-width: 540px;
+}
+
+.approach-synthesis-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #7c3aed;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.approach-synthesis-spark {
+  color: #7c3aed;
+}
+
+.approach-synthesis-title {
+  margin: 0 0 6px;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #070e1b;
+}
+
+.approach-synthesis-desc {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.approach-synthesis-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.approach-synthesis-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}
+
+.approach-pill-icon {
+  color: #1769e0;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN (Tablet & Mobile)
+   ========================================================= */
+
+@media (max-width: 992px) {
+  .approach-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .approach-header-narrative {
+    max-width: 100%;
+  }
+
+  .approach-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .approach-card-featured {
+    grid-column: auto;
+  }
+
+  .approach-synthesis {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .approach-section {
+    padding: 45px 0 38px;
+  }
+
+  .approach-container {
+    width: calc(100% - 32px);
+  }
+
+  .approach-header-row {
+    margin-bottom: 38px;
+    padding-bottom: 24px;
+  }
+
+  .approach-flow-tracker {
+    display: none;
+  }
+
+  .approach-title {
+    font-size: clamp(34px, 9vw, 44px);
+  }
+
+  .approach-card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .approach-card-title {
+    font-size: 22px;
+  }
+
+  .approach-card-desc {
+    font-size: 14px;
+  }
+
+  .approach-tags-list {
+    gap: 6px;
+  }
+
+  .approach-tag {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  .approach-synthesis {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .approach-synthesis-pills {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .approach-synthesis-pill {
+    width: 100%;
+    font-size: 12px;
+  }
+}
+
+/* Micro screens (320px - 360px) */
+@media (max-width: 360px) {
+  .approach-container {
+    width: calc(100% - 24px);
+  }
+
+  .approach-card {
+    padding: 20px 16px;
+  }
+
+  .approach-card-title {
+    font-size: 20px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .approach-card,
+  .approach-card-icon-wrap,
+  .approach-card-top-bar,
+  .approach-tag {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .approach-eyebrow-pip::after {
+    animation: none !important;
+  }
+}

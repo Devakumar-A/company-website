@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Favicon from /assets/favions.png -->
+    <link rel="icon" type="image/png" href="/assets/favions.png" />
+    <link rel="shortcut icon" type="image/png" href="/assets/favions.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Cognolynx — Technology · Ideas · Impact</title>
+    <meta name="description" content="Cognolynx builds digital products, intelligent systems, and technology solutions for growing businesses." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#000009" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Cognolynx — Technology · Ideas · Impact" />
+    <meta property="og:description" content="Cognolynx builds digital products, intelligent systems, and technology solutions for growing businesses." />
+    <meta property="og:image" content="/assets/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cognolynx — Technology · Ideas · Impact" />
+    <meta name="twitter:description" content="Cognolynx builds digital products, intelligent systems, and technology solutions for growing businesses." />
+
+    <!-- Preconnect to external icon CDNs for fastest subsequent loading -->
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://api.iconify.design" crossorigin />
+    <link rel="dns-prefetch" href="https://api.iconify.design" />
+
+    <!-- Preload Critical Above-The-Fold Assets (LCP Optimization) -->
+    <link rel="preload" as="image" href="/assets/logo.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/hero-video-poster-desktop.webp" type="image/webp" media="(min-width: 768px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/hero-video-poster-mobile.webp" type="image/webp" media="(max-width: 767px)" fetchpriority="high" />
+
+    <!-- Inline style: prevents any white flash before React mounts -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100%;
+        background: #000009;
+      }
+      #root {
+        width: 100%;
+        min-height: 100%;
+        background: #000009;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

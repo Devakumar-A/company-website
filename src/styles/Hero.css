@@ -1,0 +1,422 @@
+/* ==========================================================================
+   HERO SECTION STYLES — COGNOLYNX PREMIUM CINEMATIC REDESIGN
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   HERO → ABOUT LAYERED SCROLL FLOW
+   Confines Hero's sticky boundary strictly to the Hero + About stage,
+   allowing About to slide over Hero, while preserving 100% normal page flow
+   for Services, Solutions, Technology, Roadmap, and Footer afterward.
+   -------------------------------------------------------------------------- */
+.hero-about-flow {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+.hero-section {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 540px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  contain: paint;
+  background-color: #010308;
+  color: #ffffff;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   FULL-BLEED BACKGROUND VIDEOS
+   Seamless looping, full coverage, hardware-accelerated
+   -------------------------------------------------------------------------- */
+.hero-video-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Desktop video: shown on >= 768px */
+.hero-video-desktop {
+  display: none;
+}
+
+/* Mobile video: shown on < 768px */
+.hero-video-mobile {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .hero-video-desktop {
+    display: block;
+  }
+  .hero-video-mobile {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SUBTLE GRADIENT OVERLAYS (MINIMAL & NON-INTRUSIVE)
+   Keeps the video visually dominant while ensuring effortless readability
+   -------------------------------------------------------------------------- */
+.hero-overlay-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, rgba(1, 3, 8, 0.55) 0%, rgba(1, 3, 8, 0.15) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hero-overlay-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 110px;
+  background: linear-gradient(0deg, #010308 0%, rgba(1, 3, 8, 0.45) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* --------------------------------------------------------------------------
+   HERO CONTENT CONTAINER (LOCKED TO NEGATIVE SPACE)
+   -------------------------------------------------------------------------- */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Desktop: centered in the dark arena between the left & right waves */
+@media (min-width: 768px) {
+  .hero-content {
+    max-width: 1100px;
+    padding: 0 32px;
+    margin-top: -24px;
+  }
+}
+
+/* Mobile: locked into the central vertical channel between particle ribbons */
+@media (max-width: 767px) {
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 16px;
+    margin-top: -12px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   HEADLINE: "BUILD WHAT'S NEXT."
+   -------------------------------------------------------------------------- */
+.hero-headline {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.035em;
+  text-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.9),
+    0 4px 40px rgba(0, 0, 0, 0.7),
+    0 0 60px rgba(37, 99, 235, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-headline-line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Desktop typography scale: single continuous line */
+@media (min-width: 768px) {
+  .hero-headline {
+    flex-direction: row;
+    column-gap: 0.32em;
+    font-size: clamp(3.2rem, 5.6vw, 5.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-headline-line {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-headline {
+    font-size: 5.8rem;
+    line-height: 0.96;
+  }
+}
+
+/* Mobile responsive typography: stacked 2 lines to fit dark corridor */
+@media (max-width: 767px) {
+  .hero-headline {
+    font-size: clamp(1.85rem, 8.2vw, 2.35rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    row-gap: 2px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hero-headline {
+    font-size: 1.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-headline {
+    font-size: 1.85rem;
+    line-height: 1.05;
+  }
+}
+
+.hero-headline-accent {
+  color: #3b82f6;
+  display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   SUPPORTING LINE: "Software · Digital Products · Technology"
+   -------------------------------------------------------------------------- */
+.hero-supporting-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 3px;
+  margin-top: 1.35rem;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgba(241, 245, 249, 0.92);
+  letter-spacing: 0.12em;
+  font-size: clamp(0.85rem, 1.1vw, 1.05rem);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+}
+
+.hero-supporting-item {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-dot {
+  display: inline-block;
+  color: #60a5fa;
+  font-size: 1.1em;
+  line-height: 1;
+  opacity: 0.85;
+  margin: 0 1px;
+}
+
+@media (max-width: 767px) {
+  .hero-supporting-line {
+    margin-top: 1.1rem;
+    font-size: clamp(0.68rem, 2.8vw, 0.78rem);
+    letter-spacing: 0.05em;
+    column-gap: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-supporting-line {
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    column-gap: 4px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CTA BUTTON: "Start a Project →"
+   -------------------------------------------------------------------------- */
+.hero-cta-wrapper {
+  margin-top: clamp(1.75rem, 3.2vh, 2.6rem);
+  display: flex;
+  justify-content: center;
+}
+
+.hero-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 34px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 10px 28px -4px rgba(37, 99, 235, 0.6),
+    0 4px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-cta-btn:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 38px -4px rgba(59, 130, 246, 0.7),
+    0 6px 18px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+.hero-cta-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.hero-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-cta-btn:hover .hero-cta-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 767px) {
+  .hero-cta-btn {
+    padding: 12px 28px;
+    font-size: 0.86rem;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-cta-btn {
+    padding: 11px 24px;
+    font-size: 0.82rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BOTTOM SCROLL INDICATOR: "SCROLL TO EXPLORE ↓"
+   -------------------------------------------------------------------------- */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: clamp(20px, 3.5vh, 34px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.hero-scroll-indicator:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-scroll-arrow {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1;
+  animation: hero-scroll-float 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-scroll-float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-scroll-indicator {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    padding: 6px 12px;
+  }
+  .hero-scroll-arrow {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-scroll-indicator {
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* Accessibility: respects prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-btn,
+  .hero-cta-arrow,
+  .hero-scroll-arrow {
+    animation: none !important;
+    transition: none !important;
+  }
+}

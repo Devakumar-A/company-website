@@ -1,0 +1,402 @@
+/* =========================================================
+   COGNOLYNX — ABOUT SECTION (CINEMATIC LOGO ASSEMBLY)
+   High-end luxury technology aesthetic.
+   Black + Cognolynx Purple identity construction.
+   ========================================================= */
+
+.about-section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 100%;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  contain: paint;
+  background: #fbfcfd;
+  color: #080d1a;
+  isolation: isolate;
+  border-top-left-radius: clamp(24px, 4vw, 44px);
+  border-top-right-radius: clamp(24px, 4vw, 44px);
+  box-shadow:
+    0 -30px 70px -15px rgba(0, 0, 0, 0.55),
+    0 -12px 30px -5px rgba(0, 0, 0, 0.35),
+    0 -1px 0 rgba(255, 255, 255, 0.8);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  box-sizing: border-box;
+  padding: clamp(55px, 7vh, 85px) 24px;
+}
+
+.about-section *,
+.about-section *::before,
+.about-section *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   AMBIENT BACKGROUND (Subtle Grid & Light Glow)
+   ========================================================= */
+
+.about-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+}
+
+.about-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.032) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 85%);
+}
+
+.about-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.045) 0%,
+    rgba(23, 105, 224, 0.03) 40%,
+    transparent 70%
+  );
+  filter: blur(60px);
+}
+
+/* =========================================================
+   MAIN CONTAINER (Balanced Desktop Grid)
+   ========================================================= */
+
+.about-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(360px, 1.25fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(48px, 6vw, 110px);
+}
+
+/* =========================================================
+   CINEMATIC LOGO ASSEMBLY CHAMBER
+   ========================================================= */
+
+.about-logo-chamber {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.about-logo-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.08) 0%,
+    rgba(23, 105, 224, 0.04) 45%,
+    transparent 70%
+  );
+  filter: blur(36px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Stage preserving original 1355 x 1161 logo aspect ratio */
+.about-logo-stage {
+  position: relative;
+  z-index: 2;
+  width: clamp(260px, 28vw, 380px);
+  aspect-ratio: 1355 / 1161;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 20px 40px rgba(10, 15, 30, 0.08));
+}
+
+/* Common Logo Piece Styling */
+.about-logo-piece {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  will-change: transform, opacity, filter;
+}
+
+/* Black Piece: Crisp depth contrast */
+.about-piece-black {
+  z-index: 3;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
+}
+
+/* Purple Piece: Restrained high-tech neon glow */
+.about-piece-purple {
+  z-index: 4;
+  filter: drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
+          drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
+}
+
+/* =========================================================
+   FOREGROUND EDITORIAL CONTENT
+   ========================================================= */
+
+.about-content {
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  will-change: transform;
+}
+
+/* =========================================================
+   SYNCHRONIZED CONVERGING TEXT ELEMENTS
+   Left and right halves join in unison with the logo shards
+   ========================================================= */
+
+.about-split-left,
+.about-split-right {
+  display: inline-flex;
+  align-items: center;
+  will-change: transform, opacity, filter;
+}
+
+.about-eyebrow-left {
+  color: #080d1a;
+  gap: 8px;
+}
+
+.about-eyebrow-right {
+  color: #7c3aed;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  padding-left: 6px;
+}
+
+.about-statement-left {
+  color: #080d1a;
+}
+
+.about-statement-right {
+  color: #080d1a;
+  background: linear-gradient(135deg, #080d1a 35%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-pillars-left {
+  color: #334155;
+}
+
+.about-pillars-right {
+  color: #64748b;
+}
+
+.about-founder-left {
+  gap: 10px;
+  color: #64748b;
+}
+
+.about-founder-right {
+  color: #0f172a;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  padding-left: 4px;
+}
+
+/* Eyebrow */
+.about-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: clamp(18px, 2.8vh, 26px);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.about-eyebrow-accent {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: #7c3aed;
+  border-radius: 2px;
+}
+
+/* Statement / Main Headline */
+.about-statement {
+  margin: 0 0 clamp(16px, 2.4vh, 24px);
+  font-size: clamp(28px, 3.4vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #080d1a;
+}
+
+/* Narrative Body Paragraphs */
+.about-description {
+  margin: 0 0 14px 0;
+  font-size: clamp(15px, 1.08vw, 16.5px);
+  line-height: 1.68;
+  color: #475569;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+}
+
+/* Founder Statement Callout Card */
+.about-founder-box {
+  margin-top: clamp(18px, 2.6vh, 26px);
+  padding: 16px 20px;
+  border-left: 3px solid #7c3aed;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.045) 0%, rgba(37, 99, 235, 0.02) 100%);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 2px 12px rgba(10, 15, 30, 0.03);
+}
+
+.about-founder-belief {
+  margin: 0;
+  font-size: clamp(14px, 1vw, 15px);
+  line-height: 1.62;
+  color: #334155;
+  font-weight: 400;
+}
+
+.about-founder-name {
+  color: #080d1a;
+  font-weight: 700;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN (Mobile & Tablet)
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .about-logo-chamber {
+    max-width: 320px;
+  }
+
+  .about-logo-stage {
+    width: clamp(190px, 48vw, 270px);
+  }
+
+  .about-content {
+    align-items: center;
+    text-align: center;
+    max-width: 540px;
+  }
+
+  .about-eyebrow {
+    justify-content: center;
+  }
+
+  .about-statement {
+    font-size: clamp(26px, 6vw, 38px);
+    line-height: 1.18;
+  }
+
+  .about-description {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .about-founder-box {
+    text-align: left;
+    border-radius: 12px;
+    border-left: 3px solid #7c3aed;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 45px 18px 36px;
+  }
+
+  .about-container {
+    gap: 32px;
+  }
+
+  .about-logo-stage {
+    width: clamp(170px, 52vw, 220px);
+  }
+
+  .about-statement {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .about-description {
+    font-size: 14px;
+    line-height: 1.62;
+  }
+
+  .about-founder-box {
+    padding: 14px 16px;
+  }
+
+  .about-founder-belief {
+    font-size: 13.5px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-logo-piece,
+  .about-split-left,
+  .about-split-right {
+    animation: none !important;
+    transition: none !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,306 @@
+/* =========================================================
+   COGNOLYNX — SERVICE CATEGORY PAGE
+   Premium editorial / technology aesthetic
+   ========================================================= */
+
+.service-category-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f7f8fa;
+  color: #10131a;
+  overflow-x: hidden;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.service-category-hero {
+  min-height: auto;
+  padding: 105px 7vw 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(37, 99, 235, 0.09),
+      transparent 35%
+    ),
+    #f7f8fa;
+}
+
+.service-category-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.service-category-eyebrow span {
+  color: #2563eb;
+}
+
+.service-category-hero h1 {
+  margin: 0;
+  max-width: 960px;
+  font-size: clamp(3.8rem, 8.5vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+  font-weight: 700;
+}
+
+.service-category-hero h1 span {
+  color: #8a94a6;
+}
+
+.service-category-hero > p {
+  max-width: 640px;
+  margin: 28px 0 24px;
+  color: #5f6878;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.68;
+}
+
+.service-category-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.service-category-meta span {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #475569;
+}
+
+/* =========================================================
+   LIST / GRID SECTION
+   ========================================================= */
+
+.service-category-list {
+  padding: 70px 7vw;
+  background: #ffffff;
+  border-top: 1px solid #dfe3e8;
+}
+
+.service-category-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  margin-bottom: 35px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.service-category-intro span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #2563eb;
+}
+
+.service-category-intro p {
+  max-width: 520px;
+  margin: 0;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.service-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.service-category-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  padding: 38px;
+  border-radius: 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.service-category-card:hover {
+  transform: translateY(-6px);
+  background: #ffffff;
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+.service-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.service-card-top span {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #2563eb;
+}
+
+.service-card-top svg {
+  color: #64748b;
+  transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.service-category-card:hover .service-card-top svg {
+  transform: scale(1.1);
+  color: #2563eb;
+}
+
+.service-card-content h2 {
+  margin: 0 0 12px;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.service-card-content p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.service-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #2563eb;
+  transition: gap 0.25s ease;
+}
+
+.service-category-card:hover .service-card-link {
+  gap: 12px;
+}
+
+/* =========================================================
+   STATEMENT SECTION
+   ========================================================= */
+
+.service-category-statement {
+  padding: 80px 7vw;
+  background: #10141c;
+  color: white;
+}
+
+.service-category-statement > span {
+  display: block;
+  margin-bottom: 24px;
+  color: #8290a5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.service-category-statement h2 {
+  margin: 0 0 28px;
+  font-size: clamp(38px, 6vw, 78px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+}
+
+.service-category-statement p {
+  max-width: 680px;
+  margin: 0;
+  color: #94a3b8;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .service-category-hero {
+    min-height: auto;
+    padding: 95px 6vw 50px;
+  }
+
+  .service-category-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .service-category-list {
+    padding: 55px 6vw;
+  }
+
+  .service-category-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .service-category-statement {
+    padding: 60px 6vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .service-category-hero {
+    min-height: auto;
+    padding: 95px 22px 45px;
+  }
+
+  .service-category-hero h1 {
+    font-size: clamp(32px, 10vw, 56px);
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .service-category-hero > p {
+    font-size: 15px;
+  }
+
+  .service-category-card {
+    padding: 28px 24px;
+    min-height: 260px;
+  }
+
+  .service-category-list {
+    padding: 45px 22px;
+  }
+
+  .service-category-statement {
+    padding: 50px 22px;
+  }
+}

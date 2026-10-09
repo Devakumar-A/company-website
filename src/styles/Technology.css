@@ -1,0 +1,1338 @@
+/* =========================================================
+   COGNOLYNX — 3D TECHNOLOGY TUNNEL CSS
+   ========================================================= */
+
+:root {
+  --tech-bg: #010308;
+  --tech-bg-soft: #040914;
+  --tech-blue: #1769e0;
+  --tech-blue-bright: #4f9cff;
+  --tech-blue-soft: rgba(23, 105, 224, 0.22);
+  --tech-white: #ffffff;
+  --tech-muted: rgba(255, 255, 255, 0.55);
+  --tech-border: rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================================
+   RESET & SECTION ROOT
+   CRITICAL: overflow must be visible so position: sticky
+   functions across all browsers.
+   ========================================================= */
+
+.technology-section,
+.technology-section * {
+  box-sizing: border-box;
+}
+
+.technology-section {
+  position: relative;
+  /* 580vh vertical scroll space directly controls tunnel progress with steady, cinematic pacing */
+  min-height: 580vh;
+  width: 100%;
+  overflow: visible;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(23, 105, 224, 0.12), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.08), transparent 40%),
+    #010308;
+  color: #ffffff;
+  isolation: isolate;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* =========================================================
+   STICKY VIEWPORT
+   Pins to the top during the entire section scroll.
+   overflow: hidden is isolated strictly to this viewport.
+   ========================================================= */
+
+.technology-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 560px;
+  overflow: hidden;
+  z-index: 20;
+}
+
+/* =========================================================
+   3D PERSPECTIVE SCENE
+   ========================================================= */
+
+.technology-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgba(10, 35, 70, 0.45) 0%,
+      rgba(3, 10, 22, 0.85) 45%,
+      rgba(1, 3, 8, 1) 85%
+    );
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* =========================================================
+   BACKGROUND LAYERS
+   ========================================================= */
+
+.technology-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Noise */
+.technology-noise {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.038;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  animation: technologyNoise 0.22s steps(2) infinite;
+}
+
+@keyframes technologyNoise {
+  0%   { transform: translate3d(0, 0, 0); }
+  25%  { transform: translate3d(-2%, 1%, 0); }
+  50%  { transform: translate3d(1%, -2%, 0); }
+  75%  { transform: translate3d(2%, 1%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* Perspective Cyber Grid */
+.technology-grid {
+  position: absolute;
+  inset: -15%;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(rgba(70, 140, 220, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70, 140, 220, 0.075) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse at center, black 0%, rgba(0, 0, 0, 0.6) 38%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, rgba(0, 0, 0, 0.6) 38%, transparent 75%);
+  transform:
+    translate3d(
+      calc(var(--technology-mouse-x) * -14px),
+      calc(var(--technology-mouse-y) * -14px),
+      0
+    )
+    scale(1.05);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Volumetric Blue Core Glow */
+.technology-blue-glow {
+  position: absolute;
+  width: 75vw;
+  height: 75vw;
+  max-width: 1050px;
+  max-height: 1050px;
+  left: 50%;
+  top: 50%;
+  transform:
+    translate(-50%, -50%)
+    translate3d(
+      calc(var(--technology-mouse-x) * 26px),
+      calc(var(--technology-mouse-y) * 26px),
+      0
+    );
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(23, 105, 224, 0.22) 0%,
+      rgba(23, 105, 224, 0.08) 32%,
+      transparent 68%
+    );
+  filter: blur(24px);
+  opacity: calc(0.5 + var(--technology-progress) * 0.35);
+  transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Purple Ambient Accent */
+.technology-purple-glow {
+  position: absolute;
+  width: 45vw;
+  height: 45vw;
+  max-width: 650px;
+  max-height: 650px;
+  right: -10%;
+  bottom: -15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent 70%);
+  filter: blur(54px);
+  transform:
+    translate3d(
+      calc(var(--technology-mouse-x) * -38px),
+      calc(var(--technology-mouse-y) * -28px),
+      0
+    );
+  animation: technologyPurpleFloat 8s ease-in-out infinite;
+}
+
+@keyframes technologyPurpleFloat {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translate3d(calc(var(--technology-mouse-x) * -38px), calc(var(--technology-mouse-y) * -28px), 0) scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: translate3d(calc(var(--technology-mouse-x) * -52px), calc(var(--technology-mouse-y) * -42px), 0) scale(1.12);
+  }
+}
+
+/* Cinematic Vignette */
+.technology-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 32%,
+      rgba(0, 0, 0, 0.3) 65%,
+      rgba(1, 3, 8, 0.9) 100%
+    );
+}
+
+/* Deep Space Particles */
+.technology-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.65;
+}
+
+.technology-particle {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: rgba(111, 177, 255, 0.85);
+  box-shadow: 0 0 10px rgba(71, 151, 255, 0.6);
+  animation: technologyParticleFloat 5.5s ease-in-out infinite;
+}
+
+@keyframes technologyParticleFloat {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translate3d(0, 14px, 0) scale(0.7);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(0, -18px, 0) scale(1);
+  }
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.technology-topbar {
+  position: absolute;
+  top: clamp(22px, 3.8vw, 44px);
+  left: clamp(22px, 4.5vw, 68px);
+  right: clamp(22px, 4.5vw, 68px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.technology-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.technology-label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4f9cff;
+  box-shadow: 0 0 12px rgba(79, 156, 255, 0.95);
+  animation: technologyDotPulse 2s ease-in-out infinite;
+}
+
+@keyframes technologyDotPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.85); }
+  50%       { opacity: 1;    transform: scale(1.18); }
+}
+
+.technology-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.technology-counter strong {
+  font-size: 17px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* =========================================================
+   INTRO TEXT (Left Side)
+   ========================================================= */
+
+.technology-intro {
+  position: absolute;
+  top: 50%;
+  left: clamp(28px, 6.5vw, 105px);
+  z-index: 30;
+  width: min(340px, 30vw);
+  transform: translateY(-50%);
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: opacity 0.25s ease;
+}
+
+.technology-intro-eyebrow {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: #4f9cff;
+}
+
+.technology-intro h2 {
+  margin: 0;
+  font-size: clamp(36px, 4.2vw, 72px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.technology-intro p {
+  width: min(270px, 100%);
+  margin: 24px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* =========================================================
+   3D TECHNOLOGY TUNNEL CONTAINER
+   Occupies full viewport; all 3D nodes center relative to it.
+   ========================================================= */
+
+.technology-tunnel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  z-index: 20;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* =========================================================
+   CONCENTRIC 3D TUNNEL DEPTH RINGS
+   ========================================================= */
+
+.technology-depth-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(79, 156, 255, 0.12);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Foreground ring */
+.ring-one {
+  width: 760px;
+  height: 520px;
+  transform: translate(-50%, -50%) translateZ(60px);
+  opacity: 0.22;
+  box-shadow: inset 0 0 35px rgba(23, 105, 224, 0.08);
+}
+
+/* Mid-depth ring */
+.ring-two {
+  width: 540px;
+  height: 380px;
+  transform: translate(-50%, -50%) translateZ(-240px);
+  opacity: 0.16;
+  border-color: rgba(79, 156, 255, 0.15);
+  box-shadow: inset 0 0 25px rgba(23, 105, 224, 0.1);
+}
+
+/* Deep ring */
+.ring-three {
+  width: 380px;
+  height: 270px;
+  transform: translate(-50%, -50%) translateZ(-520px);
+  opacity: 0.12;
+  border-color: rgba(99, 102, 241, 0.18);
+}
+
+/* Far vanishing point ring */
+.ring-four {
+  width: 240px;
+  height: 170px;
+  transform: translate(-50%, -50%) translateZ(-800px);
+  opacity: 0.08;
+  border-color: rgba(79, 156, 255, 0.22);
+}
+
+/* =========================================================
+   CONNECTION LINES
+   ========================================================= */
+
+.technology-connections {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 780px;
+  height: 540px;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.4s ease;
+}
+
+.technology-connection-line {
+  fill: none;
+  stroke: url("#technologyConnectionGradient");
+  stroke-width: 0.16;
+  stroke-linecap: round;
+  stroke-dasharray: 0.04 0.08;
+  animation: technologyConnectionFlow 3.5s linear infinite;
+}
+
+@keyframes technologyConnectionFlow {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -1; }
+}
+
+/* =========================================================
+   CENTRAL COGNOLYNX CORE
+   ========================================================= */
+
+.technology-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 170px;
+  height: 170px;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.technology-core-halo {
+  position: absolute;
+  inset: -45px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(23, 105, 224, 0.26),
+      rgba(23, 105, 224, 0.08) 38%,
+      transparent 70%
+    );
+  filter: blur(16px);
+  animation: technologyCoreHalo 4s ease-in-out infinite;
+}
+
+@keyframes technologyCoreHalo {
+  0%, 100% { transform: scale(0.9);  opacity: 0.55; }
+  50%       { transform: scale(1.08); opacity: 0.95; }
+}
+
+.technology-core-inner {
+  position: relative;
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    radial-gradient(
+      circle at 35% 25%,
+      rgba(37, 111, 218, 0.45),
+      rgba(4, 12, 24, 0.98) 60%
+    );
+  border: 1px solid rgba(106, 172, 255, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 40px rgba(23, 105, 224, 0.25),
+    inset 0 0 28px rgba(23, 105, 224, 0.2);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.technology-core-inner::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.technology-core-small {
+  position: relative;
+  margin-bottom: 3px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.technology-core-inner strong {
+  position: relative;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.technology-core-chapter {
+  position: relative;
+  margin-top: 5px;
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  color: rgba(79, 156, 255, 0.85);
+}
+
+/* Core Orbit Rings */
+.technology-core-orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(79, 156, 255, 0.16);
+  pointer-events: none;
+}
+
+.orbit-one {
+  width: 152px;
+  height: 152px;
+  transform: rotateX(70deg) rotateZ(12deg);
+  animation: technologyOrbitOne 8s linear infinite;
+}
+
+.orbit-two {
+  width: 206px;
+  height: 112px;
+  transform: rotateX(68deg) rotateZ(-34deg);
+  animation: technologyOrbitTwo 10s linear infinite reverse;
+}
+
+.orbit-three {
+  width: 242px;
+  height: 92px;
+  transform: rotateX(68deg) rotateZ(64deg);
+  animation: technologyOrbitThree 13s linear infinite;
+}
+
+@keyframes technologyOrbitOne {
+  from { transform: rotateX(70deg) rotateZ(12deg); }
+  to   { transform: rotateX(70deg) rotateZ(372deg); }
+}
+
+@keyframes technologyOrbitTwo {
+  from { transform: rotateX(68deg) rotateZ(-34deg); }
+  to   { transform: rotateX(68deg) rotateZ(-394deg); }
+}
+
+@keyframes technologyOrbitThree {
+  from { transform: rotateX(68deg) rotateZ(64deg); }
+  to   { transform: rotateX(68deg) rotateZ(424deg); }
+}
+
+/* =========================================================
+   3D TECHNOLOGY NODES
+   Centered at (50%, 50%) inside .technology-tunnel
+   ========================================================= */
+
+.technology-nodes {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.technology-node {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 82px;
+  height: 82px;
+  margin-left: -41px;
+  margin-top: -41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  contain: layout paint style;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Clean, Premium High-Contrast Logo Card (Zero GPU Thrash) */
+.technology-node-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    radial-gradient(
+      circle at 50% 36%,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(8, 16, 32, 0.94) 100%
+    );
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    0 0 25px rgba(23, 105, 224, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  overflow: hidden;
+  pointer-events: auto;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.technology-node-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.12) 48%,
+      transparent 65%
+    );
+  transform: translateX(-120%);
+  animation: technologyNodeShine 5.5s ease-in-out infinite;
+}
+
+@keyframes technologyNodeShine {
+  0%, 65%   { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+
+.technology-node-logo {
+  position: relative;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  max-width: 58%;
+  max-height: 58%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 12px rgba(79, 156, 255, 0.25));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.technology-node-fallback {
+  position: relative;
+  z-index: 2;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #4f9cff;
+  text-shadow: 0 0 10px rgba(79, 156, 255, 0.65);
+}
+
+/* Subtle Backglow */
+.technology-node-glow {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(23, 105, 224, 0.28), transparent 70%);
+  filter: blur(14px);
+  opacity: 0.45;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Hover Enhancement */
+.technology-node:hover {
+  z-index: 999;
+}
+
+.technology-node:hover .technology-node-card {
+  border-color: rgba(111, 177, 255, 0.55);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(23, 105, 224, 0.12)
+    );
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.5),
+    0 0 35px rgba(23, 105, 224, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transform: scale(1.08);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.technology-node:hover .technology-node-logo {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 16px rgba(79, 156, 255, 0.55));
+}
+
+/* =========================================================
+   CHAPTER INFO (Active Category Details)
+   ========================================================= */
+
+.technology-chapter-info {
+  position: absolute;
+  right: clamp(28px, 6vw, 92px);
+  bottom: clamp(65px, 8.5vh, 105px);
+  z-index: 40;
+  width: min(310px, 26vw);
+  display: flex;
+  gap: 18px;
+  pointer-events: none;
+}
+
+.technology-chapter-number {
+  font-size: 11px;
+  line-height: 1;
+  color: rgba(79, 156, 255, 0.9);
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+.technology-chapter-copy {
+  max-width: 270px;
+}
+
+.technology-chapter-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.technology-chapter-copy h3 {
+  margin: 0;
+  font-size: clamp(20px, 1.8vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.technology-chapter-copy p {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* =========================================================
+   SCROLL INDICATOR
+   ========================================================= */
+
+.technology-scroll {
+  position: absolute;
+  left: clamp(28px, 5vw, 68px);
+  bottom: 38px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: none;
+}
+
+.technology-scroll > span {
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+.technology-scroll-line {
+  position: relative;
+  width: 48px;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.technology-scroll-line div {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #1769e0, #4f9cff);
+  transition: transform 0.15s ease;
+}
+
+/* =========================================================
+   CHAPTER DOTS
+   ========================================================= */
+
+.technology-progress {
+  position: absolute;
+  right: clamp(22px, 3.5vw, 52px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.technology-progress span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  transition:
+    width 0.35s ease,
+    height 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.technology-progress span.active {
+  width: 5px;
+  height: 5px;
+  background: #4f9cff;
+  box-shadow: 0 0 12px rgba(79, 156, 255, 0.9);
+}
+
+/* Mobile hint hidden by default */
+.technology-mobile-hint {
+  display: none;
+}
+
+/* =========================================================
+   DESKTOP LARGE (>= 1440px)
+   ========================================================= */
+
+@media (min-width: 1440px) {
+  .technology-intro {
+    width: 380px;
+  }
+
+  .technology-node {
+    width: 82px;
+    height: 82px;
+    margin-left: -41px;
+    margin-top: -41px;
+  }
+
+  .technology-node-logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .technology-core {
+    width: 200px;
+    height: 200px;
+  }
+
+  .technology-core-inner {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+/* =========================================================
+   LAPTOP (1024px – 1366px)
+   ========================================================= */
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .technology-intro {
+    left: 36px;
+    width: 260px;
+  }
+
+  .technology-intro h2 {
+    font-size: 44px;
+  }
+
+  .technology-node {
+    width: 68px;
+    height: 68px;
+    margin-left: -34px;
+    margin-top: -34px;
+  }
+
+  .technology-node-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .technology-chapter-info {
+    right: 36px;
+    width: 240px;
+  }
+}
+
+/* =========================================================
+   TABLET (600px – 768px)
+   ========================================================= */
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .technology-section {
+    min-height: 480vh;
+    overflow: visible;
+  }
+
+  .technology-sticky {
+    min-height: 600px;
+  }
+
+  .technology-intro {
+    left: 30px;
+    top: 16%;
+    width: 320px;
+    transform: translateY(-50%);
+  }
+
+  .technology-intro h2 {
+    font-size: 44px;
+  }
+
+  .technology-intro p {
+    display: none;
+  }
+
+  .technology-node {
+    width: 62px;
+    height: 62px;
+    margin-left: -31px;
+    margin-top: -31px;
+  }
+
+  .technology-node-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .technology-chapter-info {
+    left: 30px;
+    right: auto;
+    bottom: 50px;
+    width: 300px;
+  }
+
+  .technology-scroll {
+    display: none;
+  }
+}
+
+/* =========================================================
+   MOBILE (< 600px)
+   First-Class Mobile Architecture: Fits 320px - 430px perfectly.
+   Strictly zero horizontal overflow.
+   No !important transform rules.
+   ========================================================= */
+
+@media (max-width: 599px) {
+  .technology-section {
+    min-height: 520vh;
+    overflow: visible;
+  }
+
+  .technology-sticky {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 540px;
+  }
+
+  .technology-scene {
+    perspective: 800px;
+  }
+
+  /* Grid */
+  .technology-grid {
+    opacity: 0.1;
+    background-size: 42px 42px;
+  }
+
+  /* Mobile Blue Glow */
+  .technology-blue-glow {
+    width: 120vw;
+    height: 120vw;
+    top: 50%;
+    filter: blur(20px);
+    opacity: 0.65;
+  }
+
+  /* Mobile Topbar */
+  .technology-topbar {
+    top: 18px;
+    left: 18px;
+    right: 18px;
+  }
+
+  .technology-label {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+  }
+
+  .technology-counter {
+    font-size: 9px;
+  }
+
+  .technology-counter strong {
+    font-size: 14px;
+  }
+
+  /* Mobile Intro Header */
+  .technology-intro {
+    left: 18px;
+    right: 18px;
+    top: 72px;
+    width: auto;
+    transform: none;
+  }
+
+  .technology-intro-eyebrow {
+    margin-bottom: 8px;
+    font-size: 8px;
+  }
+
+  .technology-intro h2 {
+    font-size: clamp(28px, 8.5vw, 40px);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+
+  .technology-intro p {
+    display: none;
+  }
+
+  /* Tunnel Rings on Mobile */
+  .ring-one {
+    width: 310px;
+    height: 440px;
+  }
+
+  .ring-two {
+    width: 230px;
+    height: 330px;
+  }
+
+  .ring-three {
+    width: 155px;
+    height: 220px;
+  }
+
+  .ring-four {
+    width: 95px;
+    height: 135px;
+  }
+
+  /* Mobile Connection Lines */
+  .technology-connections {
+    width: 320px;
+    height: 450px;
+  }
+
+  /* Mobile Central Core */
+  .technology-core {
+    width: 110px;
+    height: 110px;
+  }
+
+  .technology-core-inner {
+    width: 82px;
+    height: 82px;
+  }
+
+  .technology-core-inner strong {
+    font-size: 8.5px;
+  }
+
+  .technology-core-small {
+    font-size: 5px;
+  }
+
+  .technology-core-chapter {
+    font-size: 6px;
+  }
+
+  .orbit-one {
+    width: 105px;
+    height: 105px;
+  }
+
+  .orbit-two {
+    width: 142px;
+    height: 76px;
+  }
+
+  .orbit-three {
+    width: 168px;
+    height: 64px;
+  }
+
+  /* Mobile Technology Nodes */
+  .technology-node {
+    width: 58px;
+    height: 58px;
+    margin-left: -29px;
+    margin-top: -29px;
+  }
+
+  .technology-node-card {
+    border-radius: 17px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .technology-node-logo {
+    width: 32px;
+    height: 32px;
+    max-width: 60%;
+    max-height: 60%;
+  }
+
+  .technology-node-fallback {
+    font-size: 10px;
+  }
+
+  .technology-node-glow {
+    inset: -12px;
+    filter: blur(10px);
+  }
+
+  /* Mobile Chapter Info (Fixed at bottom) */
+  .technology-chapter-info {
+    left: 18px;
+    right: 18px;
+    bottom: 50px;
+    width: auto;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .technology-chapter-number {
+    font-size: 9px;
+    padding-top: 2px;
+  }
+
+  .technology-chapter-copy {
+    max-width: 260px;
+  }
+
+  .technology-chapter-eyebrow {
+    margin-bottom: 4px;
+    font-size: 7.5px;
+  }
+
+  .technology-chapter-copy h3 {
+    font-size: 19px;
+  }
+
+  .technology-chapter-copy p {
+    margin-top: 5px;
+    font-size: 9.5px;
+    line-height: 1.45;
+  }
+
+  /* Mobile Progress Indicator */
+  .technology-progress {
+    right: 12px;
+    gap: 6px;
+  }
+
+  .technology-progress span {
+    width: 2px;
+    height: 2px;
+  }
+
+  .technology-progress span.active {
+    width: 4px;
+    height: 4px;
+  }
+
+  .technology-scroll {
+    display: none;
+  }
+
+  /* Mobile Scroll Hint */
+  .technology-mobile-hint {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    left: 18px;
+    bottom: 18px;
+    z-index: 50;
+    font-size: 7px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .technology-mobile-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    font-size: 9px;
+    animation: technologyMobileArrow 1.8s ease-in-out infinite;
+  }
+
+  @keyframes technologyMobileArrow {
+    0%, 100% { transform: translateY(0); opacity: 0.35; }
+    50%       { transform: translateY(3px); opacity: 0.95; }
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE (<= 360px: iPhone SE, etc.)
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .technology-sticky {
+    min-height: 500px;
+  }
+
+  .technology-intro {
+    top: 66px;
+  }
+
+  .technology-intro h2 {
+    font-size: 25px;
+  }
+
+  .technology-node {
+    width: 46px;
+    height: 46px;
+    margin-left: -23px;
+    margin-top: -23px;
+  }
+
+  .technology-node-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .technology-core {
+    width: 96px;
+    height: 96px;
+  }
+
+  .technology-core-inner {
+    width: 72px;
+    height: 72px;
+  }
+
+  .technology-chapter-info {
+    bottom: 42px;
+  }
+
+  .technology-chapter-copy h3 {
+    font-size: 17px;
+  }
+
+  .technology-chapter-copy p {
+    font-size: 8.5px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION SUPPORT
+   ========================================================= */
+
+.technology-reduced-motion *,
+.technology-reduced-motion *::before,
+.technology-reduced-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.001ms !important;
+}
+
+.technology-reduced-motion .technology-noise {
+  display: none;
+}
+
+.technology-reduced-motion .technology-particles {
+  opacity: 0.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .technology-section *,
+  .technology-section *::before,
+  .technology-section *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================
+   HIGH CONTRAST ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-contrast: more) {
+  .technology-node-card {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .technology-chapter-copy p,
+  .technology-intro p {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .technology-grid {
+    opacity: 0.25;
+  }
+}
