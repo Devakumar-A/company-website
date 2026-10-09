@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowLeft, ArrowRight, Check, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "../../components/SEO";
+import { seoData } from "../../data/seoData";
 import Footer from "../../components/Footer";
 import "../../styles/solutions/SolutionDetail.css";
 
@@ -23,6 +25,7 @@ const outcomes = [
 export default function MobileExperiences() {
   return (
     <>
+    <SEO {...seoData["/solutions/mobile-experiences"]} />
     <main className="solution-detail-page">
 
       <section className="solution-detail-hero">

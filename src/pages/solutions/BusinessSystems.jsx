@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowLeft, ArrowRight, Check, Database } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import SEO from "../../components/SEO";
+import { seoData } from "../../data/seoData";
 import Footer from "../../components/Footer";
 import "../../styles/solutions/SolutionDetail.css";
 
@@ -21,8 +23,12 @@ const outcomes = [
 ];
 
 export default function BusinessSystems() {
+  const { pathname } = useLocation();
+  const meta = seoData[pathname] || seoData["/solutions/business-systems"];
+
   return (
     <>
+    <SEO {...meta} />
     <main className="solution-detail-page">
 
       <section className="solution-detail-hero">

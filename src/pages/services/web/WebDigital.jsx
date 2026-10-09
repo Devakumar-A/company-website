@@ -7,6 +7,8 @@ import {
   MonitorSmartphone,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SEO from "../../../components/SEO";
+import { seoData } from "../../../data/seoData";
 import Footer from "../../../components/Footer";
 import "../../../styles/services/ServiceCategory.css";
 
@@ -50,6 +52,7 @@ export default function WebDigital() {
 
   return (
     <div className="service-category-wrapper">
+      <SEO {...seoData["/services/web-digital"]} />
       <main className="service-category-page">
         {/* HERO */}
         <section className="service-category-hero">

@@ -1,6 +1,8 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/Contact.css";
 
@@ -163,6 +165,7 @@ function AnimatedWords({ text, delay = 0, stagger = 0.03, className = "" }) {
 export default function ContactPage() {
   return (
     <div className="contact-page">
+      <SEO {...seoData["/contact"]} />
       {/* ───────────────── HERO ───────────────── */}
       <motion.section
         className="contact-hero"

@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import SEO from "../../components/SEO";
+import { seoData } from "../../data/seoData";
 
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
@@ -287,6 +289,7 @@ export default function CertificateVerify() {
 
   return (
     <>
+      <SEO {...seoData["/certificate/verify"]} />
       <main className="cert-verify-page">
 
         {/* =========================

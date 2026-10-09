@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowUpRight, Code2, Globe2, Database, Cloud } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SEO from "../../../components/SEO";
+import { seoData } from "../../../data/seoData";
 import Footer from "../../../components/Footer";
 import "../../../styles/services/ServiceCategory.css";
 
@@ -44,6 +46,7 @@ export default function SoftwareEngineering() {
 
   return (
     <div className="service-category-wrapper">
+      <SEO {...seoData["/services/software-engineering"]} />
       <main className="service-category-page">
         <section className="service-category-hero">
           <div className="service-category-eyebrow">

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/Support.css";
 
@@ -101,6 +103,7 @@ export default function Support() {
 
   return (
     <>
+      <SEO {...seoData["/support"]} />
       <main className="support-page">
 
         {/* =========================

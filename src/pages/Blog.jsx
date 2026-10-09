@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { ArrowUpRight, Search, Clock3 } from "lucide-react";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/Blog.css";
 
@@ -313,6 +315,7 @@ export default function Blog() {
 
   return (
     <div className="blog-page">
+      <SEO {...seoData["/blog"]} />
       {/* HERO */}
       <section className="blog-hero">
         <div className="blog-container">

@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/PrivacyPolicy.css";
 
@@ -13,6 +15,7 @@ export default function PrivacyPolicy() {
 
   return (
     <>
+      <SEO {...seoData["/privacy-policy"]} />
       <main className="privacy-page">
         {/* Hero */}
         <section className="privacy-hero">

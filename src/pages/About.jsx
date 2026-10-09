@@ -1,5 +1,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/AboutPage.css";
 
@@ -130,6 +132,7 @@ function AnimatedWords({ text, delay = 0, stagger = 0.03, className = "" }) {
 export default function AboutPage() {
   return (
     <div className="about-page">
+      <SEO {...seoData["/about"]} />
 
       {/* ───────────────── HERO ───────────────── */}
       <motion.section

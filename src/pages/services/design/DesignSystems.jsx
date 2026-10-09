@@ -2,6 +2,8 @@ import React from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "../../../components/Footer";
+import SEO from "../../../components/SEO";
+import { seoData } from "../../../data/seoData";
 import "../../../styles/services/ServiceDetail.css";
 
 const features = [
@@ -14,8 +16,10 @@ const features = [
 ];
 
 export default function DesignSystems() {
+  const seo = seoData["/services/design-brand/design-systems"];
   return (
     <>
+      <SEO {...seo} />
       <main className="service-detail-page">
         <section className="service-detail-hero">
           <div className="service-detail-eyebrow">

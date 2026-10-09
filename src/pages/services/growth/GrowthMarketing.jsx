@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../../components/Footer";
+import SEO from "../../../components/SEO";
+import { seoData } from "../../../data/seoData";
 import "../../../styles/services/ServiceCategory.css";
 
 const services = [
@@ -47,9 +49,11 @@ const services = [
 
 export default function GrowthMarketing() {
   const navigate = useNavigate();
+  const seo = seoData["/services/growth-marketing"];
 
   return (
     <div className="service-category-wrapper">
+      <SEO {...seo} />
       <main className="service-category-page">
         {/* HERO */}
         <section className="service-category-hero">

@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/NotFound.css";
 
@@ -9,6 +11,7 @@ const NotFound = () => {
 
   return (
     <div className="not-found-page">
+      <SEO {...seoData["/404"]} />
       <main className="not-found-main">
         <section className="not-found-hero">
           <div className="not-found-content">

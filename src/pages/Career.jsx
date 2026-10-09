@@ -6,6 +6,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/Career.css";
 
@@ -19,6 +21,7 @@ export default function Career() {
   }, []);
   return (
     <>
+      <SEO {...seoData["/careers"]} />
       <main className="career-page">
         {/* =====================================================
             HERO

@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import "../styles/TermsConditions.css";
 
@@ -13,6 +15,7 @@ export default function TermsConditions() {
 
   return (
     <>
+      <SEO {...seoData["/terms-conditions"]} />
       <main className="terms-page">
         {/* HERO */}
         <section className="terms-hero">

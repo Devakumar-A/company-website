@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "../../components/SEO";
+import { seoData } from "../../data/seoData";
 
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
@@ -375,6 +377,7 @@ export default function JobApply() {
   if (submitted) {
     return (
       <>
+        <SEO {...seoData["/careers/job"]} />
         <main className="job-apply-page">
           <section className="job-apply-success">
             <div className="job-success-container">
@@ -438,6 +441,7 @@ export default function JobApply() {
 
   return (
     <>
+      <SEO {...seoData["/careers/job"]} />
       <main className="job-apply-page">
         <section className="job-apply-hero">
           <div className="job-apply-grid" />

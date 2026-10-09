@@ -5,6 +5,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -115,8 +116,9 @@ function PageLoadingFallback() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
+    <HelmetProvider>
+      <BrowserRouter>
+        <ScrollToTop />
       <Navbar />
 
       <Suspense fallback={<PageLoadingFallback />}>
@@ -403,6 +405,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-    </BrowserRouter>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }

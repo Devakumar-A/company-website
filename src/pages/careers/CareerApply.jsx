@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Send } from "lucide-react";
 import { Link } from "react-router-dom";
+import SEO from "../../components/SEO";
+import { seoData } from "../../data/seoData";
 
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
@@ -384,6 +386,7 @@ export default function CareerApply() {
   if (submitted) {
     return (
       <>
+        <SEO {...seoData["/careers/apply"]} />
         <main className="career-page">
 
           <section
@@ -480,6 +483,7 @@ export default function CareerApply() {
 
   return (
     <>
+      <SEO {...seoData["/careers/apply"]} />
       <main className="career-page">
 
         {/* =================================================

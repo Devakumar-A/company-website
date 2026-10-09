@@ -1,3 +1,5 @@
+import SEO from "../components/SEO";
+import { seoData } from "../data/seoData";
 import SolutionsSection from "../sections/Solutions";
 import Footer from "../components/Footer";
 
@@ -8,6 +10,7 @@ import Footer from "../components/Footer";
 export default function SolutionsPage() {
   return (
     <>
+      <SEO {...seoData["/solutions"]} />
       <SolutionsSection />
       <Footer />
     </>
