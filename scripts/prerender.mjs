@@ -188,7 +188,11 @@ async function prerender() {
           HelmetProvider,
           { context: helmetContext },
           React.createElement(Navbar),
-          React.createElement(Component)
+          React.createElement(
+            React.Suspense,
+            { fallback: null },
+            React.createElement(Component)
+          )
         )
       )
     );
@@ -272,6 +276,9 @@ async function prerender() {
       );
     }
 
+    // Remove any existing JSON-LD from template before injecting route-specific JSON-LD
+    pageHtml = pageHtml.replace(/<script type="application\/ld\+json">.*?<\/script>\s*/gi, '');
+
     // Inject JSON-LD if present or auto-generated for indexable routes
     const routeJsonLd = seo.jsonLd !== undefined
       ? seo.jsonLd
@@ -292,11 +299,22 @@ async function prerender() {
     let outFilePath;
     if (route === '/') {
       outFilePath = path.resolve(distDir, 'index.html');
+      fs.writeFileSync(outFilePath, pageHtml, 'utf8');
     } else {
       const cleanRoute = route.replace(/^\/+/, '').replace(/\/+$/, '');
       const routeDir = path.resolve(distDir, cleanRoute);
       fs.mkdirSync(routeDir, { recursive: true });
       outFilePath = path.resolve(routeDir, 'index.html');
+      fs.writeFileSync(outFilePath, pageHtml, 'utf8');
+
+      // Also write clean-route .html file (e.g. dist/about.html, dist/services/web.html)
+      // to guarantee clean URL serving without trailing slash on Vite preview and Netlify
+      const cleanHtmlPath = path.resolve(distDir, `${cleanRoute}.html`);
+      const cleanHtmlDir = path.dirname(cleanHtmlPath);
+      if (!fs.existsSync(cleanHtmlDir)) {
+        fs.mkdirSync(cleanHtmlDir, { recursive: true });
+      }
+      fs.writeFileSync(cleanHtmlPath, pageHtml, 'utf8');
 
       // Also create dist/404.html for 404 route
       if (route === '/404') {
@@ -305,7 +323,6 @@ async function prerender() {
       }
     }
 
-    fs.writeFileSync(outFilePath, pageHtml, 'utf8');
     renderedCount++;
   }
 

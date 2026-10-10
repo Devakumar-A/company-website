@@ -12,7 +12,6 @@ const sitemapDistPath = path.resolve(distDir, 'sitemap.xml');
 const sitemapPublicPath = path.resolve(rootDir, 'public', 'sitemap.xml');
 
 const SITE_URL = 'https://cognolynx.com';
-const buildDate = new Date().toISOString().split('T')[0];
 
 const routeComponentMap = {
   '/': 'src/pages/Home.jsx',
@@ -68,7 +67,7 @@ const routeComponentMap = {
 };
 
 function getFileLastmod(relativeFilePath) {
-  if (!relativeFilePath) return buildDate;
+  if (!relativeFilePath) return null;
   try {
     // Exclude SEO-only commits to find the last commit that changed actual page content
     const gitDate = execSync(
@@ -79,9 +78,9 @@ function getFileLastmod(relativeFilePath) {
         stdio: ['ignore', 'pipe', 'ignore'],
       }
     ).trim();
-    return gitDate || buildDate;
+    return gitDate || null;
   } catch {
-    return buildDate;
+    return null;
   }
 }
 
@@ -97,6 +96,7 @@ function generateSitemap() {
   });
 
   const urlEntries = [];
+  const distinctLastmods = new Set();
 
   for (const route of indexableRoutes) {
     const item = seoData[route];
@@ -106,12 +106,18 @@ function generateSitemap() {
 
     const compFile = routeComponentMap[route];
     const lastmod = getFileLastmod(compFile);
+    if (lastmod) {
+      distinctLastmods.add(lastmod);
+    }
+
+    const lastmodElement = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : '';
 
     urlEntries.push(`  <url>
-    <loc>${canonicalUrl}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${canonicalUrl}</loc>${lastmodElement}
   </url>`);
   }
+
+  console.log(`Distinct lastmod values in sitemap: ${distinctLastmods.size} (${Array.from(distinctLastmods).join(', ') || 'none'})`);
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

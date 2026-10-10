@@ -10,65 +10,198 @@ import { HelmetProvider } from "react-helmet-async";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 
-// Code-split pages for high-performance on-demand loading
-const AboutPage = lazy(() => import("./pages/About"));
-const ServicesPage = lazy(() => import("./pages/Services"));
-const SolutionsPage = lazy(() => import("./pages/Solutions"));
-const TechnologyPage = lazy(() => import("./pages/Technology"));
-const ContactPage = lazy(() => import("./pages/Contact"));
-const Career = lazy(() => import("./pages/Career"));
-const CareerApply = lazy(() => import("./pages/careers/CareerApply"));
-const JobApply = lazy(() => import("./pages/careers/JobApply"));
-const CertificateVerify = lazy(() => import("./pages/certificate/CertificateVerify"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const TermsConditions = lazy(() => import("./pages/TermsConditions"));
-const Support = lazy(() => import("./pages/Support"));
-const CaseStudies = lazy(() => import("./pages/CaseStudies"));
-const Blog = lazy(() => import("./pages/Blog"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+// Helper to allow preloading lazy route components before hydration,
+// ensuring prerendered HTML is not blanked by Suspense on first load.
+function lazyWithPreload(factory) {
+  let LoadedComponent = null;
+  let factoryPromise = null;
+
+  const preload = () => {
+    if (!factoryPromise) {
+      factoryPromise = factory()
+        .then((module) => {
+          LoadedComponent = module.default || module;
+          return module;
+        })
+        .catch((err) => {
+          factoryPromise = null;
+          throw err;
+        });
+    }
+    return factoryPromise;
+  };
+
+  const LazyComponent = lazy(preload);
+
+  function PreloadedComponent(props) {
+    if (LoadedComponent) {
+      return <LoadedComponent {...props} />;
+    }
+    return <LazyComponent {...props} />;
+  }
+
+  PreloadedComponent.preload = preload;
+  return PreloadedComponent;
+}
+
+const AboutPage = lazyWithPreload(() => import("./pages/About"));
+const ServicesPage = lazyWithPreload(() => import("./pages/Services"));
+const SolutionsPage = lazyWithPreload(() => import("./pages/Solutions"));
+const TechnologyPage = lazyWithPreload(() => import("./pages/Technology"));
+const ContactPage = lazyWithPreload(() => import("./pages/Contact"));
+const Career = lazyWithPreload(() => import("./pages/Career"));
+const CareerApply = lazyWithPreload(() => import("./pages/careers/CareerApply"));
+const JobApply = lazyWithPreload(() => import("./pages/careers/JobApply"));
+const CertificateVerify = lazyWithPreload(() => import("./pages/certificate/CertificateVerify"));
+const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
+const TermsConditions = lazyWithPreload(() => import("./pages/TermsConditions"));
+const Support = lazyWithPreload(() => import("./pages/Support"));
+const CaseStudies = lazyWithPreload(() => import("./pages/CaseStudies"));
+const Blog = lazyWithPreload(() => import("./pages/Blog"));
+const NotFound = lazyWithPreload(() => import("./pages/NotFound"));
 
 // 1. Software & Engineering
-const SoftwareEngineering = lazy(() => import("./pages/services/software/SoftwareEngineering"));
-const SoftwareDevelopment = lazy(() => import("./pages/services/software/SoftwareDevelopment"));
-const WebApplications = lazy(() => import("./pages/services/software/WebApplications"));
-const BusinessSoftware = lazy(() => import("./pages/services/software/BusinessSoftware"));
-const CloudSolutions = lazy(() => import("./pages/services/software/CloudSolutions"));
+const SoftwareEngineering = lazyWithPreload(() => import("./pages/services/software/SoftwareEngineering"));
+const SoftwareDevelopment = lazyWithPreload(() => import("./pages/services/software/SoftwareDevelopment"));
+const WebApplications = lazyWithPreload(() => import("./pages/services/software/WebApplications"));
+const BusinessSoftware = lazyWithPreload(() => import("./pages/services/software/BusinessSoftware"));
+const CloudSolutions = lazyWithPreload(() => import("./pages/services/software/CloudSolutions"));
 
 // 2. Web & Digital
-const WebDigital = lazy(() => import("./pages/services/web/WebDigital"));
-const WebsiteDevelopment = lazy(() => import("./pages/services/web/WebsiteDevelopment"));
-const Ecommerce = lazy(() => import("./pages/services/web/Ecommerce"));
-const WebPlatforms = lazy(() => import("./pages/services/web/WebPlatforms"));
-const DigitalExperiences = lazy(() => import("./pages/services/web/DigitalExperiences"));
+const WebDigital = lazyWithPreload(() => import("./pages/services/web/WebDigital"));
+const WebsiteDevelopment = lazyWithPreload(() => import("./pages/services/web/WebsiteDevelopment"));
+const Ecommerce = lazyWithPreload(() => import("./pages/services/web/Ecommerce"));
+const WebPlatforms = lazyWithPreload(() => import("./pages/services/web/WebPlatforms"));
+const DigitalExperiences = lazyWithPreload(() => import("./pages/services/web/DigitalExperiences"));
 
 // 3. Design & Brand
-const DesignBrand = lazy(() => import("./pages/services/design/DesignBrand"));
-const UIUXDesign = lazy(() => import("./pages/services/design/UIUXDesign"));
-const DesignSystems = lazy(() => import("./pages/services/design/DesignSystems"));
-const ProductDesign = lazy(() => import("./pages/services/design/ProductDesign"));
-const BrandIdentity = lazy(() => import("./pages/services/design/BrandIdentity"));
+const DesignBrand = lazyWithPreload(() => import("./pages/services/design/DesignBrand"));
+const UIUXDesign = lazyWithPreload(() => import("./pages/services/design/UIUXDesign"));
+const DesignSystems = lazyWithPreload(() => import("./pages/services/design/DesignSystems"));
+const ProductDesign = lazyWithPreload(() => import("./pages/services/design/ProductDesign"));
+const BrandIdentity = lazyWithPreload(() => import("./pages/services/design/BrandIdentity"));
 
 // 4. Growth & Marketing
-const GrowthMarketing = lazy(() => import("./pages/services/growth/GrowthMarketing"));
-const DigitalMarketing = lazy(() => import("./pages/services/growth/DigitalMarketing"));
-const PerformanceMarketing = lazy(() => import("./pages/services/growth/PerformanceMarketing"));
-const LeadGeneration = lazy(() => import("./pages/services/growth/LeadGeneration"));
-const ContentMarketing = lazy(() => import("./pages/services/growth/ContentMarketing"));
+const GrowthMarketing = lazyWithPreload(() => import("./pages/services/growth/GrowthMarketing"));
+const DigitalMarketing = lazyWithPreload(() => import("./pages/services/growth/DigitalMarketing"));
+const PerformanceMarketing = lazyWithPreload(() => import("./pages/services/growth/PerformanceMarketing"));
+const LeadGeneration = lazyWithPreload(() => import("./pages/services/growth/LeadGeneration"));
+const ContentMarketing = lazyWithPreload(() => import("./pages/services/growth/ContentMarketing"));
 
 // Solutions
-const DigitalProducts = lazy(() => import("./pages/solutions/DigitalProducts"));
-const BusinessSystems = lazy(() => import("./pages/solutions/BusinessSystems"));
-const MobileExperiences = lazy(() => import("./pages/solutions/MobileExperiences"));
-const DesignBrandSolution = lazy(() => import("./pages/solutions/DesignBrand"));
-const GrowthMarketingSolution = lazy(() => import("./pages/solutions/GrowthMarketing"));
+const DigitalProducts = lazyWithPreload(() => import("./pages/solutions/DigitalProducts"));
+const BusinessSystems = lazyWithPreload(() => import("./pages/solutions/BusinessSystems"));
+const MobileExperiences = lazyWithPreload(() => import("./pages/solutions/MobileExperiences"));
+const DesignBrandSolution = lazyWithPreload(() => import("./pages/solutions/DesignBrand"));
+const GrowthMarketingSolution = lazyWithPreload(() => import("./pages/solutions/GrowthMarketing"));
 
 // Technology
-const WebEngineering = lazy(() => import("./pages/technology/WebEngineering"));
-const SoftwareSystems = lazy(() => import("./pages/technology/SoftwareSystems"));
-const MobileDevelopment = lazy(() => import("./pages/technology/MobileDevelopment"));
-const CloudInfrastructure = lazy(() => import("./pages/technology/CloudInfrastructure"));
-const BackendDatabases = lazy(() => import("./pages/technology/BackendDatabases"));
-const DesignSystemsTechnology = lazy(() => import("./pages/technology/DesignSystems"));
+const WebEngineering = lazyWithPreload(() => import("./pages/technology/WebEngineering"));
+const SoftwareSystems = lazyWithPreload(() => import("./pages/technology/SoftwareSystems"));
+const MobileDevelopment = lazyWithPreload(() => import("./pages/technology/MobileDevelopment"));
+const CloudInfrastructure = lazyWithPreload(() => import("./pages/technology/CloudInfrastructure"));
+const BackendDatabases = lazyWithPreload(() => import("./pages/technology/BackendDatabases"));
+const DesignSystemsTechnology = lazyWithPreload(() => import("./pages/technology/DesignSystems"));
+
+const routePreloadMap = {
+  "/about": AboutPage,
+  "/services": ServicesPage,
+  "/solutions": SolutionsPage,
+  "/technology": TechnologyPage,
+  "/contact": ContactPage,
+  "/careers": Career,
+  "/career": Career,
+  "/careers/apply": CareerApply,
+  "/career/apply": CareerApply,
+  "/careers/job": JobApply,
+  "/career/job": JobApply,
+  "/certificate/verify": CertificateVerify,
+  "/certificates/verify": CertificateVerify,
+  "/verify": CertificateVerify,
+  "/privacy-policy": PrivacyPolicy,
+  "/privacy": PrivacyPolicy,
+  "/terms-conditions": TermsConditions,
+  "/terms": TermsConditions,
+  "/support": Support,
+  "/case-studies": CaseStudies,
+  "/blog": Blog,
+
+  // Solutions
+  "/solutions/digital-products": DigitalProducts,
+  "/solutions/business-systems": BusinessSystems,
+  "/solutions/ai-systems": BusinessSystems,
+  "/solutions/mobile-experiences": MobileExperiences,
+  "/solutions/design-brand": DesignBrandSolution,
+  "/solutions/growth-marketing": GrowthMarketingSolution,
+
+  // Technology
+  "/technology/web-engineering": WebEngineering,
+  "/technology/web": WebEngineering,
+  "/technology/software-systems": SoftwareSystems,
+  "/technology/mobile-development": MobileDevelopment,
+  "/technology/mobile": MobileDevelopment,
+  "/technology/cloud-infrastructure": CloudInfrastructure,
+  "/technology/cloud": CloudInfrastructure,
+  "/technology/backend-databases": BackendDatabases,
+  "/technology/data": BackendDatabases,
+  "/technology/design-systems": DesignSystemsTechnology,
+  "/technology/creative": DesignSystemsTechnology,
+
+  // Services: Software
+  "/services/software-engineering": SoftwareEngineering,
+  "/services/software-engineering/software-development": SoftwareDevelopment,
+  "/services/software-engineering/web-applications": WebApplications,
+  "/services/software-engineering/business-software": BusinessSoftware,
+  "/services/software-engineering/cloud-solutions": CloudSolutions,
+
+  // Services: Web
+  "/services/web-digital": WebDigital,
+  "/services/web": WebDigital,
+  "/services/web-digital/website-development": WebsiteDevelopment,
+  "/services/web/website-development": WebsiteDevelopment,
+  "/services/web-digital/ecommerce": Ecommerce,
+  "/services/web/ecommerce": Ecommerce,
+  "/services/web-digital/web-platforms": WebPlatforms,
+  "/services/web/web-platforms": WebPlatforms,
+  "/services/web-digital/digital-experiences": DigitalExperiences,
+  "/services/web/digital-experiences": DigitalExperiences,
+
+  // Services: Design
+  "/services/design-brand": DesignBrand,
+  "/services/design": DesignBrand,
+  "/services/design-brand/ui-ux-design": UIUXDesign,
+  "/services/design/ui-ux-design": UIUXDesign,
+  "/services/design-brand/design-systems": DesignSystems,
+  "/services/design/design-systems": DesignSystems,
+  "/services/design-brand/product-design": ProductDesign,
+  "/services/design/product-design": ProductDesign,
+  "/services/design-brand/graphic-design": ProductDesign,
+  "/services/design-brand/brand-identity": BrandIdentity,
+  "/services/design/brand-identity": BrandIdentity,
+
+  // Services: Growth
+  "/services/growth-marketing": GrowthMarketing,
+  "/services/growth": GrowthMarketing,
+  "/services/growth-marketing/digital-marketing": DigitalMarketing,
+  "/services/growth/digital-marketing": DigitalMarketing,
+  "/services/growth-marketing/performance-marketing": PerformanceMarketing,
+  "/services/growth/performance-marketing": PerformanceMarketing,
+  "/services/growth-marketing/lead-generation": LeadGeneration,
+  "/services/growth/lead-generation": LeadGeneration,
+  "/services/growth-marketing/content-marketing": ContentMarketing,
+  "/services/growth/content-marketing": ContentMarketing,
+};
+
+export async function preloadRoute(pathname) {
+  const cleanPath = (pathname || "").replace(/\/$/, "") || "/";
+  if (cleanPath === "/") return;
+  const targetComponent = routePreloadMap[cleanPath];
+  if (targetComponent?.preload) {
+    await targetComponent.preload();
+  } else if (NotFound?.preload) {
+    await NotFound.preload();
+  }
+}
 
 // Always scroll to top upon route change
 function ScrollToTop() {

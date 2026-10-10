@@ -383,7 +383,6 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     name: "Cognolynx",
     url: SITE_URL,
     logo: `${SITE_URL}/favicon-512.png`,
-    sameAs: [],
   };
 
   const webSiteSchema = {
@@ -484,7 +483,6 @@ export function getJsonLdForRoute(routePath, seo = {}) {
       url: canonicalUrl,
       provider: {
         "@type": "Organization",
-        "@id": `${SITE_URL}/#organization`,
         name: "Cognolynx",
         url: SITE_URL,
       },

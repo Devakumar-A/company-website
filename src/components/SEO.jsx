@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { getJsonLdForRoute } from "../data/seoData";
 
@@ -34,6 +35,22 @@ export default function SEO({
     ? jsonLd
     : (noindex ? null : getJsonLdForRoute(path, { title, description, canonical: resolvedCanonical, noindex }));
 
+  // Keep JSON-LD in <head> synced on client-side route transitions without causing hydration mismatches
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    let scriptTag = document.querySelector('script[type="application/ld+json"]');
+    if (resolvedJsonLd) {
+      if (!scriptTag) {
+        scriptTag = document.createElement("script");
+        scriptTag.type = "application/ld+json";
+        document.head.appendChild(scriptTag);
+      }
+      scriptTag.textContent = JSON.stringify(resolvedJsonLd);
+    } else if (scriptTag) {
+      scriptTag.remove();
+    }
+  }, [resolvedJsonLd]);
+
   return (
     <Helmet>
       {title && <title>{title}</title>}
@@ -54,13 +71,6 @@ export default function SEO({
       {title && <meta name="twitter:title" content={title} />}
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={fullImage} />
-
-      {/* Structured Data (JSON-LD) */}
-      {resolvedJsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(resolvedJsonLd)}
-        </script>
-      )}
     </Helmet>
   );
 }

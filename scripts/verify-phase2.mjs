@@ -42,6 +42,7 @@ for (const sample of sampleFiles) {
         console.log(`Service Name: "${item.name}"`);
         console.log(`Service URL: "${item.url}"`);
         console.log(`Service Provider: "${item.provider?.name}"`);
+        console.log(`Service Provider Object: ${JSON.stringify(item.provider)}`);
       }
       if (item['@type'] === 'Organization') {
         console.log(`Organization Name: "${item.name}"`);
