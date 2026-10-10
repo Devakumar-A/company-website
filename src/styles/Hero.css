@@ -140,6 +140,31 @@
 }
 
 /* --------------------------------------------------------------------------
+   HERO ENTRANCE ANIMATIONS (CSS-DRIVEN FOR INSTANT FIRST PAINT / ZERO JS DELAY)
+   Matches previous Framer Motion variants:
+   duration: 0.5s, ease: cubic-bezier(0.16, 1, 0.3, 1), y: 12px -> 0, stagger: 0.08s
+   -------------------------------------------------------------------------- */
+@keyframes heroEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroScrollCueEntrance {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
    HEADLINE: "BUILD WHAT'S NEXT."
    -------------------------------------------------------------------------- */
 .hero-headline {
@@ -158,6 +183,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  animation: heroEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
 }
 
 .hero-headline-line {
@@ -233,6 +259,7 @@
   letter-spacing: 0.12em;
   font-size: clamp(0.85rem, 1.1vw, 1.05rem);
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+  animation: heroEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
 }
 
 .hero-supporting-item {
@@ -273,6 +300,7 @@
   margin-top: clamp(1.75rem, 3.2vh, 2.6rem);
   display: flex;
   justify-content: center;
+  animation: heroEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
 }
 
 .hero-cta-btn {
@@ -367,6 +395,7 @@
   border-radius: 9999px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  animation: heroScrollCueEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 
 .hero-scroll-indicator:hover {
@@ -413,6 +442,19 @@
 
 /* Accessibility: respects prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
+  .hero-headline,
+  .hero-supporting-line,
+  .hero-cta-wrapper {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero-scroll-indicator {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
   .hero-cta-btn,
   .hero-cta-arrow,
   .hero-scroll-arrow {
