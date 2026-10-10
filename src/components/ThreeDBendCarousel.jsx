@@ -18,10 +18,11 @@ export function BendCarouselItem({
   children,
   className = "",
   style = {},
+  as: Component = "div",
   ...rest
 }) {
   return (
-    <div
+    <Component
       className={`bend-carousel-item ${className}`}
       style={style}
       role="group"
@@ -33,7 +34,7 @@ export function BendCarouselItem({
 
       {/* Card Content */}
       <div className="bend-card-inner">{children}</div>
-    </div>
+    </Component>
   );
 }
 

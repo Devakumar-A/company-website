@@ -6,7 +6,7 @@ import {
   Users2,
   FileText,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Footer from "../../../components/Footer";
 import SEO from "../../../components/SEO";
 import { seoData } from "../../../data/seoData";
@@ -96,18 +96,11 @@ export default function GrowthMarketing() {
               const Icon = service.icon;
 
               return (
-                <div
+                <Link
                   key={service.number}
+                  to={service.path}
                   className="service-category-card"
-                  onClick={() => navigate(service.path)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      navigate(service.path);
-                    }
-                  }}
-                  tabIndex={0}
-                  role="button"
+                  style={{ textDecoration: "none", color: "inherit" }}
                   aria-label={`Explore ${service.title}`}
                 >
                   <div className="service-card-top">
@@ -126,7 +119,7 @@ export default function GrowthMarketing() {
                     Explore
                     <ArrowUpRight size={18} strokeWidth={1.6} />
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

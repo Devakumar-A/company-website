@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
@@ -37,13 +37,14 @@ const NotFound = () => {
             </p>
 
             <div className="not-found-actions">
-              <button
+              <Link
+                to="/"
                 className="not-found-primary"
-                onClick={() => navigate("/")}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
                 Back to Home
                 <ArrowUpRight size={18} strokeWidth={2} />
-              </button>
+              </Link>
 
               <button
                 className="not-found-secondary"

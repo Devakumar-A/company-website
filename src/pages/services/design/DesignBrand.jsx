@@ -6,7 +6,7 @@ import {
   Layout,
   Sparkles,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import SEO from "../../../components/SEO";
 import { seoData } from "../../../data/seoData";
 import Footer from "../../../components/Footer";
@@ -95,18 +95,11 @@ export default function DesignBrand() {
               const Icon = service.icon;
 
               return (
-                <div
+                <Link
                   key={service.number}
+                  to={service.path}
                   className="service-category-card"
-                  onClick={() => navigate(service.path)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      navigate(service.path);
-                    }
-                  }}
-                  tabIndex={0}
-                  role="button"
+                  style={{ textDecoration: "none", color: "inherit" }}
                   aria-label={`Explore ${service.title}`}
                 >
                   <div className="service-card-top">
@@ -125,7 +118,7 @@ export default function DesignBrand() {
                     Explore
                     <ArrowUpRight size={18} strokeWidth={1.6} />
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

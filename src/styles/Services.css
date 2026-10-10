@@ -128,6 +128,7 @@
   color: #4269d9;
 }
 
+.services-heading h1,
 .services-heading h2 {
   margin: 0;
 
@@ -146,6 +147,7 @@
   color: #0b1020;
 }
 
+.services-heading h1 span,
 .services-heading h2 span {
   background:
     linear-gradient(
@@ -776,6 +778,7 @@
     letter-spacing: 0.22em;
   }
 
+  .services-heading h1,
   .services-heading h2 {
     font-size: clamp(28px, 9.5vw, 56px);
     line-height: 1.05;
@@ -923,6 +926,7 @@
       calc(100% - 24px);
   }
 
+  .services-heading h1,
   .services-heading h2 {
     font-size: clamp(30px, 10vw, 43px);
     overflow-wrap: break-word;

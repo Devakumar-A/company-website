@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   ThreeDBendCarousel,
@@ -67,7 +67,8 @@ const solutionsData = [
  * Clean white canvas with architectural grid lines, restrained lighting,
  * and high-performance 3D curved cylinder carousel.
  */
-export default function Solutions() {
+export default function Solutions({ headingTag = "h2" }) {
+  const Heading = headingTag;
   const navigate = useNavigate();
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const carouselRef = useRef(null);
@@ -100,11 +101,11 @@ export default function Solutions() {
         {/* Minimal Editorial Section Header */}
         <div className="solutions-header">
           <span className="solutions-eyebrow">OUR SOLUTIONS</span>
-          <h2 className="solutions-title">
+          <Heading className="solutions-title">
             Technology.
             <br />
             <span className="solutions-title-dim">Built around your business.</span>
-          </h2>
+          </Heading>
           <p className="solutions-subtitle">
             From digital products to intelligent systems, we build technology around real business needs.
           </p>
@@ -121,17 +122,10 @@ export default function Solutions() {
             {solutionsData.map((item) => (
               <BendCarouselItem
                 key={item.id}
+                as={Link}
+                to={item.path}
                 className="solution-card"
-                onClick={() => navigate(item.path)}
-                style={{ cursor: "pointer" }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    navigate(item.path);
-                  }
-                }}
+                style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}
                 aria-label={`View ${item.title} solution`}
               >
                 {/* [01] DIGITAL PRODUCTS */}

@@ -11,7 +11,7 @@ export default function SolutionsPage() {
   return (
     <>
       <SEO {...seoData["/solutions"]} />
-      <SolutionsSection />
+      <SolutionsSection headingTag="h1" />
       <Footer />
     </>
   );

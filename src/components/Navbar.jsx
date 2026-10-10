@@ -429,11 +429,16 @@ export default function Navbar() {
 
   const renderCTA = (extraClass = "") => (
     <a
-      href="#contact"
+      href="/contact"
       className={`cg-cta-btn ${extraClass}`}
-      onClick={(event) =>
-        navigateTo(event, "#contact")
-      }
+      onClick={(event) => {
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+          navigateTo(event, "#contact");
+        } else {
+          navigateTo(event, "/contact");
+        }
+      }}
       aria-label="Start a project with Cognolynx"
     >
       <span>Start a Project</span>
@@ -588,7 +593,6 @@ export default function Navbar() {
             </button>
 
 
-            {openMenu === "services" && (
               <div
                 className="cg-dropdown-panel cg-services-dropdown"
                 role="menu"
@@ -613,14 +617,15 @@ export default function Navbar() {
                           activeService === index;
 
                         return (
-                          <button
+                          <a
                             key={service.id}
-                            type="button"
+                            href={servicePathMap[service.title] || "/services"}
                             className={`cg-category-tab ${
                               active
                                 ? "is-active"
                                 : ""
                             }`}
+                            style={{ textDecoration: "none", color: "inherit" }}
                             onMouseEnter={() =>
                               setActiveService(
                                 index
@@ -631,11 +636,15 @@ export default function Navbar() {
                                 index
                               )
                             }
-                            onClick={() =>
+                            onClick={(event) => {
                               setActiveService(
                                 index
-                              )
-                            }
+                              );
+                              navigateTo(
+                                event,
+                                servicePathMap[service.title] || "/services"
+                              );
+                            }}
                           >
 
                             <span className="cg-tab-left">
@@ -673,7 +682,7 @@ export default function Navbar() {
                               size={16}
                             />
 
-                          </button>
+                          </a>
                         );
                       }
                     )}
@@ -812,7 +821,6 @@ export default function Navbar() {
                 </div>
 
               </div>
-            )}
 
           </div>
 
@@ -864,7 +872,6 @@ export default function Navbar() {
             </button>
 
 
-            {openMenu === "solutions" && (
               <div
                 className="cg-dropdown-panel cg-solutions-dropdown"
                 role="menu"
@@ -956,7 +963,6 @@ export default function Navbar() {
                 </div>
 
               </div>
-            )}
 
           </div>
 
@@ -1008,7 +1014,6 @@ export default function Navbar() {
             </button>
 
 
-            {openMenu === "technology" && (
               <div
                 className="cg-dropdown-panel cg-tech-dropdown"
                 role="menu"
@@ -1088,7 +1093,6 @@ export default function Navbar() {
                 </div>
 
               </div>
-            )}
 
           </div>
 

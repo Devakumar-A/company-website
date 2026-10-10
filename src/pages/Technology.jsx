@@ -11,7 +11,7 @@ export default function TechnologyPage() {
   return (
     <>
       <SEO {...seoData["/technology"]} />
-      <TechnologySection />
+      <TechnologySection headingTag="h1" />
       <Footer />
     </>
   );

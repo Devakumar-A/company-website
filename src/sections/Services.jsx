@@ -130,7 +130,8 @@ const services = [
 // 3 sets of the 15 services ensures seamless modulo wrap without any jumps
 const marqueeItems = [...services, ...services, ...services];
 
-export default function Services() {
+export default function Services({ headingTag = "h2" }) {
+  const Heading = headingTag;
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const trackRef = useRef(null);
@@ -410,11 +411,11 @@ export default function Services() {
         <div className="services-header">
           <div className="services-heading">
             <span className="services-eyebrow">WHAT WE DO</span>
-            <h2>
+            <Heading>
               Everything you need
               <br />
               <span>to move forward.</span>
-            </h2>
+            </Heading>
           </div>
 
           <div className="services-description">

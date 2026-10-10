@@ -322,6 +322,7 @@
   color: #4f9cff;
 }
 
+.technology-intro h1,
 .technology-intro h2 {
   margin: 0;
   font-size: clamp(36px, 4.2vw, 72px);
@@ -896,6 +897,7 @@
     width: 260px;
   }
 
+  .technology-intro h1,
   .technology-intro h2 {
     font-size: 44px;
   }
@@ -939,6 +941,7 @@
     transform: translateY(-50%);
   }
 
+  .technology-intro h1,
   .technology-intro h2 {
     font-size: 44px;
   }
@@ -1043,6 +1046,7 @@
     font-size: 8px;
   }
 
+  .technology-intro h1,
   .technology-intro h2 {
     font-size: clamp(28px, 8.5vw, 40px);
     line-height: 0.95;
@@ -1247,6 +1251,7 @@
     top: 66px;
   }
 
+  .technology-intro h1,
   .technology-intro h2 {
     font-size: 25px;
   }

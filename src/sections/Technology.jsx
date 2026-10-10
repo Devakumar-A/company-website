@@ -523,7 +523,8 @@ const TechnologyCore = React.memo(
    MAIN TECHNOLOGY TUNNEL SECTION
    ========================================================= */
 
-export default function Technology() {
+export default function Technology({ headingTag = "h2" }) {
+  const Heading = headingTag;
   const navigate = useNavigate();
   const sectionRef = useRef(null);
 
@@ -827,13 +828,13 @@ export default function Technology() {
             }}
           >
             <span className="technology-intro-eyebrow">THE STACK</span>
-            <h2>
+            <Heading>
               Technology
               <br />
               behind
               <br />
               what we build.
-            </h2>
+            </Heading>
             <p>
               Scroll to travel through our core technology stack and digital
               capabilities.

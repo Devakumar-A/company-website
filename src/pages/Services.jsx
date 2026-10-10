@@ -11,7 +11,7 @@ export default function ServicesPage() {
   return (
     <>
       <SEO {...seoData["/services"]} />
-      <ServicesSection />
+      <ServicesSection headingTag="h1" />
       <Footer />
     </>
   );
