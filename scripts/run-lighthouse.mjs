@@ -5,7 +5,7 @@ import path from 'path';
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 process.env.CHROME_PATH = CHROME_PATH;
 
-const routes = [
+const routes = process.argv[2] ? [process.argv[2]] : [
   '/',
   '/about',
   '/services',
@@ -42,6 +42,12 @@ for (const route of routes) {
     const lcp = reportJson.audits['largest-contentful-paint']?.displayValue || `${reportJson.audits['largest-contentful-paint']?.numericValue} ms`;
     const cls = reportJson.audits['cumulative-layout-shift']?.displayValue || `${reportJson.audits['cumulative-layout-shift']?.numericValue}`;
     const tbt = reportJson.audits['total-blocking-time']?.displayValue || `${reportJson.audits['total-blocking-time']?.numericValue} ms`;
+    const lcpAudit = reportJson.audits['largest-contentful-paint-element'];
+    console.log('LCP Audit keys:', lcpAudit ? Object.keys(lcpAudit) : 'no lcpAudit');
+    if (lcpAudit?.details) console.log('LCP details:', JSON.stringify(lcpAudit.details, null, 2));
+    const firstTable = lcpAudit?.details?.items?.find((i) => i.type === 'table' && i.items?.[0]?.node);
+    const node = firstTable?.items?.[0]?.node;
+    const lcpElement = node ? `${node.selector} ("${node.nodeLabel || node.snippet}")` : 'unknown';
 
     results.push({
       route,
@@ -52,9 +58,11 @@ for (const route of routes) {
       lcp,
       cls,
       tbt,
+      lcpElement,
     });
 
     console.log(`  -> Perf: ${perfScore} | A11y: ${a11yScore} | SEO: ${seoScore} | LCP: ${lcp} | CLS: ${cls} | TBT: ${tbt}`);
+    console.log(`  -> LCP Element: ${lcpElement}`);
   } catch (err) {
     console.error(`  Failed on ${route}:`, err.message);
   } finally {

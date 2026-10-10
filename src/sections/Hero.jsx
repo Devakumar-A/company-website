@@ -111,6 +111,8 @@ export default function Hero() {
           preload="metadata"
           disablePictureInPicture
           tabIndex={-1}
+          width="100%"
+          height="100%"
         />
 
         {/* Mobile full-bleed video */}
@@ -126,6 +128,8 @@ export default function Hero() {
           preload="metadata"
           disablePictureInPicture
           tabIndex={-1}
+          width="100%"
+          height="100%"
         />
       </div>
 
