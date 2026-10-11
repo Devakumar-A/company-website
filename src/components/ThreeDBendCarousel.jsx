@@ -39,10 +39,18 @@ export function BendCarouselItem({
 }
 
 /**
+ * Positive modulo helper
+ */
+function wrapIndex(val, n) {
+  return ((val % n) + n) % n;
+}
+
+/**
  * ThreeDBendCarousel
  * High-performance 3D curved cylinder/ribbon carousel.
  * Continuous RAF interpolation, smooth momentum, natural pointer drag,
- * mouse wheel, seamless infinite loop, and mobile vertical scroll preservation.
+ * non-hijacking wheel gestures, seamless circular infinite loop,
+ * 5-second auto-advance with smart pause, and mobile vertical scroll preservation.
  */
 export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
   {
@@ -69,6 +77,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
   const isDragging = useRef(false);
   const isGestureActive = useRef(false);
   const isHorizontalDrag = useRef(false);
+  const dragMovedRef = useRef(false);
   const dragStart = useRef({
     x: 0,
     y: 0,
@@ -80,10 +89,42 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
   const lastActiveIndexRef = useRef(initialIndex);
   const onIndexChangeRef = useRef(onIndexChange);
   const wheelSnapTimeout = useRef(null);
+  const requestTickRef = useRef(null);
+
+  // Autoplay and interaction state refs
+  const autoplayTimerRef = useRef(null);
+  const isHoveredRef = useRef(false);
+  const isFocusedRef = useRef(false);
+  const isVisibleRef = useRef(false);
+  const isTabVisibleRef = useRef(typeof document !== "undefined" ? !document.hidden : true);
+  const isReducedMotionRef = useRef(false);
 
   useEffect(() => {
     onIndexChangeRef.current = onIndexChange;
   }, [onIndexChange]);
+
+  // Autoplay condition checker
+  const canAutoplay = useCallback(() => {
+    return (
+      !isHoveredRef.current &&
+      !isFocusedRef.current &&
+      !isDragging.current &&
+      isVisibleRef.current &&
+      isTabVisibleRef.current &&
+      !isReducedMotionRef.current
+    );
+  }, []);
+
+  // Reset 5s autoplay interval so it never advances right after a user interaction
+  const resetAutoplayTimer = useCallback(() => {
+    if (autoplayTimerRef.current) clearInterval(autoplayTimerRef.current);
+    autoplayTimerRef.current = setInterval(() => {
+      if (canAutoplay()) {
+        targetPosition.current = Math.round(targetPosition.current) + 1;
+        requestTickRef.current?.();
+      }
+    }, 5000);
+  }, [canAutoplay]);
 
   // Responsive cylindrical configuration
   const getConfig = useCallback(() => {
@@ -135,25 +176,28 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
   useEffect(() => {
     const handleResize = () => {
       configRef.current = getConfig();
+      requestTickRef.current?.();
     };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, [getConfig]);
 
-  // Smooth goTo card using shortest circular distance
+  // Smooth goTo card using shortest circular distance along circular ring
   const goToCard = useCallback(
     (index) => {
       const current = currentPosition.current;
-      const currentNorm = ((Math.round(current) % itemCount) + itemCount) % itemCount;
+      const currentNorm = wrapIndex(Math.round(current), itemCount);
       let delta = index - currentNorm;
 
-      // Shortest path along circular ring
+      // Shortest path along circular ring: no reverse-spin across all cards
       if (delta > itemCount / 2) delta -= itemCount;
       if (delta < -itemCount / 2) delta += itemCount;
 
       targetPosition.current = Math.round(current) + delta;
+      resetAutoplayTimer();
+      requestTickRef.current?.();
     },
-    [itemCount]
+    [itemCount, resetAutoplayTimer]
   );
 
   // Expose imperative API for external controls
@@ -162,18 +206,25 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     () => ({
       next: () => {
         targetPosition.current = Math.round(targetPosition.current) + 1;
+        resetAutoplayTimer();
+        requestTickRef.current?.();
       },
       prev: () => {
         targetPosition.current = Math.round(targetPosition.current) - 1;
+        resetAutoplayTimer();
+        requestTickRef.current?.();
       },
       goTo: (idx) => {
         goToCard(idx);
       },
+      resetAutoplay: () => {
+        resetAutoplayTimer();
+      },
     }),
-    [goToCard]
+    [goToCard, resetAutoplayTimer]
   );
 
-  // Main 60fps/120fps RAF physics loop
+  // Main 60fps/120fps RAF physics loop & visibility observer
   useEffect(() => {
     if (stageRef.current) {
       cardElementsRef.current = Array.from(
@@ -184,13 +235,34 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
       );
     }
 
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionQuery =
+      typeof window !== "undefined" && window.matchMedia
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
+    isReducedMotionRef.current = motionQuery ? motionQuery.matches : false;
 
-    const damping = prefersReducedMotion ? 0.35 : 0.095;
+    const handleMotionChange = (e) => {
+      isReducedMotionRef.current = e.matches;
+      if (e.matches && autoplayTimerRef.current) {
+        clearInterval(autoplayTimerRef.current);
+      } else {
+        resetAutoplayTimer();
+      }
+    };
+    motionQuery?.addEventListener?.("change", handleMotionChange);
+
+    const damping = isReducedMotionRef.current ? 0.35 : 0.095;
+
+    let isRunning = false;
+    let needsUpdate = true;
 
     const tick = () => {
+      if (!isVisibleRef.current) {
+        isRunning = false;
+        animFrame.current = null;
+        return;
+      }
+
       // Smooth interpolation: currentPosition += (targetPosition - currentPosition) * damping
       const current = currentPosition.current;
       const target = targetPosition.current;
@@ -198,8 +270,14 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
 
       if (Math.abs(diff) > 0.0002) {
         currentPosition.current += diff * damping;
-      } else if (current !== target) {
-        currentPosition.current = target;
+        needsUpdate = true;
+      } else {
+        if (current !== target) {
+          currentPosition.current = target;
+          needsUpdate = true;
+        } else {
+          needsUpdate = false;
+        }
       }
 
       const pos = currentPosition.current;
@@ -211,7 +289,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
         if (!cardEl) continue;
 
         // Continuous modular offset along circular ring
-        let offset = (i - (pos % itemCount) + itemCount) % itemCount;
+        let offset = (i - wrapIndex(pos, itemCount) + itemCount) % itemCount;
         if (offset > itemCount / 2) offset -= itemCount;
 
         const absOffset = Math.abs(offset);
@@ -226,7 +304,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
         const opacity = Math.max(cfg.minOpacity, 1 - absOffset * cfg.opacityStep);
         const zIndex = Math.round(120 - absOffset * 15);
 
-        // Contrast & brightness: active center card is sharp & full saturation, surrounding cards gently desaturate/dim into Z-depth
+        // Contrast & brightness: active center card is sharp & full saturation
         const brightness = absOffset < 0.25 ? 100 : Math.max(78, Math.round(100 - absOffset * 11));
         const grayscale = absOffset < 0.25 ? 0 : Math.min(100, Math.round(absOffset * 55));
 
@@ -261,7 +339,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
       }
 
       // Check active card index and notify parent only when center changes
-      const activeIdx = ((Math.round(pos) % itemCount) + itemCount) % itemCount;
+      const activeIdx = wrapIndex(Math.round(pos), itemCount);
       if (activeIdx !== lastActiveIndexRef.current) {
         lastActiveIndexRef.current = activeIdx;
         if (onIndexChangeRef.current) {
@@ -269,16 +347,82 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
         }
       }
 
+      if (needsUpdate) {
+        animFrame.current = requestAnimationFrame(tick);
+      } else {
+        isRunning = false;
+        animFrame.current = null;
+        // Normalize stored positions while at rest so numbers stay bounded in [0, itemCount - 1]
+        // This has ZERO visual difference because wrapIndex(norm) === wrapIndex(pos)
+        const norm = wrapIndex(Math.round(currentPosition.current), itemCount);
+        currentPosition.current = norm;
+        targetPosition.current = norm;
+      }
+    };
+
+    const requestTick = () => {
+      needsUpdate = true;
+      if (isRunning || !isVisibleRef.current) return;
+      isRunning = true;
       animFrame.current = requestAnimationFrame(tick);
     };
+    requestTickRef.current = requestTick;
 
-    animFrame.current = requestAnimationFrame(tick);
-    return () => {
-      if (animFrame.current) cancelAnimationFrame(animFrame.current);
+    const stopLoop = () => {
+      isRunning = false;
+      if (animFrame.current) {
+        cancelAnimationFrame(animFrame.current);
+        animFrame.current = null;
+      }
     };
-  }, [itemCount]);
 
-  // Mouse Wheel Handling (Only activates while pointer is over the carousel)
+    // IntersectionObserver: pauses rAF loop and autoplay when off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisibleRef.current;
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          requestTick();
+          if (!wasVisible) {
+            resetAutoplayTimer();
+          }
+        } else {
+          stopLoop();
+          if (autoplayTimerRef.current) clearInterval(autoplayTimerRef.current);
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    // Tab visibility handling: pause when tab is hidden, resume when tab is active
+    const handleVisibilityChange = () => {
+      isTabVisibleRef.current = !document.hidden;
+      if (isTabVisibleRef.current && isVisibleRef.current) {
+        resetAutoplayTimer();
+        requestTick();
+      } else {
+        if (autoplayTimerRef.current) clearInterval(autoplayTimerRef.current);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      motionQuery?.removeEventListener?.("change", handleMotionChange);
+      stopLoop();
+      if (autoplayTimerRef.current) clearInterval(autoplayTimerRef.current);
+      requestTickRef.current = null;
+    };
+  }, [itemCount, resetAutoplayTimer]);
+
+  // Wheel Handling: VERTICAL SCROLL NEVER HIJACKED.
+  // Wheel/trackpad with vertical intent (|deltaY| >= |deltaX|) scrolls the page normally.
+  // Only horizontal intent (|deltaX| > |deltaY|) moves the cards.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -286,22 +430,40 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     let wheelAcc = 0;
 
     const onWheel = (e) => {
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (Math.abs(delta) < 3) return;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
 
-      // Prevent whole page vertical jump while wheeling directly on carousel
-      e.preventDefault();
+      // 1. Vertical intent: let page scroll naturally!
+      // NEVER preventDefault, NEVER mutate targetPosition.
+      if (absY >= absX) {
+        return;
+      }
 
-      // Convert wheel delta into smooth target offset velocity
+      // 2. Horizontal intent: trackpad horizontal swipe or shift+wheel
+      if (absX < 2) return;
+
+      // Prevent horizontal browser page navigation / back-swipe
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
+      resetAutoplayTimer();
+
       const sensitivity = 0.0018;
-      targetPosition.current += delta * sensitivity;
-      wheelAcc += delta;
+      targetPosition.current += e.deltaX * sensitivity;
+      wheelAcc += e.deltaX;
+      requestTickRef.current?.();
 
-      // Debounce snapping to nearest card when wheel gesture ends
       if (wheelSnapTimeout.current) clearTimeout(wheelSnapTimeout.current);
       wheelSnapTimeout.current = setTimeout(() => {
-        targetPosition.current = Math.round(targetPosition.current);
+        if (Math.abs(wheelAcc) > 80) {
+          const dir = wheelAcc > 0 ? 1 : -1;
+          targetPosition.current = Math.round(targetPosition.current + dir * 0.35);
+        } else {
+          targetPosition.current = Math.round(targetPosition.current);
+        }
         wheelAcc = 0;
+        requestTickRef.current?.();
       }, 160);
     };
 
@@ -310,7 +472,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
       el.removeEventListener("wheel", onWheel);
       if (wheelSnapTimeout.current) clearTimeout(wheelSnapTimeout.current);
     };
-  }, []);
+  }, [resetAutoplayTimer]);
 
   // Pointer Event Handlers (Desktop Mouse Drag & Mobile Touch Swipe)
   const handlePointerDown = (e) => {
@@ -319,6 +481,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     isDragging.current = true;
     isGestureActive.current = true;
     isHorizontalDrag.current = false;
+    dragMovedRef.current = false;
 
     dragStart.current = {
       x: e.clientX,
@@ -327,6 +490,8 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
       time: performance.now(),
       velocity: 0,
     };
+
+    resetAutoplayTimer();
   };
 
   const handlePointerMove = (e) => {
@@ -338,16 +503,21 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     const totalDeltaX = Math.abs(currentX - dragStart.current.x);
     const totalDeltaY = Math.abs(currentY - dragStart.current.y);
 
-    // Direction lock: preserve normal vertical page scroll on mobile
+    // Suppress card link click only when pointer moved more than ~6px
+    if (totalDeltaX > 6 || totalDeltaY > 6) {
+      dragMovedRef.current = true;
+    }
+
+    // Direction lock: preserve normal vertical page scroll on touch
     if (!isHorizontalDrag.current) {
       if (totalDeltaY > 8 && totalDeltaY > totalDeltaX) {
-        // User is scrolling the page vertically: let the browser scroll naturally
+        // User is scrolling vertically: let browser scroll naturally
         isDragging.current = false;
         isGestureActive.current = false;
         return;
       }
       if (totalDeltaX > 8 && totalDeltaX >= totalDeltaY) {
-        // User is swiping the carousel horizontally: capture pointer
+        // User is swiping horizontally: capture pointer
         isHorizontalDrag.current = true;
         if (e.currentTarget.setPointerCapture) {
           try {
@@ -371,11 +541,14 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     // Convert pixel drag to target position offset
     const spacing = configRef.current.cardSpacing;
     targetPosition.current -= deltaX / spacing;
+    resetAutoplayTimer();
+    requestTickRef.current?.();
   };
 
   const handlePointerUp = (e) => {
     if (!isDragging.current && !isGestureActive.current) return;
     isDragging.current = false;
+    resetAutoplayTimer();
 
     if (isHorizontalDrag.current) {
       // Releasing swipe continues with momentum, then smoothly snaps
@@ -388,6 +561,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
 
     isGestureActive.current = false;
     isHorizontalDrag.current = false;
+    requestTickRef.current?.();
 
     if (e?.currentTarget?.releasePointerCapture) {
       try {
@@ -398,30 +572,70 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
     }
   };
 
+  // Intercept and suppress card link navigation only if the user dragged
+  const handleClickCapture = (e) => {
+    if (dragMovedRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      setTimeout(() => {
+        dragMovedRef.current = false;
+      }, 50);
+    }
+  };
+
+  // Click on side peek cards brings them smoothly into focus
+  const handleStageClick = (e) => {
+    if (dragMovedRef.current) return;
+    const cardEl = e.target.closest("[data-bend-index]");
+    if (cardEl && cardEl.classList.contains("bend-item-inactive")) {
+      e.preventDefault();
+      const idx = parseInt(cardEl.getAttribute("data-bend-index"), 10);
+      if (!Number.isNaN(idx)) {
+        goToCard(idx);
+      }
+    }
+  };
+
   // Keyboard navigation
   const handleKeyDown = (e) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
       targetPosition.current = Math.round(targetPosition.current) + 1;
+      resetAutoplayTimer();
+      requestTickRef.current?.();
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
       targetPosition.current = Math.round(targetPosition.current) - 1;
+      resetAutoplayTimer();
+      requestTickRef.current?.();
     } else if (e.key === "Home") {
       e.preventDefault();
-      targetPosition.current = 0;
+      goToCard(0);
     } else if (e.key === "End") {
       e.preventDefault();
-      targetPosition.current = itemCount - 1;
+      goToCard(itemCount - 1);
     }
   };
 
-  const handleStageClick = (e) => {
-    const cardEl = e.target.closest("[data-bend-index]");
-    if (cardEl) {
-      const idx = parseInt(cardEl.getAttribute("data-bend-index"), 10);
-      if (!Number.isNaN(idx)) {
-        goToCard(idx);
-      }
+  // Hover pause handling
+  const handleMouseEnter = () => {
+    isHoveredRef.current = true;
+  };
+
+  const handleMouseLeave = () => {
+    isHoveredRef.current = false;
+    resetAutoplayTimer();
+  };
+
+  // Focus within pause handling
+  const handleFocus = () => {
+    isFocusedRef.current = true;
+  };
+
+  const handleBlur = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      isFocusedRef.current = false;
+      resetAutoplayTimer();
     }
   };
 
@@ -434,6 +648,10 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       tabIndex={0}
       role="region"
       aria-label={ariaLabel}
@@ -442,6 +660,7 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
         <div
           ref={stageRef}
           className="bend-carousel-stage"
+          onClickCapture={handleClickCapture}
           onClick={handleStageClick}
         >
           {items.map((child, index) =>
