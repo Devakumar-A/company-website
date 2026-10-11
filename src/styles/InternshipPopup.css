@@ -1,0 +1,242 @@
+/* ==========================================================================
+   INTERNSHIP POPUP (HOMEPAGE ONLY)
+   Floating compact card, fixed position, zero CLS, mobile bottom sheet
+   ========================================================================== */
+
+.cg-internship-popup {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 390px;
+  max-width: calc(100vw - 48px);
+  z-index: 990; /* Under navbar (1000+) but above page contents */
+  background: rgba(14, 18, 26, 0.96);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow:
+    0 24px 50px -12px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  padding: 20px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #ffffff;
+  font-family: inherit;
+  pointer-events: auto;
+  outline: none;
+  animation: cg-popup-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes cg-popup-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cg-internship-popup {
+    animation: none;
+  }
+}
+
+/* Accessible focus ring for the card when programmatically focused */
+.cg-internship-popup:focus-visible {
+  box-shadow:
+    0 24px 50px -12px rgba(0, 0, 0, 0.65),
+    0 0 0 2px #2474ff;
+}
+
+/* Header row: Badge + Close button */
+.cg-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* "Internships open" badge */
+.cg-popup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  background: rgba(23, 105, 224, 0.14);
+  border: 1px solid rgba(36, 116, 255, 0.3);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 650;
+  color: #60a5fa;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  user-select: none;
+}
+
+.cg-popup-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.85);
+  flex-shrink: 0;
+}
+
+/* Close (X) button with min 44px touch target */
+.cg-popup-close-btn {
+  width: 44px;
+  height: 44px;
+  margin: -10px -10px -10px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+  padding: 0;
+}
+
+.cg-popup-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cg-popup-close-btn:focus-visible {
+  outline: 2px solid #2474ff;
+  outline-offset: 2px;
+}
+
+/* Headline */
+.cg-popup-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
+}
+
+/* Body description */
+.cg-popup-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Action button row */
+.cg-popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* Primary CTA button (matches navbar CTA style) */
+.cg-popup-primary-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    135deg,
+    #2474ff 0%,
+    #1769e0 48%,
+    #0c49d8 100%
+  );
+  box-shadow:
+    0 8px 22px rgba(23, 105, 255, 0.24),
+    0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cg-popup-primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 28px rgba(23, 105, 255, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.24) inset;
+}
+
+.cg-popup-primary-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.cg-popup-primary-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Secondary "Maybe later" button */
+.cg-popup-secondary-btn {
+  min-height: 44px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cg-popup-secondary-btn:hover {
+  color: #ffffff;
+}
+
+.cg-popup-secondary-btn:focus-visible {
+  outline: 2px solid #2474ff;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Mobile responsive bottom sheet with 16px margins */
+@media (max-width: 640px) {
+  .cg-internship-popup {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    padding: 18px 18px 16px;
+    border-radius: 16px;
+  }
+
+  .cg-popup-title {
+    font-size: 15px;
+  }
+
+  .cg-popup-desc {
+    font-size: 12.5px;
+  }
+
+  .cg-popup-actions {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}

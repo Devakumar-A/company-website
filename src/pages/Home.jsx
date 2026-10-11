@@ -1,3 +1,4 @@
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Hero from "../sections/Hero";
@@ -7,7 +8,16 @@ import Solutions from "../sections/Solutions";
 import Technology from "../sections/Technology";
 import Footer from "../components/Footer";
 
+// Lazy-load after hydration to keep critical bundle & hydration path untouched
+const InternshipPopup = lazy(() => import("../components/InternshipPopup"));
+
 export default function Home() {
+  const [isClientMounted, setIsClientMounted] = useState(false);
+
+  useEffect(() => {
+    setIsClientMounted(true);
+  }, []);
+
   return (
     <>
       <SEO {...seoData["/"]} />
@@ -23,6 +33,12 @@ export default function Home() {
       <Technology />
 
       <Footer />
+
+      {isClientMounted && (
+        <Suspense fallback={null}>
+          <InternshipPopup />
+        </Suspense>
+      )}
     </>
   );
 }
