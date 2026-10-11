@@ -27,7 +27,7 @@ const solutionsData = [
     image: "/assets/solutions/ai-systems.jpg",
     imageWebp: "/assets/solutions/ai-systems.webp",
     alt: "AI & Intelligent Systems — Precision processor hardware and optical glass",
-    path: "/solutions/business-systems",
+    path: "/solutions/ai-systems",
   },
   {
     id: "mobile-experiences",
