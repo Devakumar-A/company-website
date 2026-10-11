@@ -6,24 +6,33 @@ export default function Hero() {
   const desktopVideoRef = useRef(null);
   const mobileVideoRef = useRef(null);
 
-  // Ensure seamless, reliable muted playback across all browsers
+  // Ensure smooth, deferrable playback without blocking initial paint or wasting data on mobile/saveData
   useEffect(() => {
-    const playSafe = (videoEl) => {
-      if (!videoEl) return;
-      videoEl.muted = true;
-      videoEl.defaultMuted = true;
-      const playPromise = videoEl.play();
+    if (typeof navigator !== "undefined" && navigator.connection?.saveData) return;
+
+    const getActiveVideo = () => {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      return isMobile ? mobileVideoRef.current : desktopVideoRef.current;
+    };
+
+    const startPlayback = () => {
+      const activeVideo = getActiveVideo();
+      if (!activeVideo) return;
+      activeVideo.muted = true;
+      activeVideo.defaultMuted = true;
+      const playPromise = activeVideo.play();
       if (playPromise !== undefined && typeof playPromise.catch === "function") {
-        playPromise.catch(() => {
-          // Autoplay fallback handling
-        });
+        playPromise.catch(() => {});
       }
     };
 
-    playSafe(desktopVideoRef.current);
-    playSafe(mobileVideoRef.current);
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      window.requestIdleCallback(startPlayback, { timeout: 2500 });
+    } else {
+      setTimeout(startPlayback, 1200);
+    }
 
-    // Keep Hero video playing naturally while visible / sliding, pause when completely off-screen
+    // Keep Hero video playing naturally while visible, pause when completely off-screen
     const heroEl = document.getElementById("hero");
     if (!heroEl) return;
 
@@ -31,14 +40,18 @@ export default function Hero() {
       (entries) => {
         const [entry] = entries;
         const isVisible = entry.isIntersecting;
-        [desktopVideoRef.current, mobileVideoRef.current].forEach((v) => {
-          if (!v) return;
+        const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 768;
+        const targetVideo = isMobileScreen ? mobileVideoRef.current : desktopVideoRef.current;
+        const otherVideo = isMobileScreen ? desktopVideoRef.current : mobileVideoRef.current;
+
+        if (otherVideo) otherVideo.pause();
+        if (targetVideo) {
           if (isVisible) {
-            v.play().catch(() => {});
+            targetVideo.play().catch(() => {});
           } else {
-            v.pause();
+            targetVideo.pause();
           }
-        });
+        }
       },
       { threshold: 0 }
     );
@@ -79,11 +92,10 @@ export default function Hero() {
           className="hero-video hero-video-desktop"
           src="/assets/background_video.mp4"
           poster="/assets/hero-video-poster-desktop.webp"
-          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           disablePictureInPicture
           tabIndex={-1}
           width="100%"
@@ -96,11 +108,10 @@ export default function Hero() {
           className="hero-video hero-video-mobile"
           src="/assets/background_video_company.mp4"
           poster="/assets/hero-video-poster-mobile.webp"
-          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           disablePictureInPicture
           tabIndex={-1}
           width="100%"

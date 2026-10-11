@@ -177,14 +177,34 @@ export default function Services({ headingTag = "h2" }) {
    * Main 60fps/120fps physics loop:
    * Combines continuous marquee auto-scrolling with user drag momentum,
    * gentle hover deceleration, and seamless modulo wrap.
+   * Pauses completely when off-screen via IntersectionObserver.
    */
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
+    let isVisible = false;
+    let isRunning = false;
     let previousTime = performance.now();
 
+    const mediaQuery =
+      typeof window !== "undefined" && window.matchMedia
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
+    let isReducedMotion = mediaQuery ? mediaQuery.matches : false;
+    const handleMotionChange = (e) => {
+      isReducedMotion = e.matches;
+    };
+    if (mediaQuery?.addEventListener) {
+      mediaQuery.addEventListener("change", handleMotionChange);
+    }
+
     const tick = (currentTime) => {
+      if (!isVisible) {
+        isRunning = false;
+        return;
+      }
+
       // Normalized delta time factor (1.0 at 60fps, ~0.5 at 120fps)
       const rawDelta = currentTime - previousTime;
       const dt = Math.min(32, Math.max(6, rawDelta)) / 16.667;
@@ -200,11 +220,11 @@ export default function Services({ headingTag = "h2" }) {
           velocityRef.current *= Math.pow(0.93, dt);
         } else {
           velocityRef.current = 0;
-          // Smooth continuous marquee cruising
-          // When hovered, slows down gently so cards are easily readable
+          // Smooth continuous marquee cruising (paused if reduced motion and not dragging)
+          const baseSpeed = isReducedMotion ? 0 : baseSpeedRef.current;
           const speed = isHoveredRef.current
-            ? baseSpeedRef.current * 0.2
-            : baseSpeedRef.current;
+            ? baseSpeed * 0.2
+            : baseSpeed;
           positionRef.current += speed * dt;
         }
       }
@@ -238,12 +258,42 @@ export default function Services({ headingTag = "h2" }) {
       animFrameIdRef.current = requestAnimationFrame(tick);
     };
 
-    animFrameIdRef.current = requestAnimationFrame(tick);
+    const startLoop = () => {
+      if (isRunning || !isVisible) return;
+      isRunning = true;
+      previousTime = performance.now();
+      animFrameIdRef.current = requestAnimationFrame(tick);
+    };
 
-    return () => {
+    const stopLoop = () => {
+      isRunning = false;
       if (animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current);
+        animFrameIdRef.current = null;
       }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+
+    const targetEl = sectionRef.current || track;
+    observer.observe(targetEl);
+
+    return () => {
+      observer.disconnect();
+      if (mediaQuery?.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleMotionChange);
+      }
+      stopLoop();
     };
   }, [getCardWidth]);
 

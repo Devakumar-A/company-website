@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/Technology.css";
 
@@ -590,7 +590,11 @@ export default function Technology({ headingTag = "h2" }) {
   ======================================================= */
 
   useEffect(() => {
+    let isIntersecting = false;
+    let isRunning = false;
+
     const handleScroll = () => {
+      if (!isIntersecting) return;
       targetProgress.current = calculateProgress();
     };
 
@@ -605,8 +609,6 @@ export default function Technology({ headingTag = "h2" }) {
     let lastProgress = -1;
     let lastMouseX = 0;
     let lastMouseY = 0;
-    let isIntersecting = false;
-    let isRunning = false;
 
     const animate = () => {
       if (!isIntersecting || !isRunning) {
@@ -896,18 +898,10 @@ export default function Technology({ headingTag = "h2" }) {
           {/* =============================================
               ACTIVE CHAPTER INFO PANEL
           ============================================= */}
-          <div
+          <Link
+            to={activeChapter.path}
             className="technology-chapter-info"
-            onClick={() => navigate(activeChapter.path)}
-            style={{ cursor: "pointer", pointerEvents: "auto" }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                navigate(activeChapter.path);
-              }
-            }}
+            style={{ textDecoration: "none", color: "inherit", cursor: "pointer", pointerEvents: "auto" }}
             aria-label={`View ${activeChapter.title} details`}
           >
             <span className="technology-chapter-number">
@@ -923,7 +917,7 @@ export default function Technology({ headingTag = "h2" }) {
 
               <p>{activeChapter.description}</p>
             </div>
-          </div>
+          </Link>
 
           {/* =============================================
               SCROLL INDICATOR
