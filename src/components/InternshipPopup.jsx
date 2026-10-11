@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../styles/InternshipPopup.css";
 
-const STORAGE_KEY = "cg_internship_popup_v1";
+const SESSION_KEY = "cg_internship_popup_session_v1";
 let memoryFallbackSeen = false;
 
 function hasSeenPopup() {
   try {
-    if (typeof window !== "undefined" && window.localStorage) {
-      return window.localStorage.getItem(STORAGE_KEY) === "1";
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      return window.sessionStorage.getItem(SESSION_KEY) === "1";
     }
   } catch {
     // Storage restricted or unavailable
@@ -19,8 +19,12 @@ function hasSeenPopup() {
 function markPopupSeen() {
   memoryFallbackSeen = true;
   try {
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      window.sessionStorage.setItem(SESSION_KEY, "1");
+    }
+    // Clean up legacy localStorage key if present
     if (typeof window !== "undefined" && window.localStorage) {
-      window.localStorage.setItem(STORAGE_KEY, "1");
+      window.localStorage.removeItem("cg_internship_popup_v1");
     }
   } catch {
     // Storage restricted or unavailable
@@ -134,6 +138,7 @@ export default function InternshipPopup() {
   }, [isOpen]);
 
   const handleClose = () => {
+    markPopupSeen();
     setIsOpen(false);
     if (
       previousActiveElement.current &&
