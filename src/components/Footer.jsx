@@ -74,6 +74,7 @@ const linkRouteMap = {
   About: "/about",
   Services: "/services",
   Solutions: "/solutions",
+  Work: "/case-studies",
   Contact: "/contact",
   Careers: "/careers",
   Career: "/careers",
@@ -83,6 +84,17 @@ const linkRouteMap = {
   Support: "/support",
   "Case Studies": "/case-studies",
   Blog: "/blog",
+  "Digital Products": "/solutions/digital-products",
+  "AI Systems": "/solutions/ai-systems",
+  "Mobile Experiences": "/solutions/mobile-experiences",
+  "Design & Brand": "/solutions/design-brand",
+  "Growth & Marketing": "/solutions/growth-marketing",
+  "Software Development": "/services/software-engineering/software-development",
+  "Web Development": "/services/web-digital/website-development",
+  "Mobile Applications": "/services/software-engineering",
+  "AI & Automation": "/solutions/ai-systems",
+  "UI/UX Design": "/services/design-brand/ui-ux-design",
+  "Digital Marketing": "/services/growth-marketing/digital-marketing",
 };
 
 const socialLinks = [

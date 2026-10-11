@@ -9,7 +9,8 @@
   min-height: auto;
 
   overflow: hidden;
-  contain: paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 850px;
 
   background:
     radial-gradient(

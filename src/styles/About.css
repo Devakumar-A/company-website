@@ -114,7 +114,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  will-change: transform;
 }
 
 .about-logo-halo {
@@ -158,20 +157,39 @@
   user-select: none;
   pointer-events: none;
   -webkit-user-drag: none;
-  will-change: transform, opacity, filter;
+  transition: transform 1.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.45s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Black Piece: Crisp depth contrast */
+/* Black Piece: Crisp depth contrast - enters from left */
 .about-piece-black {
   z-index: 3;
-  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
+  transform: translate3d(-95px, -8px, 0);
+  opacity: 0;
+  filter: blur(5px) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
 }
 
-/* Purple Piece: Restrained high-tech neon glow */
+/* Purple Piece: Restrained high-tech neon glow - enters from right */
 .about-piece-purple {
   z-index: 4;
-  filter: drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
-          drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
+  transform: translate3d(95px, 8px, 0);
+  opacity: 0;
+  filter: blur(5px) drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
+                    drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
+}
+
+.about-in-view .about-piece-black {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  filter: blur(0px) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
+}
+
+.about-in-view .about-piece-purple {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  filter: blur(0px) drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
+                    drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
 }
 
 /* =========================================================
@@ -185,7 +203,6 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  will-change: transform;
 }
 
 /* =========================================================
@@ -197,12 +214,17 @@
 .about-split-right {
   display: inline-flex;
   align-items: center;
-  will-change: transform, opacity, filter;
+  transition: transform 1.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.45s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .about-eyebrow-left {
   color: #080d1a;
   gap: 8px;
+  transform: translate3d(-45px, 0, 0);
+  opacity: 0;
+  filter: blur(4px);
 }
 
 .about-eyebrow-right {
@@ -210,10 +232,23 @@
   font-weight: 800;
   letter-spacing: 0.28em;
   padding-left: 6px;
+  transform: translate3d(45px, 0, 0);
+  opacity: 0;
+  filter: blur(4px);
+}
+
+.about-in-view .about-eyebrow-left,
+.about-in-view .about-eyebrow-right {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  filter: blur(0px);
 }
 
 .about-statement-left {
   color: #080d1a;
+  transform: translate3d(-80px, 0, 0);
+  opacity: 0;
+  filter: blur(5px);
 }
 
 .about-statement-right {
@@ -222,6 +257,16 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  transform: translate3d(80px, 0, 0);
+  opacity: 0;
+  filter: blur(5px);
+}
+
+.about-in-view .about-statement-left,
+.about-in-view .about-statement-right {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  filter: blur(0px);
 }
 
 .about-pillars-left {
@@ -283,6 +328,18 @@
   color: #475569;
   letter-spacing: -0.01em;
   font-weight: 400;
+  transform: translate3d(0, 16px, 0);
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-description:nth-of-type(1) {
+  transition-delay: 0.12s;
+}
+
+.about-description:nth-of-type(2) {
+  transition-delay: 0.22s;
 }
 
 /* Founder Statement Callout Card */
@@ -293,6 +350,16 @@
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.045) 0%, rgba(37, 99, 235, 0.02) 100%);
   border-radius: 0 12px 12px 0;
   box-shadow: 0 2px 12px rgba(10, 15, 30, 0.03);
+  transform: translate3d(0, 16px, 0);
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.32s,
+              opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.32s;
+}
+
+.about-in-view .about-description,
+.about-in-view .about-founder-box {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
 }
 
 .about-founder-belief {

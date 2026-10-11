@@ -4088,8 +4088,6 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-
-  will-change: background, box-shadow, border-color;
 }
 
 /* --------------------------------------------------------------------------

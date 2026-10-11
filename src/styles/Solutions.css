@@ -9,7 +9,8 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
-  contain: paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 850px;
   background: #ffffff;
   color: #080d1a;
   font-family:
