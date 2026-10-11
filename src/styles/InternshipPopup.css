@@ -1,98 +1,105 @@
 /* ==========================================================================
-   INTERNSHIP POPUP (HOMEPAGE ONLY)
-   Floating compact card, fixed position, zero CLS, mobile bottom sheet
+   COGNOLYNX INTERNSHIP CAMPAIGN POPUP (CENTERED DIALOG)
+   Clean, brand-authentic, solid dark card with centered scrim overlay
    ========================================================================== */
 
-.cg-internship-popup {
+/* Fixed Scrim Overlay */
+.cg-popup-scrim {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 390px;
-  max-width: calc(100vw - 48px);
-  z-index: 990; /* Under navbar (1000+) but above page contents */
-  background: rgba(14, 18, 26, 0.96);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  box-shadow:
-    0 24px 50px -12px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-  padding: 20px 22px 18px;
+  inset: 0;
+  z-index: 1050; /* Above all content and standard navbar */
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  color: #ffffff;
-  font-family: inherit;
-  pointer-events: auto;
-  outline: none;
-  animation: cg-popup-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 20px;
+  animation: cg-scrim-fade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity;
 }
 
-@keyframes cg-popup-enter {
+@keyframes cg-scrim-fade {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+  }
+}
+
+/* Centered Dialog Card */
+.cg-popup-card {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background: #0d121c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  padding: 32px 34px 30px;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  font-family: inherit;
+  outline: none;
+  animation: cg-card-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+  box-sizing: border-box;
+}
+
+@keyframes cg-card-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cg-internship-popup {
+  .cg-popup-scrim,
+  .cg-popup-card {
     animation: none;
   }
 }
 
-/* Accessible focus ring for the card when programmatically focused */
-.cg-internship-popup:focus-visible {
-  box-shadow:
-    0 24px 50px -12px rgba(0, 0, 0, 0.65),
-    0 0 0 2px #2474ff;
-}
-
-/* Header row: Badge + Close button */
-.cg-popup-header {
+/* Top bar: Kicker & Close button */
+.cg-popup-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
-/* "Internships open" badge */
-.cg-popup-badge {
-  display: inline-flex;
+.cg-popup-brand-row {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 4px 10px;
-  background: rgba(23, 105, 224, 0.14);
-  border: 1px solid rgba(36, 116, 255, 0.3);
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 650;
-  color: #60a5fa;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-  user-select: none;
+  gap: 9px;
 }
 
-.cg-popup-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #3b82f6;
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.85);
-  flex-shrink: 0;
+.cg-popup-logo {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+.cg-popup-kicker {
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  line-height: 1;
 }
 
 /* Close (X) button with min 44px touch target */
 .cg-popup-close-btn {
   width: 44px;
   height: 44px;
-  margin: -10px -10px -10px 0;
+  margin: -12px -12px -12px 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +108,7 @@
   border-radius: 10px;
   color: rgba(255, 255, 255, 0.55);
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.15s ease, background 0.15s ease;
   padding: 0;
 }
 
@@ -115,37 +122,70 @@
   outline-offset: 2px;
 }
 
-/* Headline */
-.cg-popup-title {
+/* Two-line Headline */
+.cg-popup-headline {
   margin: 0;
-  font-size: 16px;
+  font-size: 27px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cg-popup-headline-sub {
+  color: #cbd5e1;
   font-weight: 700;
-  line-height: 1.35;
-  color: #f8fafc;
-  letter-spacing: -0.01em;
 }
 
-/* Body description */
-.cg-popup-desc {
-  margin: 0;
-  font-size: 13px;
+/* Oversized "FREE" Centerpiece */
+.cg-popup-free-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 12px 0 14px;
+  user-select: none;
+}
+
+.cg-popup-free-text {
+  font-size: 64px;
+  font-weight: 950;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  color: #2474ff; /* Brand accent color */
+}
+
+/* Body line */
+.cg-popup-body {
+  margin: 0 0 10px;
+  font-size: 13.5px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.72);
+  color: #94a3b8;
 }
 
-/* Action button row */
+/* Urgency line */
+.cg-popup-urgency {
+  margin: 0 0 22px;
+  font-size: 13px;
+  font-weight: 650;
+  color: #f1f5f9;
+  letter-spacing: -0.005em;
+}
+
+/* Actions Row */
 .cg-popup-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 4px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
-/* Primary CTA button (matches navbar CTA style) */
-.cg-popup-primary-btn {
-  min-height: 44px;
-  padding: 0 18px;
+/* Primary CTA Button */
+.cg-popup-cta-btn {
+  min-height: 46px;
+  padding: 0 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -159,84 +199,94 @@
     #0c49d8 100%
   );
   box-shadow:
-    0 8px 22px rgba(23, 105, 255, 0.24),
-    0 1px 0 rgba(255, 255, 255, 0.2) inset;
+    0 8px 24px rgba(23, 105, 255, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.22) inset;
   color: #ffffff;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.005em;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.cg-popup-primary-btn:hover {
+.cg-popup-cta-btn:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 12px 28px rgba(23, 105, 255, 0.35),
-    0 1px 0 rgba(255, 255, 255, 0.24) inset;
+    0 12px 28px rgba(23, 105, 255, 0.38),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
 }
 
-.cg-popup-primary-btn:active {
+.cg-popup-cta-btn:active {
   transform: translateY(0) scale(0.98);
 }
 
-.cg-popup-primary-btn:focus-visible {
+.cg-popup-cta-btn:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 
-/* Secondary "Maybe later" button */
-.cg-popup-secondary-btn {
+/* Secondary "Not now" link button */
+.cg-popup-secondary-link {
   min-height: 44px;
-  padding: 0 12px;
+  padding: 0 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 12.5px;
-  font-weight: 500;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 550;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
-.cg-popup-secondary-btn:hover {
-  color: #ffffff;
+.cg-popup-secondary-link:hover {
+  color: #e2e8f0;
 }
 
-.cg-popup-secondary-btn:focus-visible {
+.cg-popup-secondary-link:focus-visible {
   outline: 2px solid #2474ff;
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Mobile responsive bottom sheet with 16px margins */
+/* Mobile responsive centering with 20px side margins and max-height 85vh */
 @media (max-width: 640px) {
-  .cg-internship-popup {
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    width: auto;
-    max-width: calc(100vw - 32px);
-    padding: 18px 18px 16px;
+  .cg-popup-scrim {
+    padding: 16px 20px;
+  }
+
+  .cg-popup-card {
+    max-width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px 22px 22px;
     border-radius: 16px;
   }
 
-  .cg-popup-title {
-    font-size: 15px;
+  .cg-popup-headline {
+    font-size: 22px;
   }
 
-  .cg-popup-desc {
-    font-size: 12.5px;
+  .cg-popup-free-text {
+    font-size: 52px;
+  }
+
+  .cg-popup-body {
+    font-size: 13px;
+  }
+
+  .cg-popup-urgency {
+    margin-bottom: 18px;
   }
 
   .cg-popup-actions {
     flex-direction: row;
-    justify-content: flex-start;
+    gap: 12px;
   }
 }

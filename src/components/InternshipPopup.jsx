@@ -30,6 +30,7 @@ function markPopupSeen() {
 export default function InternshipPopup() {
   const [isOpen, setIsOpen] = useState(false);
   const cardRef = useRef(null);
+  const scrimRef = useRef(null);
   const previousActiveElement = useRef(null);
 
   // Trigger once when About section scrolls into view (~35% visible) after ~600ms
@@ -73,25 +74,61 @@ export default function InternshipPopup() {
     };
   }, []);
 
-  // Accessibility & Escape key handler
+  // Background scroll lock & Focus trap while open
   useEffect(() => {
     if (!isOpen) return;
 
+    // Save previous active element for restoration on close
     previousActiveElement.current = document.activeElement;
 
+    // Scroll lock background
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Focus the card without scrolling page
     requestAnimationFrame(() => {
       cardRef.current?.focus({ preventScroll: true });
     });
 
+    // Keydown handler: Escape to close + Tab key focus trap
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        event.stopPropagation();
+        event.preventDefault();
         handleClose();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        if (!cardRef.current) return;
+        const focusable = cardRef.current.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (event.shiftKey) {
+          if (
+            document.activeElement === firstElement ||
+            document.activeElement === cardRef.current
+          ) {
+            event.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+          }
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
@@ -110,79 +147,111 @@ export default function InternshipPopup() {
     }
   };
 
+  const handleScrimClick = (event) => {
+    if (event.target === scrimRef.current) {
+      handleClose();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div
-      ref={cardRef}
-      className="cg-internship-popup"
-      role="dialog"
-      aria-labelledby="cg-popup-title"
-      aria-describedby="cg-popup-desc"
-      aria-modal="false"
-      tabIndex={-1}
+      ref={scrimRef}
+      className="cg-popup-scrim"
+      onClick={handleScrimClick}
+      aria-hidden="false"
     >
-      {/* Top Header: Badge + Close button */}
-      <div className="cg-popup-header">
-        <div className="cg-popup-badge">
-          <span className="cg-popup-badge-dot" aria-hidden="true" />
-          <span>Internships open</span>
+      <div
+        ref={cardRef}
+        className="cg-popup-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cg-popup-title"
+        aria-describedby="cg-popup-desc"
+        tabIndex={-1}
+      >
+        {/* Top bar: Brand + Kicker + Close button */}
+        <div className="cg-popup-top-bar">
+          <div className="cg-popup-brand-row">
+            <img
+              src="/assets/logo.webp"
+              alt=""
+              className="cg-popup-logo"
+              width="18"
+              height="18"
+              aria-hidden="true"
+            />
+            <span className="cg-popup-kicker">
+              COGNOLYNX INTERNSHIP PROGRAM
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="cg-popup-close-btn"
+            onClick={handleClose}
+            aria-label="Close dialog"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
         </div>
 
-        <button
-          type="button"
-          className="cg-popup-close-btn"
-          onClick={handleClose}
-          aria-label="Close internship popup"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+        {/* Big headline */}
+        <h2 id="cg-popup-title" className="cg-popup-headline">
+          <span>Internships are open.</span>
+          <span className="cg-popup-headline-sub">And they're free.</span>
+        </h2>
+
+        {/* Bold "FREE" centerpiece */}
+        <div className="cg-popup-free-wrap" aria-hidden="true">
+          <span className="cg-popup-free-text">FREE</span>
+        </div>
+
+        {/* Short body */}
+        <p id="cg-popup-desc" className="cg-popup-body">
+          Learn by working on real software, design and digital projects with the
+          Cognolynx team.
+        </p>
+
+        {/* Urgency */}
+        <p className="cg-popup-urgency">Register soon.</p>
+
+        {/* Actions */}
+        <div className="cg-popup-actions">
+          <Link
+            to="/careers/apply"
+            className="cg-popup-cta-btn"
+            onClick={() => {
+              markPopupSeen();
+              setIsOpen(false);
+            }}
+            aria-label="Register for Free"
           >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
-        </button>
-      </div>
+            Register for Free →
+          </Link>
 
-      {/* Copy */}
-      <h2 id="cg-popup-title" className="cg-popup-title">
-        Build real products. Start your career here.
-      </h2>
-
-      <p id="cg-popup-desc" className="cg-popup-desc">
-        Join Cognolynx as an intern and work on real software, design and digital
-        projects with an engineering team that ships.
-      </p>
-
-      {/* Actions */}
-      <div className="cg-popup-actions">
-        <Link
-          to="/careers/apply"
-          className="cg-popup-primary-btn"
-          onClick={() => {
-            markPopupSeen();
-            setIsOpen(false);
-          }}
-          aria-label="Apply for Internship"
-        >
-          Apply for Internship →
-        </Link>
-
-        <button
-          type="button"
-          className="cg-popup-secondary-btn"
-          onClick={handleClose}
-        >
-          Maybe later
-        </button>
+          <button
+            type="button"
+            className="cg-popup-secondary-link"
+            onClick={handleClose}
+          >
+            Not now
+          </button>
+        </div>
       </div>
     </div>
   );
