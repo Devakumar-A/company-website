@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Menu,
@@ -428,27 +428,20 @@ export default function Navbar() {
      ========================================================================== */
 
   const renderCTA = (extraClass = "") => (
-    <a
-      href="/contact"
+    <Link
+      to="/careers/apply"
       className={`cg-cta-btn ${extraClass}`}
-      onClick={(event) => {
-        const contactSection = document.getElementById("contact");
-        if (contactSection) {
-          navigateTo(event, "#contact");
-        } else {
-          navigateTo(event, "/contact");
-        }
-      }}
-      aria-label="Start a project with Cognolynx"
+      onClick={() => setMobileOpen(false)}
+      aria-label="Apply for Internship at Cognolynx"
     >
-      <span>Start a Project</span>
+      <span>Apply for Internship</span>
 
       <ArrowUpRight
         className="cg-cta-arrow"
         size={17}
         strokeWidth={2}
       />
-    </a>
+    </Link>
   );
 
 
