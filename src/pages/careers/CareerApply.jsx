@@ -19,39 +19,12 @@ import SEO from "../../components/SEO";
 import { seoData } from "../../data/seoData";
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
+import {
+  INTERNSHIP_DOMAINS,
+  DOMAIN_SPECIALIZATIONS_MAP,
+} from "../../data/internshipDomains";
 
 import "../../styles/CareerApply.css";
-
-/* =========================================================
-   INTERNSHIP DOMAINS
-========================================================= */
-
-const domainOptions = [
-  "Python Development",
-  "Java Development",
-  "C / C++ Development",
-  "Full Stack Web Development",
-  "Frontend Web Development",
-  "Backend Web Development",
-  "React.js Development",
-  "Node.js Development",
-  "Mobile App Development",
-  "Artificial Intelligence & Machine Learning",
-  "Generative AI & LLM",
-  "Data Science & Data Analytics",
-  "Computer Vision",
-  "Natural Language Processing (NLP)",
-  "Cloud Computing",
-  "DevOps",
-  "Cybersecurity & Ethical Hacking",
-  "Database Management",
-  "UI/UX Design",
-  "Software Testing & QA",
-  "Internet of Things (IoT)",
-  "Embedded Systems",
-  "Blockchain & Web3",
-  "Game Development",
-];
 
 /* =========================================================
    FILE CONFIGURATION
@@ -97,6 +70,7 @@ export default function CareerApply() {
     email: "",
     phone: "",
     domain: "",
+    specialization: "",
     college: "",
     city: "",
     state: "",
@@ -109,6 +83,10 @@ export default function CareerApply() {
   const [submittedData, setSubmittedData] = useState(null);
   const [error, setError] = useState("");
 
+  const availableSpecializations = formData.domain
+    ? DOMAIN_SPECIALIZATIONS_MAP[formData.domain] || []
+    : [];
+
   /* =======================================================
      HANDLE INPUT
   ======================================================= */
@@ -118,6 +96,19 @@ export default function CareerApply() {
     setFormData((previous) => ({
       ...previous,
       [name]: value,
+    }));
+
+    if (error) {
+      setError("");
+    }
+  };
+
+  const handleDomainChange = (event) => {
+    const selectedDomain = event.target.value;
+    setFormData((previous) => ({
+      ...previous,
+      domain: selectedDomain,
+      specialization: "", // Requirement 4: Immediately reset previously selected specialization
     }));
 
     if (error) {
@@ -168,7 +159,11 @@ export default function CareerApply() {
 
   const validateForm = () => {
     if (!formData.domain) {
-      return "Please select your preferred internship domain.";
+      return "Please select an internship domain.";
+    }
+
+    if (!formData.specialization) {
+      return "Please select your specialization.";
     }
 
     if (!formData.fullName.trim()) {
@@ -264,11 +259,12 @@ export default function CareerApply() {
       uploadedResumePath = resumePath;
 
       /* Step 3: Insert Application into Database */
+      const combinedDomain = `${formData.domain} - ${formData.specialization}`;
       const applicationPayload = {
         full_name: formData.fullName.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim().toLowerCase(),
-        domain: formData.domain,
+        domain: combinedDomain,
         college: formData.college.trim(),
         city: formData.city.trim(),
         state: formData.state.trim(),
@@ -278,9 +274,25 @@ export default function CareerApply() {
         status: "submitted",
       };
 
-      const { error: databaseError } = await supabase
+      let { error: databaseError } = await supabase
         .from("internship_applications")
-        .insert(applicationPayload);
+        .insert({
+          ...applicationPayload,
+          specialization: formData.specialization,
+        });
+
+      if (databaseError) {
+        if (
+          databaseError.message?.toLowerCase().includes("specialization") ||
+          databaseError.code === "PGRST204" ||
+          databaseError.code === "42703"
+        ) {
+          const { error: fallbackError } = await supabase
+            .from("internship_applications")
+            .insert(applicationPayload);
+          databaseError = fallbackError;
+        }
+      }
 
       if (databaseError) {
         if (uploadedResumePath) {
@@ -298,6 +310,7 @@ export default function CareerApply() {
         name: formData.fullName.trim(),
         email: formData.email.trim().toLowerCase(),
         domain: formData.domain,
+        specialization: formData.specialization,
         date: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "short",
@@ -312,6 +325,7 @@ export default function CareerApply() {
         email: "",
         phone: "",
         domain: "",
+        specialization: "",
         college: "",
         city: "",
         state: "",
@@ -367,14 +381,18 @@ export default function CareerApply() {
 
                 <p className="intern-success-desc">
                   Thank you, <strong>{submittedData?.name || "Applicant"}</strong>. Your application for the{" "}
-                  <strong>{submittedData?.domain}</strong> internship has been submitted successfully to Cognolynx.
+                  <strong>{submittedData?.domain} ({submittedData?.specialization})</strong> internship has been submitted successfully to Cognolynx.
                 </p>
 
                 {submittedData && (
                   <div className="intern-success-details">
                     <div className="intern-success-row">
-                      <span className="label">Selected Track:</span>
+                      <span className="label">Selected Domain:</span>
                       <span className="value">{submittedData.domain}</span>
+                    </div>
+                    <div className="intern-success-row">
+                      <span className="label">Specialization:</span>
+                      <span className="value">{submittedData.specialization}</span>
                     </div>
                     <div className="intern-success-row">
                       <span className="label">Registered Email:</span>
@@ -517,42 +535,85 @@ export default function CareerApply() {
             )}
 
             <form onSubmit={handleSubmit} noValidate>
-              {/* CARD 1: DOMAIN SELECTION */}
+              {/* CARD 1: DOMAIN & SPECIALIZATION SELECTION */}
               <div className="intern-form-card">
                 <div className="intern-section-header">
                   <div className="intern-step-num">01</div>
                   <div className="intern-step-title">
-                    <h2>Choose Your Domain</h2>
-                    <p>Select the technical specialization that aligns with your skillset and ambitions.</p>
+                    <h2>Choose Your Domain &amp; Specialization</h2>
+                    <p>Select your primary technical discipline, then choose your focused specialization track.</p>
                   </div>
                 </div>
 
-                <div className="intern-grid-1">
+                <div className="intern-grid-2">
+                  {/* Dropdown 1: Main Internship Domain */}
                   <div className="intern-field">
                     <label htmlFor="internDomain" className="intern-label">
                       <span>
-                        Internship Domain <span className="required">*</span>
+                        Select Internship Domain <span className="required">*</span>
                       </span>
-                      <span className="optional">{domainOptions.length} tracks available</span>
+                      <span className="optional">{INTERNSHIP_DOMAINS.length} domains</span>
                     </label>
 
                     <select
                       id="internDomain"
                       name="domain"
                       value={formData.domain}
-                      onChange={handleChange}
+                      onChange={handleDomainChange}
                       className="intern-select"
                       required
+                      aria-label="Select Internship Domain"
+                      aria-required="true"
                     >
-                      <option value="">Select your preferred track</option>
-                      {domainOptions.map((domain) => (
+                      <option value="">Select Internship Domain</option>
+                      {INTERNSHIP_DOMAINS.map((domain) => (
                         <option key={domain} value={domain}>
                           {domain}
                         </option>
                       ))}
                     </select>
                     <p className="intern-field-hint">
-                      Projects and mentor assignments will be custom-tailored to this domain.
+                      Choose your primary technical discipline.
+                    </p>
+                  </div>
+
+                  {/* Dropdown 2: Dependent Specialization */}
+                  <div className="intern-field">
+                    <label htmlFor="internSpecialization" className="intern-label">
+                      <span>
+                        Select Specialization <span className="required">*</span>
+                      </span>
+                      <span className="optional">
+                        {formData.domain
+                          ? `${availableSpecializations.length} tracks`
+                          : "Select domain first"}
+                      </span>
+                    </label>
+
+                    <select
+                      id="internSpecialization"
+                      name="specialization"
+                      value={formData.specialization}
+                      onChange={handleChange}
+                      className="intern-select"
+                      disabled={!formData.domain}
+                      required
+                      aria-label="Select Specialization"
+                      aria-required="true"
+                    >
+                      <option value="">
+                        {formData.domain ? "Choose a specialization" : "Select a domain first"}
+                      </option>
+                      {availableSpecializations.map((spec) => (
+                        <option key={spec} value={spec}>
+                          {spec}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="intern-field-hint">
+                      {formData.domain
+                        ? "Projects and mentor assignments will be tailored to this track."
+                        : "Select an internship domain above to unlock specialization options."}
                     </p>
                   </div>
                 </div>
