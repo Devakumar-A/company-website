@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { getJsonLdForRoute } from "../data/seoData";
 
-const SITE_URL = "https://cognolynx.com";
+const SITE_URL = "https://cognolynx.tech";
 const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.png`;
 
 export default function SEO({

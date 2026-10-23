@@ -249,13 +249,23 @@ export default function Navbar() {
 
 
   /* ==========================================================================
-     SCROLL STATE
+     SCROLL STATE (THROTTLED TO 60/120FPS RAF)
      ========================================================================== */
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateScroll = () => {
       const scrolled = window.scrollY > 24;
       setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
     };
 
     handleScroll();
@@ -1442,11 +1452,6 @@ export default function Navbar() {
                 <ArrowUpRight size={17} />
               </a>
             </div>
-          </div>
-
-          {/* FIXED BOTTOM CTA — ALWAYS VISIBLE WITHOUT COVERING CONTENT */}
-          <div className="cg-mobile-cta-bar">
-            {renderCTA("cg-mobile-fixed-cta")}
           </div>
         </div>
       )}

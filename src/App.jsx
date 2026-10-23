@@ -56,6 +56,7 @@ const CertificateVerify = lazyWithPreload(() => import("./pages/certificate/Cert
 const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazyWithPreload(() => import("./pages/TermsConditions"));
 const Support = lazyWithPreload(() => import("./pages/Support"));
+const FAQ = lazyWithPreload(() => import("./pages/FAQ"));
 const CaseStudies = lazyWithPreload(() => import("./pages/CaseStudies"));
 const Blog = lazyWithPreload(() => import("./pages/Blog"));
 const NotFound = lazyWithPreload(() => import("./pages/NotFound"));
@@ -123,6 +124,8 @@ const routePreloadMap = {
   "/terms-conditions": TermsConditions,
   "/terms": TermsConditions,
   "/support": Support,
+  "/faq": FAQ,
+  "/faqs": FAQ,
   "/case-studies": CaseStudies,
   "/blog": Blog,
 
@@ -374,6 +377,14 @@ export default function App() {
             <Route
               path="/support"
               element={<Support />}
+            />
+            <Route
+              path="/faq"
+              element={<FAQ />}
+            />
+            <Route
+              path="/faqs"
+              element={<FAQ />}
             />
 
             {/* Case Studies */}

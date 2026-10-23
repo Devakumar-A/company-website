@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import "../styles/InternshipPopup.css";
 
@@ -7,8 +7,14 @@ let memoryFallbackSeen = false;
 
 function hasSeenPopup() {
   try {
-    if (typeof window !== "undefined" && window.sessionStorage) {
-      return window.sessionStorage.getItem(SESSION_KEY) === "1";
+    if (typeof window !== "undefined") {
+      // Allow manual query param override for testing (?popup=1)
+      if (new URLSearchParams(window.location.search).get("popup") === "1") {
+        return false;
+      }
+      if (window.sessionStorage) {
+        return window.sessionStorage.getItem(SESSION_KEY) === "1";
+      }
     }
   } catch {
     // Storage restricted or unavailable
@@ -22,7 +28,6 @@ function markPopupSeen() {
     if (typeof window !== "undefined" && window.sessionStorage) {
       window.sessionStorage.setItem(SESSION_KEY, "1");
     }
-    // Clean up legacy localStorage key if present
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.removeItem("cg_internship_popup_v1");
     }
@@ -32,12 +37,32 @@ function markPopupSeen() {
 }
 
 export default function InternshipPopup() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).get("popup") === "1";
+    }
+    return false;
+  });
   const cardRef = useRef(null);
   const scrimRef = useRef(null);
   const previousActiveElement = useRef(null);
 
-  // Trigger once when About section scrolls into view (~35% visible) after ~600ms
+  const handleClose = useCallback(() => {
+    markPopupSeen();
+    setIsOpen(false);
+    if (
+      previousActiveElement.current &&
+      typeof previousActiveElement.current.focus === "function"
+    ) {
+      try {
+        previousActiveElement.current.focus({ preventScroll: true });
+      } catch {
+        // Element may no longer exist
+      }
+    }
+  }, []);
+
+  // Trigger when About section is scrolled into view (~30% visible) or safety timer
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -47,34 +72,41 @@ export default function InternshipPopup() {
     if (hasSeenPopup()) return;
 
     const aboutEl = document.getElementById("about");
-    if (!aboutEl) return;
-
     let delayTimer = null;
+    let observer = null;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry && entry.isIntersecting && entry.intersectionRatio >= 0.35) {
-          observer.disconnect();
+    if (aboutEl) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry && entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+            observer.disconnect();
 
-          delayTimer = setTimeout(() => {
-            // Verify current route is still homepage and not careers/apply
-            if (window.location.pathname === "/" && !hasSeenPopup()) {
-              markPopupSeen();
-              setIsOpen(true);
-            }
-          }, 600);
-        }
-      },
-      {
-        threshold: [0.35],
+            delayTimer = setTimeout(() => {
+              if (window.location.pathname === "/" && !hasSeenPopup()) {
+                markPopupSeen();
+                setIsOpen(true);
+              }
+            }, 500);
+          }
+        },
+        { threshold: [0.3] }
+      );
+
+      observer.observe(aboutEl);
+    }
+
+    // Safety fallback: display after 7 seconds on homepage if user hasn't scrolled
+    const safetyTimer = setTimeout(() => {
+      if (window.location.pathname === "/" && !hasSeenPopup()) {
+        markPopupSeen();
+        setIsOpen(true);
       }
-    );
-
-    observer.observe(aboutEl);
+    }, 7000);
 
     return () => {
-      observer.disconnect();
+      if (observer) observer.disconnect();
       if (delayTimer) clearTimeout(delayTimer);
+      clearTimeout(safetyTimer);
     };
   }, []);
 
@@ -82,19 +114,15 @@ export default function InternshipPopup() {
   useEffect(() => {
     if (!isOpen) return;
 
-    // Save previous active element for restoration on close
     previousActiveElement.current = document.activeElement;
 
-    // Scroll lock background
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    // Focus the card without scrolling page
     requestAnimationFrame(() => {
       cardRef.current?.focus({ preventScroll: true });
     });
 
-    // Keydown handler: Escape to close + Tab key focus trap
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -135,22 +163,7 @@ export default function InternshipPopup() {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
-
-  const handleClose = () => {
-    markPopupSeen();
-    setIsOpen(false);
-    if (
-      previousActiveElement.current &&
-      typeof previousActiveElement.current.focus === "function"
-    ) {
-      try {
-        previousActiveElement.current.focus({ preventScroll: true });
-      } catch {
-        // Element may no longer exist
-      }
-    }
-  };
+  }, [isOpen, handleClose]);
 
   const handleScrimClick = (event) => {
     if (event.target === scrimRef.current) {
@@ -176,87 +189,139 @@ export default function InternshipPopup() {
         aria-describedby="cg-popup-desc"
         tabIndex={-1}
       >
-        {/* Top bar: Brand + Kicker + Close button */}
-        <div className="cg-popup-top-bar">
-          <div className="cg-popup-brand-row">
-            <img
-              src="/assets/logo.webp"
-              alt=""
-              className="cg-popup-logo"
-              width="18"
-              height="18"
-              aria-hidden="true"
-            />
-            <span className="cg-popup-kicker">
-              COGNOLYNX INTERNSHIP PROGRAM
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className="cg-popup-close-btn"
-            onClick={handleClose}
-            aria-label="Close dialog"
+        {/* Top-Right Clean Minimalist 'X' Close Button */}
+        <button
+          type="button"
+          className="cg-popup-close-btn"
+          onClick={handleClose}
+          aria-label="Close dialog"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        {/* Brand Row: Logo Icon + COGNOLYNX */}
+        <div className="cg-popup-brand-row">
+          <picture>
+            <source srcSet="/assets/logo.webp" type="image/webp" />
+            <img
+              src="/assets/logo.png"
+              alt="Cognolynx"
+              className="cg-popup-logo"
+              width="36"
+              height="36"
+              loading="eager"
+              decoding="async"
+              draggable="false"
+            />
+          </picture>
+          <span className="cg-popup-brand-name">COGNOLYNX</span>
+        </div>
+
+        {/* Headline Row with Flanking Purple Celebration Sparks */}
+        <div className="cg-popup-headline-wrap">
+          {/* Left Spark Accents */}
+          <svg
+            className="cg-popup-spark cg-popup-spark-left"
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
+            fill="none"
+            aria-hidden="true"
+          >
+            {/* Upper ray: angled ~45° from top-left to bottom-right */}
+            <path
+              d="M9 7L23 21"
+              stroke="#8B5CF6"
+              strokeWidth="4"
               strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
+            />
+            {/* Lower ray: gentle angle ~15° */}
+            <path
+              d="M5 25L21 30"
+              stroke="#8B5CF6"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          <h2 id="cg-popup-title" className="cg-popup-headline">
+            <span className="cg-popup-headline-top">We’re Hiring</span>
+            <span className="cg-popup-headline-bottom">Interns</span>
+          </h2>
+
+          {/* Right Spark Accents */}
+          <svg
+            className="cg-popup-spark cg-popup-spark-right"
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
+            fill="none"
+            aria-hidden="true"
+          >
+            {/* Upper ray: angled ~45° from top-right to bottom-left */}
+            <path
+              d="M27 7L13 21"
+              stroke="#8B5CF6"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+            {/* Lower ray: gentle angle ~15° */}
+            <path
+              d="M31 25L15 30"
+              stroke="#8B5CF6"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+          </svg>
         </div>
 
-        {/* Big headline */}
-        <h2 id="cg-popup-title" className="cg-popup-headline">
-          <span>Internships are open.</span>
-          <span className="cg-popup-headline-sub">And they're free.</span>
-        </h2>
-
-        {/* Bold "FREE" centerpiece */}
-        <div className="cg-popup-free-wrap" aria-hidden="true">
-          <span className="cg-popup-free-text">FREE</span>
-        </div>
-
-        {/* Short body */}
-        <p id="cg-popup-desc" className="cg-popup-body">
-          Learn by working on real software, design and digital projects with the
-          Cognolynx team.
+        {/* Subtitle / Description */}
+        <p id="cg-popup-desc" className="cg-popup-desc">
+          Gain real-world experience, work on live projects,
+          <br />
+          and grow with our team.
         </p>
 
-        {/* Urgency */}
-        <p className="cg-popup-urgency">Register soon.</p>
-
-        {/* Actions */}
-        <div className="cg-popup-actions">
-          <Link
-            to="/careers/apply"
-            className="cg-popup-cta-btn"
-            onClick={() => {
-              markPopupSeen();
-              setIsOpen(false);
-            }}
-            aria-label="Register for Free"
+        {/* Primary CTA Button: Apply Now → */}
+        <Link
+          to="/careers/apply"
+          className="cg-popup-cta-btn"
+          onClick={() => {
+            markPopupSeen();
+            setIsOpen(false);
+          }}
+          aria-label="Apply Now for Internship"
+        >
+          <span>Apply Now</span>
+          <svg
+            className="cg-popup-cta-arrow"
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            Register for Free →
-          </Link>
-
-          <button
-            type="button"
-            className="cg-popup-secondary-link"
-            onClick={handleClose}
-          >
-            Not now
-          </button>
-        </div>
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </Link>
       </div>
     </div>
   );

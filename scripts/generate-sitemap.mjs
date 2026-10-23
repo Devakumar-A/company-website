@@ -11,7 +11,7 @@ const distDir = path.resolve(rootDir, 'dist');
 const sitemapDistPath = path.resolve(distDir, 'sitemap.xml');
 const sitemapPublicPath = path.resolve(rootDir, 'public', 'sitemap.xml');
 
-const SITE_URL = 'https://cognolynx.com';
+const SITE_URL = 'https://cognolynx.tech';
 
 const routeComponentMap = {
   '/': 'src/pages/Home.jsx',
@@ -26,6 +26,7 @@ const routeComponentMap = {
   '/privacy-policy': 'src/pages/PrivacyPolicy.jsx',
   '/terms-conditions': 'src/pages/TermsConditions.jsx',
   '/support': 'src/pages/Support.jsx',
+  '/faq': 'src/pages/FAQ.jsx',
 
   '/solutions/digital-products': 'src/pages/solutions/DigitalProducts.jsx',
   '/solutions/business-systems': 'src/pages/solutions/BusinessSystems.jsx',

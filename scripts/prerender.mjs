@@ -11,7 +11,7 @@ const rootDir = path.resolve(__dirname, '..');
 const distDir = path.resolve(rootDir, 'dist');
 const templatePath = path.resolve(distDir, 'index.html');
 
-const SITE_URL = 'https://cognolynx.com';
+const SITE_URL = 'https://cognolynx.tech';
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -36,6 +36,8 @@ const routeComponentMap = {
   '/privacy-policy': './src/pages/PrivacyPolicy.jsx',
   '/terms-conditions': './src/pages/TermsConditions.jsx',
   '/support': './src/pages/Support.jsx',
+  '/faq': './src/pages/FAQ.jsx',
+  '/faqs': './src/pages/FAQ.jsx',
 
   // Solutions
   '/solutions/digital-products': './src/pages/solutions/DigitalProducts.jsx',

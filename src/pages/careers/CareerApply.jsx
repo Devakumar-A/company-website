@@ -1,13 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Send } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Send,
+  Loader2,
+  UploadCloud,
+  FileText,
+  X,
+  AlertCircle,
+  ShieldCheck,
+  Award,
+  Sparkles,
+  GraduationCap,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "../../components/SEO";
 import { seoData } from "../../data/seoData";
-
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 
-import "../../styles/Career.css";
+import "../../styles/CareerApply.css";
 
 /* =========================================================
    INTERNSHIP DOMAINS
@@ -50,19 +63,29 @@ const ALLOWED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
 
 /* =========================================================
    COMPONENT
 ========================================================= */
 
 export default function CareerApply() {
-  /* =======================================================
-     SCROLL TO TOP
-  ======================================================= */
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
   }, []);
 
   /* =======================================================
@@ -78,15 +101,12 @@ export default function CareerApply() {
     city: "",
     state: "",
     portfolioUrl: "",
-    about: "",
   });
 
   const [resumeFile, setResumeFile] = useState(null);
-
   const [submitting, setSubmitting] = useState(false);
-
   const [submitted, setSubmitted] = useState(false);
-
+  const [submittedData, setSubmittedData] = useState(null);
   const [error, setError] = useState("");
 
   /* =======================================================
@@ -95,7 +115,6 @@ export default function CareerApply() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((previous) => ({
       ...previous,
       [name]: value,
@@ -112,7 +131,6 @@ export default function CareerApply() {
 
   const handleResumeChange = (event) => {
     const file = event.target.files?.[0] || null;
-
     setError("");
 
     if (!file) {
@@ -120,35 +138,28 @@ export default function CareerApply() {
       return;
     }
 
-    /* File type */
-
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       setResumeFile(null);
-
-      event.target.value = "";
-
-      setError(
-        "Only PDF, DOC, and DOCX files are allowed."
-      );
-
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setError("Only PDF, DOC, and DOCX files are allowed.");
       return;
     }
 
-    /* File size */
-
     if (file.size > MAX_FILE_SIZE) {
       setResumeFile(null);
-
-      event.target.value = "";
-
-      setError(
-        "Resume size must be 5 MB or smaller."
-      );
-
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setError("Resume size must be 5 MB or smaller.");
       return;
     }
 
     setResumeFile(file);
+  };
+
+  const handleRemoveResume = () => {
+    setResumeFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   /* =======================================================
@@ -156,6 +167,10 @@ export default function CareerApply() {
   ======================================================= */
 
   const validateForm = () => {
+    if (!formData.domain) {
+      return "Please select your preferred internship domain.";
+    }
+
     if (!formData.fullName.trim()) {
       return "Please enter your full name.";
     }
@@ -164,16 +179,17 @@ export default function CareerApply() {
       return "Please enter your email address.";
     }
 
-    if (!formData.phone.trim()) {
-      return "Please enter your phone number.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      return "Please enter a valid email address.";
     }
 
-    if (!formData.domain) {
-      return "Please select an internship domain.";
+    if (!formData.phone.trim()) {
+      return "Please enter your phone or WhatsApp number.";
     }
 
     if (!formData.college.trim()) {
-      return "Please enter your college or university.";
+      return "Please enter your college or university name.";
     }
 
     if (!formData.city.trim()) {
@@ -185,15 +201,7 @@ export default function CareerApply() {
     }
 
     if (!resumeFile) {
-      return "Please upload your resume.";
-    }
-
-    if (!ALLOWED_FILE_TYPES.includes(resumeFile.type)) {
-      return "Only PDF, DOC, and DOCX files are allowed.";
-    }
-
-    if (resumeFile.size > MAX_FILE_SIZE) {
-      return "Resume size must be 5 MB or smaller.";
+      return "Please upload your resume (PDF, DOC or DOCX).";
     }
 
     return "";
@@ -206,142 +214,96 @@ export default function CareerApply() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (submitting) {
-      return;
-    }
-
+    if (submitting) return;
     setError("");
 
-    /* -----------------------------------------------
-       Frontend validation
-    ------------------------------------------------ */
-
     const validationError = validateForm();
-
     if (validationError) {
       setError(validationError);
+      const errorElement = document.getElementById("intern-error-banner");
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return;
     }
 
     setSubmitting(true);
-
     let uploadedResumePath = null;
 
     try {
-      /* =================================================
-         STEP 1 — CHECK SUPABASE CLIENT
-      ================================================= */
-
       if (!supabase) {
-        throw new Error(
-          "Supabase is not configured correctly."
-        );
+        throw new Error("Supabase is not configured correctly.");
       }
 
-      /* =================================================
-         STEP 2 — CREATE SAFE FILE NAME
-      ================================================= */
-
+      /* Step 1: Create clean file name */
       const originalFileName = resumeFile.name;
-
       const cleanFileName = originalFileName
         .replace(/[^a-zA-Z0-9._-]/g, "_")
         .replace(/\s+/g, "_")
         .toLowerCase();
 
-      const uniqueFileName =
-        `${Date.now()}-${Math.random()
-          .toString(36)
-          .substring(2, 10)}-${cleanFileName}`;
+      const uniqueFileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(2, 10)}-${cleanFileName}`;
 
-      const resumePath =
-        `internship/${uniqueFileName}`;
+      const resumePath = `internship/${uniqueFileName}`;
 
-      /* =================================================
-         STEP 3 — UPLOAD RESUME
-      ================================================= */
-
-      const {
-        error: uploadError,
-      } = await supabase.storage
+      /* Step 2: Upload Resume to Supabase Storage */
+      const { error: uploadError } = await supabase.storage
         .from("resumes")
-        .upload(
-          resumePath,
-          resumeFile,
-          {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: resumeFile.type,
-          }
-        );
+        .upload(resumePath, resumeFile, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: resumeFile.type,
+        });
 
       if (uploadError) {
-        throw new Error(
-          `Resume upload failed: ${uploadError.message}`
-        );
+        throw new Error(`Resume upload failed: ${uploadError.message}`);
       }
 
       uploadedResumePath = resumePath;
 
-      /* =================================================
-         STEP 4 — SAVE APPLICATION
-      ================================================= */
-
+      /* Step 3: Insert Application into Database */
       const applicationPayload = {
         full_name: formData.fullName.trim(),
-
         phone: formData.phone.trim(),
-
-        email: formData.email
-          .trim()
-          .toLowerCase(),
-
+        email: formData.email.trim().toLowerCase(),
         domain: formData.domain,
-
         college: formData.college.trim(),
-
         city: formData.city.trim(),
-
         state: formData.state.trim(),
-
-        linkedin:
-          formData.portfolioUrl.trim() || null,
-
-        portfolio:
-          formData.portfolioUrl.trim() || null,
-
+        linkedin: formData.portfolioUrl.trim() || null,
+        portfolio: formData.portfolioUrl.trim() || null,
         resume_url: uploadedResumePath,
-
         status: "submitted",
       };
 
-      const {
-        error: databaseError,
-      } = await supabase
+      const { error: databaseError } = await supabase
         .from("internship_applications")
         .insert(applicationPayload);
 
-      /* =================================================
-         STEP 5 — DATABASE ERROR
-      ================================================= */
-
       if (databaseError) {
-        /* Delete resume if database insert failed */
-
         if (uploadedResumePath) {
           await supabase.storage
             .from("resumes")
             .remove([uploadedResumePath]);
         }
-
         throw new Error(
           `Application submission failed: ${databaseError.message}`
         );
       }
 
-      /* =================================================
-         STEP 6 — SUCCESS
-      ================================================= */
+      /* Step 4: Success */
+      setSubmittedData({
+        name: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        domain: formData.domain,
+        date: new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      });
 
       setSubmitted(true);
 
@@ -354,25 +316,22 @@ export default function CareerApply() {
         city: "",
         state: "",
         portfolioUrl: "",
-        about: "",
       });
 
       setResumeFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
 
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
-
     } catch (submitError) {
-      console.error(
-        "Cognolynx internship submission error:",
-        submitError
-      );
-
+      console.error("Cognolynx internship submission error:", submitError);
       setError(
         submitError?.message ||
-          "Unable to submit your application. Please try again."
+          "Unable to submit your application. Please check your internet connection and try again."
       );
     } finally {
       setSubmitting(false);
@@ -387,580 +346,460 @@ export default function CareerApply() {
     return (
       <>
         <SEO {...seoData["/careers/apply"]} />
-        <main className="career-page">
+        <main className="intern-page">
+          <section className="intern-hero" style={{ minHeight: "auto", paddingBottom: "70px" }}>
+            <div className="intern-hero-grid" aria-hidden="true" />
+            <div className="intern-hero-container">
+              <div className="intern-success-card">
+                <div className="intern-success-icon-wrap">
+                  <Check size={40} strokeWidth={2.6} />
+                </div>
 
-          <section
-            className="career-hero"
-            style={{
-              minHeight: "auto",
-              padding: "105px 7vw 60px",
-            }}
-          >
-            <div
-              className="career-hero-grid"
-              aria-hidden="true"
-            />
+                <div className="intern-eyebrow" style={{ justifyContent: "center" }}>
+                  <span className="intern-eyebrow-pill">APPLICATION CONFIRMED</span>
+                  <span className="intern-eyebrow-dot" />
+                  <span>COGNOLYNX INNOVATION</span>
+                </div>
 
-            <div
-              className="career-hero-content"
-              style={{
-                textAlign: "center",
-                maxWidth: "800px",
-                margin: "0 auto",
-              }}
-            >
-              <div
-                style={{
-                  width: "68px",
-                  height: "68px",
-                  margin: "0 auto 28px",
-                  borderRadius: "50%",
-                  background: "#1769e0",
-                  color: "#ffffff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Check
-                  size={34}
-                  strokeWidth={2.4}
-                />
+                <h1>
+                  Application <span>Received!</span>
+                </h1>
+
+                <p className="intern-success-desc">
+                  Thank you, <strong>{submittedData?.name || "Applicant"}</strong>. Your application for the{" "}
+                  <strong>{submittedData?.domain}</strong> internship has been submitted successfully to Cognolynx.
+                </p>
+
+                {submittedData && (
+                  <div className="intern-success-details">
+                    <div className="intern-success-row">
+                      <span className="label">Selected Track:</span>
+                      <span className="value">{submittedData.domain}</span>
+                    </div>
+                    <div className="intern-success-row">
+                      <span className="label">Registered Email:</span>
+                      <span className="value">{submittedData.email}</span>
+                    </div>
+                    <div className="intern-success-row">
+                      <span className="label">Submission Date:</span>
+                      <span className="value">{submittedData.date}</span>
+                    </div>
+                    <div className="intern-success-row">
+                      <span className="label">Status:</span>
+                      <span className="value" style={{ color: "#16a34a" }}>Under Technical Review</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="intern-next-steps">
+                  <div className="intern-next-steps-title">
+                    <Sparkles size={16} />
+                    What happens next?
+                  </div>
+                  <div className="intern-step-item">
+                    <div className="intern-step-bullet">1</div>
+                    <div>
+                      <strong>Application Screening within 24 Hours:</strong> Our technical team will review and screen your application within 24 hours.
+                    </div>
+                  </div>
+                  <div className="intern-step-item">
+                    <div className="intern-step-bullet">2</div>
+                    <div>
+                      <strong>Offer Letter via Email:</strong> Check your given email address ({submittedData?.email || "registered email"}). If you are shortlisted, your official internship offer letter will be sent directly to your mail.
+                    </div>
+                  </div>
+                  <div className="intern-step-item">
+                    <div className="intern-step-bullet">3</div>
+                    <div>
+                      <strong>Check Inbox & Spam Folder:</strong> Please keep an eye on your email inbox and make sure to check your spam/junk folder as well so you don't miss the offer letter or any updates.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="intern-success-actions">
+                  <Link to="/careers" className="intern-btn-primary">
+                    <ArrowLeft size={16} />
+                    Back to Careers
+                  </Link>
+                  <button
+                    type="button"
+                    className="intern-btn-secondary"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setError("");
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  >
+                    Submit Another Application
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
               </div>
-
-              <div className="career-eyebrow">
-                <span>APPLICATION RECEIVED</span>
-                <i />
-                COGNOLYNX
-              </div>
-
-              <h1
-                style={{
-                  fontSize:
-                    "clamp(3.2rem, 7vw, 7rem)",
-                }}
-              >
-                Thank
-                <br />
-                <span>you.</span>
-              </h1>
-
-              <p
-                style={{
-                  maxWidth: "560px",
-                  margin:
-                    "35px auto 0",
-                }}
-              >
-                Your internship application has
-                been submitted successfully.
-              </p>
-
-              <Link
-                to="/careers"
-                className="career-primary-button"
-                style={{
-                  display: "inline-flex",
-                  marginTop: "32px",
-                }}
-              >
-                Back to Careers
-                <ArrowRight size={16} />
-              </Link>
             </div>
           </section>
-
         </main>
-
         <Footer />
       </>
     );
   }
 
   /* =======================================================
-     MAIN PAGE
+     MAIN APPLICATION PAGE
   ======================================================= */
 
   return (
     <>
       <SEO {...seoData["/careers/apply"]} />
-      <main className="career-page">
-
+      <main className="intern-page">
         {/* =================================================
             HERO
         ================================================= */}
-
-        <section
-          className="career-hero"
-          style={{
-            minHeight: "auto",
-            paddingBottom: "45px",
-          }}
-        >
-          <div
-            className="career-hero-grid"
-            aria-hidden="true"
-          />
-
-          <div className="career-hero-content">
-
-            <Link
-              to="/careers"
-              className="career-primary-button"
-              style={{
-                display: "inline-flex",
-                width: "fit-content",
-                marginBottom: "24px",
-                padding: "10px 18px",
-                fontSize: "12px",
-              }}
-            >
-              <ArrowLeft size={16} />
-              Back to Careers
+        <section className="intern-hero">
+          <div className="intern-hero-grid" aria-hidden="true" />
+          <div className="intern-hero-container">
+            <Link to="/careers" className="intern-back-btn">
+              <ArrowLeft size={15} />
+              <span>Back to Careers</span>
             </Link>
 
-            <div className="career-eyebrow">
-              <span>INTERNSHIP APPLICATION</span>
-              <i />
-              COGNOLYNX
+            <div className="intern-eyebrow">
+              <span className="intern-eyebrow-pill">INTERNSHIP PROGRAM</span>
+              <span className="intern-eyebrow-dot" />
+              <span>COGNOLYNX INNOVATION LABS</span>
             </div>
 
-            <h1
-              style={{
-                fontSize:
-                  "clamp(3.2rem, 7vw, 7.5rem)",
-              }}
-            >
-              Apply for
-              <br />
+            <h1>
+              Apply for <br />
               <span>Internship.</span>
             </h1>
 
-            <p
-              style={{
-                maxWidth: "650px",
-              }}
-            >
-              Submit your details and select
-              the domain you would like to work in.
+            <p className="intern-hero-desc">
+              Accelerate your engineering journey. Collaborate with experienced mentors on real-world production
+              systems, gain hands-on technical mastery, and earn verifiable industry credentials.
             </p>
 
+            <div className="intern-badges-strip">
+              <div className="intern-badge-item">
+                <span className="intern-badge-icon"><Award size={15} /></span>
+                <span>Verified Certificate</span>
+              </div>
+              <div className="intern-badge-item">
+                <span className="intern-badge-icon"><Sparkles size={15} /></span>
+                <span>Live Industry Projects</span>
+              </div>
+              <div className="intern-badge-item">
+                <span className="intern-badge-icon"><GraduationCap size={15} /></span>
+                <span>Senior Mentorship</span>
+              </div>
+              <div className="intern-badge-item">
+                <span className="intern-badge-icon"><ShieldCheck size={15} /></span>
+                <span>100% Free Application</span>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* =================================================
             FORM
         ================================================= */}
-
-        <section
-          style={{
-            padding:
-              "55px 7vw 70px",
-            background: "#ffffff",
-            borderTop:
-              "1px solid #dfe4ea",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "900px",
-              margin: "0 auto",
-            }}
-          >
-
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-            >
-
-              {/* ===========================================
-                  DOMAIN
-              =========================================== */}
-
+        <section className="intern-form-section">
+          <div className="intern-form-wrapper">
+            {error && (
               <div
-                style={{
-                  marginBottom: "45px",
-                }}
+                id="intern-error-banner"
+                className="intern-error-alert"
+                role="alert"
+                aria-live="polite"
               >
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "12px",
-                    color: "#303947",
-                    fontSize: "12px",
-                    fontWeight: 650,
-                  }}
-                >
-                  Internship Domain{" "}
-                  <span style={{ color: "#1769e0" }}>
-                    *
-                  </span>
-                </label>
+                <AlertCircle size={20} />
+                <span>{error}</span>
+              </div>
+            )}
 
-                <select
-                  name="domain"
-                  value={formData.domain}
-                  onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    height: "54px",
-                    padding: "0 16px",
-                    border:
-                      "1px solid #dfe4ea",
-                    borderRadius: "10px",
-                    background: "#fbfcfd",
-                    color: formData.domain
-                      ? "#11151c"
-                      : "#8b95a4",
-                    fontFamily: "inherit",
-                    fontSize: "14px",
-                    outline: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <option value="">
-                    Select your preferred domain
-                  </option>
+            <form onSubmit={handleSubmit} noValidate>
+              {/* CARD 1: DOMAIN SELECTION */}
+              <div className="intern-form-card">
+                <div className="intern-section-header">
+                  <div className="intern-step-num">01</div>
+                  <div className="intern-step-title">
+                    <h2>Choose Your Domain</h2>
+                    <p>Select the technical specialization that aligns with your skillset and ambitions.</p>
+                  </div>
+                </div>
 
-                  {domainOptions.map(
-                    (domain) => (
-                      <option
-                        key={domain}
-                        value={domain}
-                      >
-                        {domain}
-                      </option>
-                    )
-                  )}
-                </select>
+                <div className="intern-grid-1">
+                  <div className="intern-field">
+                    <label htmlFor="internDomain" className="intern-label">
+                      <span>
+                        Internship Domain <span className="required">*</span>
+                      </span>
+                      <span className="optional">{domainOptions.length} tracks available</span>
+                    </label>
+
+                    <select
+                      id="internDomain"
+                      name="domain"
+                      value={formData.domain}
+                      onChange={handleChange}
+                      className="intern-select"
+                      required
+                    >
+                      <option value="">Select your preferred track</option>
+                      {domainOptions.map((domain) => (
+                        <option key={domain} value={domain}>
+                          {domain}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="intern-field-hint">
+                      Projects and mentor assignments will be custom-tailored to this domain.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* ===========================================
-                  PERSONAL INFORMATION
-              =========================================== */}
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "repeat(2, minmax(0, 1fr))",
-                  gap: "25px 20px",
-                  marginBottom: "45px",
-                }}
-              >
-
-                {/* Full Name */}
-
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    Full Name{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                    style={fieldStyle}
-                  />
+              {/* CARD 2: CANDIDATE INFORMATION */}
+              <div className="intern-form-card">
+                <div className="intern-section-header">
+                  <div className="intern-step-num">02</div>
+                  <div className="intern-step-title">
+                    <h2>Personal & Academic Details</h2>
+                    <p>Please enter your contact information and educational background accurately.</p>
+                  </div>
                 </div>
 
-                {/* Email */}
+                <div className="intern-grid-2">
+                  {/* Full Name */}
+                  <div className="intern-field">
+                    <label htmlFor="internFullName" className="intern-label">
+                      <span>Full Name <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internFullName"
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      placeholder="e.g. John Doe"
+                      className="intern-input"
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
 
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    Email Address{" "}
-                    <span>*</span>
-                  </label>
+                  {/* Email */}
+                  <div className="intern-field">
+                    <label htmlFor="internEmail" className="intern-label">
+                      <span>Email Address <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internEmail"
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                      className="intern-input"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
 
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    style={fieldStyle}
-                  />
+                  {/* Phone */}
+                  <div className="intern-field">
+                    <label htmlFor="internPhone" className="intern-label">
+                      <span>Phone / WhatsApp <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internPhone"
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="+91 98765 43210"
+                      className="intern-input"
+                      autoComplete="tel"
+                      required
+                    />
+                  </div>
+
+                  {/* College */}
+                  <div className="intern-field">
+                    <label htmlFor="internCollege" className="intern-label">
+                      <span>College / University <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internCollege"
+                      type="text"
+                      name="college"
+                      value={formData.college}
+                      onChange={handleChange}
+                      placeholder="e.g. Stanford University / IIT"
+                      className="intern-input"
+                      required
+                    />
+                  </div>
+
+                  {/* City */}
+                  <div className="intern-field">
+                    <label htmlFor="internCity" className="intern-label">
+                      <span>City <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internCity"
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      placeholder="e.g. Bengaluru / San Francisco"
+                      className="intern-input"
+                      autoComplete="address-level2"
+                      required
+                    />
+                  </div>
+
+                  {/* State */}
+                  <div className="intern-field">
+                    <label htmlFor="internState" className="intern-label">
+                      <span>State / Province <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="internState"
+                      type="text"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleChange}
+                      placeholder="e.g. Karnataka / California"
+                      className="intern-input"
+                      autoComplete="address-level1"
+                      required
+                    />
+                  </div>
                 </div>
-
-                {/* Phone */}
-
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    Phone / WhatsApp{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+91 98765 43210"
-                    style={fieldStyle}
-                  />
-                </div>
-
-                {/* College */}
-
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    College / University{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="college"
-                    value={formData.college}
-                    onChange={handleChange}
-                    placeholder="Enter your college or university"
-                    style={fieldStyle}
-                  />
-                </div>
-
-                {/* City */}
-
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    City{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="Enter your city"
-                    style={fieldStyle}
-                  />
-                </div>
-
-                {/* State */}
-
-                <div>
-                  <label
-                    style={fieldLabelStyle}
-                  >
-                    State{" "}
-                    <span>*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
-                    placeholder="Enter your state"
-                    style={fieldStyle}
-                  />
-                </div>
-
               </div>
 
-              {/* ===========================================
-                  ONLINE PROFILE
-              =========================================== */}
-
-              <div
-                style={{
-                  marginBottom: "45px",
-                }}
-              >
-                <label
-                  style={fieldLabelStyle}
-                >
-                  LinkedIn / GitHub /
-                  Portfolio
-                </label>
-
-                <input
-                  type="url"
-                  name="portfolioUrl"
-                  value={formData.portfolioUrl}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  style={fieldStyle}
-                />
-              </div>
-
-              {/* ===========================================
-                  RESUME
-              =========================================== */}
-
-              <div
-                style={{
-                  marginBottom: "45px",
-                }}
-              >
-                <label
-                  style={fieldLabelStyle}
-                >
-                  Resume{" "}
-                  <span>*</span>
-                </label>
-
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  onChange={handleResumeChange}
-                  style={{
-                    width: "100%",
-                    padding: "14px",
-                    border:
-                      "1px solid #dfe4ea",
-                    borderRadius: "10px",
-                    background: "#fbfcfd",
-                    fontFamily: "inherit",
-                    fontSize: "13px",
-                  }}
-                />
-
-                <p
-                  style={{
-                    margin:
-                      "8px 0 0",
-                    color: "#8b95a4",
-                    fontSize: "11px",
-                  }}
-                >
-                  PDF, DOC or DOCX ·
-                  Maximum 5 MB
-                </p>
-              </div>
-
-              {/* ===========================================
-                  INTRODUCTION
-              =========================================== */}
-
-              <div
-                style={{
-                  marginBottom: "45px",
-                }}
-              >
-                <label
-                  style={fieldLabelStyle}
-                >
-                  Brief Introduction
-                </label>
-
-                <textarea
-                  name="about"
-                  value={formData.about}
-                  onChange={handleChange}
-                  rows={5}
-                  placeholder="Tell us briefly about your interests, projects, skills, or what you would like to learn."
-                  style={{
-                    ...fieldStyle,
-                    height: "auto",
-                    minHeight: "130px",
-                    padding:
-                      "14px 16px",
-                    resize: "vertical",
-                  }}
-                />
-              </div>
-
-              {/* ===========================================
-                  ERROR
-              =========================================== */}
-
-              {error && (
-                <div
-                  role="alert"
-                  style={{
-                    marginBottom: "25px",
-                    padding:
-                      "14px 16px",
-                    border:
-                      "1px solid #f0caca",
-                    borderRadius: "10px",
-                    background:
-                      "#fff6f6",
-                    color: "#b42318",
-                    fontSize: "13px",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {error}
+              {/* CARD 3: LINKS & RESUME */}
+              <div className="intern-form-card">
+                <div className="intern-section-header">
+                  <div className="intern-step-num">03</div>
+                  <div className="intern-step-title">
+                    <h2>Portfolio & Resume</h2>
+                    <p>Provide your online profile link and upload an updated resume.</p>
+                  </div>
                 </div>
-              )}
 
-              {/* ===========================================
-                  SUBMIT
-              =========================================== */}
+                <div className="intern-grid-1">
+                  {/* Portfolio URL */}
+                  <div className="intern-field">
+                    <label htmlFor="internPortfolio" className="intern-label">
+                      <span>LinkedIn, GitHub, or Portfolio Link</span>
+                      <span className="optional">Optional</span>
+                    </label>
+                    <input
+                      id="internPortfolio"
+                      type="url"
+                      name="portfolioUrl"
+                      value={formData.portfolioUrl}
+                      onChange={handleChange}
+                      placeholder="https://linkedin.com/in/yourname or github.com/yourname"
+                      className="intern-input"
+                    />
+                    <p className="intern-field-hint">
+                      Adding your GitHub profile or live project links increases selection probability.
+                    </p>
+                  </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent:
-                    "space-between",
-                  gap: "25px",
-                  flexWrap: "wrap",
-                  paddingTop: "10px",
-                  borderTop:
-                    "1px solid #dfe4ea",
-                }}
-              >
+                  {/* Resume Upload */}
+                  <div className="intern-field" style={{ marginTop: "8px" }}>
+                    <label htmlFor="internResume" className="intern-label">
+                      <span>
+                        Resume / CV <span className="required">*</span>
+                      </span>
+                      <span className="optional">PDF, DOC, DOCX up to 5 MB</span>
+                    </label>
 
-                <p
-                  style={{
-                    margin: 0,
-                    maxWidth: "480px",
-                    color: "#7a8493",
-                    fontSize: "12px",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Please make sure the information
-                  provided is accurate before
-                  submitting your application.
-                </p>
+                    {!resumeFile ? (
+                      <div className="intern-upload-box">
+                        <input
+                          ref={fileInputRef}
+                          id="internResume"
+                          type="file"
+                          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                          onChange={handleResumeChange}
+                          className="intern-upload-input"
+                          aria-label="Upload your resume"
+                        />
+                        <div className="intern-upload-content">
+                          <div className="intern-upload-icon-circle">
+                            <UploadCloud size={24} strokeWidth={2} />
+                          </div>
+                          <div className="intern-upload-text">
+                            <span>Click to upload</span> or drag and drop your resume
+                          </div>
+                          <div className="intern-upload-subtext">
+                            PDF, DOC, or DOCX files accepted (Max size 5 MB)
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="intern-file-selected-card">
+                        <div className="intern-file-info">
+                          <div className="intern-file-badge">
+                            <FileText size={20} />
+                          </div>
+                          <div className="intern-file-details">
+                            <div className="intern-file-name" title={resumeFile.name}>
+                              {resumeFile.name}
+                            </div>
+                            <div className="intern-file-size">
+                              {formatFileSize(resumeFile.size)} • Ready for submission
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="intern-file-remove-btn"
+                          onClick={handleRemoveResume}
+                          title="Remove and select different file"
+                          aria-label="Remove uploaded file"
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="career-primary-button"
-                  style={{
-                    border: "none",
-                    minWidth: "190px",
-                    padding:
-                      "15px 22px",
-                    justifyContent:
-                      "center",
-                    cursor: submitting
-                      ? "not-allowed"
-                      : "pointer",
-                    opacity: submitting
-                      ? 0.65
-                      : 1,
-                  }}
-                >
-                  {submitting
-                    ? "Submitting..."
-                    : "Submit Application"}
+                {/* SUBMIT FOOTER */}
+                <div className="intern-form-footer">
+                  <div className="intern-footer-info">
+                    <ShieldCheck size={20} />
+                    <span>
+                      Your submission is private and protected. Cognolynx reviews every candidate profile individually.
+                    </span>
+                  </div>
 
-                  {!submitting && (
-                    <Send size={16} />
-                  )}
-                </button>
-
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="internship-submit-btn"
+                    id="internship-form-submit-btn"
+                    aria-label={submitting ? "Submitting application" : "Submit internship application"}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 size={18} className="intern-btn-spinner" />
+                        <span>Submitting Application...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Application</span>
+                        <Send size={16} />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-
             </form>
           </div>
         </section>
@@ -970,32 +809,3 @@ export default function CareerApply() {
     </>
   );
 }
-
-/* =========================================================
-   SHARED INLINE FIELD STYLES
-========================================================= */
-
-const fieldLabelStyle = {
-  display: "block",
-  marginBottom: "9px",
-  color: "#303947",
-  fontSize: "12px",
-  fontWeight: 650,
-};
-
-fieldLabelStyle.span = {
-  color: "#1769e0",
-};
-
-const fieldStyle = {
-  width: "100%",
-  height: "54px",
-  padding: "0 16px",
-  border: "1px solid #dfe4ea",
-  borderRadius: "10px",
-  background: "#fbfcfd",
-  color: "#11151c",
-  fontFamily: "inherit",
-  fontSize: "14px",
-  outline: "none",
-};

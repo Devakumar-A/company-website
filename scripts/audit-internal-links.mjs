@@ -17,7 +17,9 @@ function normalizePath(rawHref) {
   if (!rawHref) return null;
   let href = rawHref.trim();
   // Strip protocol / domain if internal
-  if (href.startsWith('https://cognolynx.com')) {
+  if (href.startsWith('https://cognolynx.tech')) {
+    href = href.replace('https://cognolynx.tech', '');
+  } else if (href.startsWith('https://cognolynx.com')) {
     href = href.replace('https://cognolynx.com', '');
   } else if (href.startsWith('http://localhost:4173')) {
     href = href.replace('http://localhost:4173', '');

@@ -71,6 +71,12 @@ export const seoData = {
     description: "Get help and technical assistance from Cognolynx. Find answers to common questions or submit support requests directly to our technical team.",
     noindex: false,
   },
+  "/faq": {
+    path: "/faq",
+    title: "Frequently Asked Questions & Technical Insights | Cognolynx",
+    description: "Find clear answers about Cognolynx custom software development, agile sprints, technology frameworks, pricing & IP rights, and our free internship program.",
+    noindex: false,
+  },
 
   // Solutions sub-pages
   "/solutions/digital-products": {
@@ -373,9 +379,27 @@ export const SEGMENT_NAMES = {
 export function getJsonLdForRoute(routePath, seo = {}) {
   if (seo.noindex) return null;
 
-  const SITE_URL = "https://cognolynx.com";
+  const SITE_URL = "https://cognolynx.tech";
   const cleanPath = (routePath || "").replace(/\/$/, "") || "/";
   const canonicalUrl = seo.canonical || (cleanPath === "/" ? SITE_URL : `${SITE_URL}${cleanPath}`);
+
+  const founderSchema = {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#founder`,
+    name: "Devakumar A",
+    jobTitle: "Founder & Chief Executive Officer",
+    url: SITE_URL,
+    worksFor: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    knowsAbout: [
+      "Custom Software Engineering",
+      "Artificial Intelligence & Machine Learning",
+      "Full Stack Web Platforms",
+      "Cloud Infrastructure",
+      "Digital Product Architecture",
+    ],
+  };
 
   const orgSchema = {
     "@type": "Organization",
@@ -383,6 +407,14 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     name: "Cognolynx",
     url: SITE_URL,
     logo: `${SITE_URL}/favicon-512.png`,
+    founder: {
+      "@type": "Person",
+      name: "Devakumar A",
+      jobTitle: "Founder",
+      url: SITE_URL,
+    },
+    foundingDate: "2024",
+    description: "Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions.",
   };
 
   const webSiteSchema = {
@@ -399,7 +431,7 @@ export function getJsonLdForRoute(routePath, seo = {}) {
   if (cleanPath === "/") {
     return {
       "@context": "https://schema.org",
-      "@graph": [orgSchema, webSiteSchema],
+      "@graph": [orgSchema, webSiteSchema, founderSchema],
     };
   }
 

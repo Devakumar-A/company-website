@@ -1,7 +1,13 @@
 # Canonical domain redirects: www to apex domain (non-www)
-https://www.cognolynx.com/*  https://cognolynx.com/:splat  301!
-http://www.cognolynx.com/*   https://cognolynx.com/:splat  301!
-http://cognolynx.com/*       https://cognolynx.com/:splat  301!
+https://www.cognolynx.tech/*  https://cognolynx.tech/:splat  301!
+http://www.cognolynx.tech/*   https://cognolynx.tech/:splat  301!
+http://cognolynx.tech/*       https://cognolynx.tech/:splat  301!
+
+# Legacy domain redirects from cognolynx.com to cognolynx.tech
+https://www.cognolynx.com/*   https://cognolynx.tech/:splat  301!
+http://www.cognolynx.com/*    https://cognolynx.tech/:splat  301!
+https://cognolynx.com/*        https://cognolynx.tech/:splat  301!
+http://cognolynx.com/*         https://cognolynx.tech/:splat  301!
 
 # Real 404 status for unknown URLs (prevents soft 404s)
 /*  /404.html  404

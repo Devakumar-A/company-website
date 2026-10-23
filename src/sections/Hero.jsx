@@ -10,14 +10,29 @@ export default function Hero() {
   useEffect(() => {
     if (typeof navigator !== "undefined" && navigator.connection?.saveData) return;
 
-    const getActiveVideo = () => {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      return isMobile ? mobileVideoRef.current : desktopVideoRef.current;
-    };
-
     const startPlayback = () => {
-      const activeVideo = getActiveVideo();
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      const activeVideo = isMobile ? mobileVideoRef.current : desktopVideoRef.current;
+      const otherVideo = isMobile ? desktopVideoRef.current : mobileVideoRef.current;
+
+      if (otherVideo) {
+        otherVideo.pause();
+        if (otherVideo.hasAttribute("src")) {
+          otherVideo.removeAttribute("src");
+          otherVideo.load();
+        }
+      }
+
       if (!activeVideo) return;
+
+      const expectedSrc = isMobile
+        ? "/assets/background_video_company.mp4"
+        : "/assets/background_video.mp4";
+
+      if (!activeVideo.src || !activeVideo.src.includes(expectedSrc)) {
+        activeVideo.src = expectedSrc;
+      }
+
       activeVideo.muted = true;
       activeVideo.defaultMuted = true;
       const playPromise = activeVideo.play();
@@ -27,9 +42,9 @@ export default function Hero() {
     };
 
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      window.requestIdleCallback(startPlayback, { timeout: 2500 });
+      window.requestIdleCallback(startPlayback, { timeout: 2000 });
     } else {
-      setTimeout(startPlayback, 1200);
+      setTimeout(startPlayback, 1000);
     }
 
     // Keep Hero video playing naturally while visible, pause when completely off-screen
@@ -86,11 +101,10 @@ export default function Hero() {
           - Desktop: background_video.mp4
           ==================================================================== */}
       <div className="hero-video-container" aria-hidden="true">
-        {/* Desktop full-bleed video */}
+        {/* Desktop full-bleed video (loaded on demand to preserve bandwidth) */}
         <video
           ref={desktopVideoRef}
           className="hero-video hero-video-desktop"
-          src="/assets/background_video.mp4"
           poster="/assets/hero-video-poster-desktop.webp"
           muted
           loop
@@ -102,11 +116,10 @@ export default function Hero() {
           height="100%"
         />
 
-        {/* Mobile full-bleed video */}
+        {/* Mobile full-bleed video (loaded on demand to preserve mobile data) */}
         <video
           ref={mobileVideoRef}
           className="hero-video hero-video-mobile"
-          src="/assets/background_video_company.mp4"
           poster="/assets/hero-video-poster-mobile.webp"
           muted
           loop

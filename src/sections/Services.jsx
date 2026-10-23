@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -161,17 +160,9 @@ export default function Services({ headingTag = "h2" }) {
     pointerId: null,
   });
 
-  /*
-   * Get single card width including CSS column gap
-   */
-  const getCardWidth = useCallback(() => {
-    if (!trackRef.current) return 384;
-    const card = trackRef.current.querySelector(".service-card");
-    if (!card) return 384;
-    const style = window.getComputedStyle(trackRef.current);
-    const gap = parseFloat(style.columnGap || style.gap || "24");
-    return card.offsetWidth + gap;
-  }, []);
+  // Cached dimensions to prevent per-frame style recalculations (layout thrashing)
+  const cachedCardWidthRef = useRef(384);
+  const cachedSetWidthRef = useRef(0);
 
   /*
    * Main 60fps/120fps physics loop:
@@ -186,6 +177,20 @@ export default function Services({ headingTag = "h2" }) {
     let isVisible = false;
     let isRunning = false;
     let previousTime = performance.now();
+
+    const updateDimensions = () => {
+      if (!track) return;
+      const card = track.querySelector(".service-card");
+      if (card) {
+        const style = window.getComputedStyle(track);
+        const gap = parseFloat(style.columnGap || style.gap || "24");
+        cachedCardWidthRef.current = card.offsetWidth + gap;
+      }
+      cachedSetWidthRef.current = track.scrollWidth / 3;
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions, { passive: true });
 
     const mediaQuery =
       typeof window !== "undefined" && window.matchMedia
@@ -210,7 +215,7 @@ export default function Services({ headingTag = "h2" }) {
       const dt = Math.min(32, Math.max(6, rawDelta)) / 16.667;
       previousTime = currentTime;
 
-      const oneSetWidth = track.scrollWidth / 3;
+      const oneSetWidth = cachedSetWidthRef.current;
 
       if (!isDraggingRef.current) {
         // Momentum decay when thrown by user swipe / drag
@@ -244,7 +249,7 @@ export default function Services({ headingTag = "h2" }) {
 
       // Sync active index for card highlight
       if (oneSetWidth > 0) {
-        const cardWidth = getCardWidth();
+        const cardWidth = cachedCardWidthRef.current || 384;
         const currentCard =
           Math.floor((positionRef.current + cardWidth * 0.45) / cardWidth) %
           services.length;
@@ -260,6 +265,7 @@ export default function Services({ headingTag = "h2" }) {
 
     const startLoop = () => {
       if (isRunning || !isVisible) return;
+      updateDimensions();
       isRunning = true;
       previousTime = performance.now();
       animFrameIdRef.current = requestAnimationFrame(tick);
@@ -290,12 +296,13 @@ export default function Services({ headingTag = "h2" }) {
 
     return () => {
       observer.disconnect();
+      window.removeEventListener("resize", updateDimensions);
       if (mediaQuery?.removeEventListener) {
         mediaQuery.removeEventListener("change", handleMotionChange);
       }
       stopLoop();
     };
-  }, [getCardWidth]);
+  }, []);
 
   /*
    * Pointer down: initiates gesture detection

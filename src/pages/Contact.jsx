@@ -34,8 +34,8 @@ const channels = [
     label: "EMAIL",
     title: "Send an Email",
     description: "For project proposals, business inquiries and collaboration requests.",
-    value: "contact@cognolynx.com",
-    href: "mailto:contact@cognolynx.com",
+    value: "cognolynxforge@gmail.com",
+    href: "mailto:cognolynxforge@gmail.com",
     icon: Mail,
     external: false,
   },
@@ -339,7 +339,7 @@ export default function ContactPage() {
           </p>
 
           <motion.a
-            href="mailto:contact@cognolynx.com"
+            href="mailto:cognolynxforge@gmail.com"
             className="contact-project-button"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}

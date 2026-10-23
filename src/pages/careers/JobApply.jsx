@@ -1,15 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Loader2,
+  Send,
+  UploadCloud,
+  FileText,
+  X,
+  AlertCircle,
+  ShieldCheck,
+  Briefcase,
+  Sparkles,
+  Zap,
+  Globe,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "../../components/SEO";
 import { seoData } from "../../data/seoData";
-
 import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 
 import "../../styles/JobApply.css";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 const ALLOWED_FILE_TYPES = [
   "application/pdf",
@@ -17,7 +31,17 @@ const ALLOWED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
+function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}
+
 export default function JobApply() {
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -38,6 +62,7 @@ export default function JobApply() {
   const [resumeFile, setResumeFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -54,7 +79,6 @@ export default function JobApply() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((previous) => ({
       ...previous,
       [name]: value,
@@ -70,8 +94,7 @@ export default function JobApply() {
   ========================= */
 
   const handleResumeChange = (event) => {
-    const file = event.target.files?.[0];
-
+    const file = event.target.files?.[0] || null;
     setError("");
 
     if (!file) {
@@ -81,16 +104,14 @@ export default function JobApply() {
 
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       setResumeFile(null);
-      event.target.value = "";
-
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setError("Please upload your resume in PDF, DOC, or DOCX format.");
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
       setResumeFile(null);
-      event.target.value = "";
-
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setError("Resume size must be 5 MB or less.");
       return;
     }
@@ -98,101 +119,90 @@ export default function JobApply() {
     setResumeFile(file);
   };
 
+  const handleRemoveResume = () => {
+    setResumeFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   /* =========================
      FORM VALIDATION
   ========================= */
 
   const validateForm = () => {
-    /* =========================
-       EXPERIENCE VALIDATION (Immediate check if < 1)
-    ========================= */
-
     const experienceStr =
       formData.experience !== null && formData.experience !== undefined
         ? String(formData.experience).trim()
         : "";
 
-    if (experienceStr !== "") {
-      const expNumber = Number(experienceStr);
-      if (Number.isNaN(expNumber) || expNumber < 1) {
-        setError("Experience should be equal to or greater than 1 year.");
-        return false;
-      }
-    }
-
     if (!formData.fullName.trim()) {
-      setError("Full Name is required.");
+      setError("Please enter your full name.");
       return false;
     }
 
     if (!formData.email.trim()) {
-      setError("Email Address is required.");
+      setError("Please enter your email address.");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(formData.email.trim())) {
       setError("Please enter a valid email address.");
       return false;
     }
 
     if (!formData.phone.trim()) {
-      setError("Phone Number is required.");
+      setError("Please enter your phone number.");
       return false;
     }
 
     if (!formData.city.trim()) {
-      setError("City is required.");
+      setError("Please enter your city.");
       return false;
     }
 
     if (!formData.position.trim()) {
-      setError("Position Applying For is required.");
+      setError("Please specify the position you are applying for.");
       return false;
     }
 
     if (!formData.qualification.trim()) {
-      setError("Highest Qualification is required.");
+      setError("Please enter your highest qualification.");
       return false;
     }
 
     if (!experienceStr) {
-      setError("Years of Experience is required.");
+      setError("Years of experience is required.");
       return false;
     }
 
     const expNumber = Number(experienceStr);
-
     if (Number.isNaN(expNumber) || expNumber < 1) {
       setError("Experience should be equal to or greater than 1 year.");
       return false;
     }
 
     if (!formData.skills.trim()) {
-      setError("Key Skills is required.");
+      setError("Please provide your key technical or professional skills.");
       return false;
     }
 
     if (!resumeFile) {
-      setError("Please upload your resume.");
+      setError("Please upload your resume (PDF, DOC or DOCX).");
       return false;
     }
 
     if (!formData.introduction.trim()) {
-      setError("Short Introduction is required.");
+      setError("Please write a short introduction about yourself.");
       return false;
     }
-
-    /* =========================
-       URL VALIDATION
-    ========================= */
 
     if (formData.linkedin.trim()) {
       try {
         new URL(formData.linkedin.trim());
       } catch {
-        setError("Please enter a valid LinkedIn URL.");
+        setError("Please enter a valid LinkedIn URL (e.g. https://linkedin.com/in/username).");
         return false;
       }
     }
@@ -201,7 +211,7 @@ export default function JobApply() {
       try {
         new URL(formData.portfolio.trim());
       } catch {
-        setError("Please enter a valid GitHub or Portfolio URL.");
+        setError("Please enter a valid GitHub or Portfolio URL (e.g. https://github.com/username).");
         return false;
       }
     }
@@ -210,7 +220,7 @@ export default function JobApply() {
   };
 
   /* =========================
-     SUBMIT APPLICATION
+     SUBMIT APPLICATION (BACKEND EXACT PRESERVED)
   ========================= */
 
   const handleSubmit = async (event) => {
@@ -222,10 +232,12 @@ export default function JobApply() {
 
     setError("");
 
-    /* Validate before doing anything */
     const valid = validateForm();
-
     if (!valid) {
+      const errorElement = document.getElementById("job-error-banner");
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return;
     }
 
@@ -234,10 +246,7 @@ export default function JobApply() {
     try {
       console.log("Starting job application submission...");
 
-      /* =========================
-         CREATE UNIQUE FILE NAME
-      ========================= */
-
+      /* Create unique, safe file path */
       const fileExtension =
         resumeFile.name.split(".").pop()?.toLowerCase() || "pdf";
 
@@ -255,10 +264,7 @@ export default function JobApply() {
 
       console.log("Uploading resume:", resumePath);
 
-      /* =========================
-         UPLOAD RESUME
-      ========================= */
-
+      /* STEP 1: Upload resume to Supabase storage bucket 'resumes' */
       const { error: uploadError } = await supabase.storage
         .from("resumes")
         .upload(resumePath, resumeFile, {
@@ -269,19 +275,15 @@ export default function JobApply() {
 
       if (uploadError) {
         console.error("Resume upload error:", uploadError);
-
         throw new Error(
           uploadError.message ||
-            "Unable to upload the resume. Please try again."
+            "Unable to upload your resume. Please try again."
         );
       }
 
       console.log("Resume uploaded successfully.");
 
-      /* =========================
-         INSERT APPLICATION
-      ========================= */
-
+      /* STEP 2: Insert application into Supabase table 'job_applications' */
       const applicationData = {
         full_name: formData.fullName.trim(),
         email: formData.email.trim().toLowerCase(),
@@ -301,8 +303,7 @@ export default function JobApply() {
         status: "submitted",
       };
 
-      console.log("Sending application to Supabase...");
-      console.log(applicationData);
+      console.log("Sending application to Supabase...", applicationData);
 
       const { error: databaseError } = await supabase
         .from("job_applications")
@@ -310,18 +311,28 @@ export default function JobApply() {
 
       if (databaseError) {
         console.error("Database error:", databaseError);
-
+        if (resumePath) {
+          await supabase.storage.from("resumes").remove([resumePath]);
+        }
         throw new Error(
           databaseError.message ||
-            "Unable to save your application."
+            "Unable to save your application. Please try again."
         );
       }
 
       console.log("Job application submitted successfully.");
 
-      /* =========================
-         SUCCESS
-      ========================= */
+      /* STEP 3: Save submitted preview data and show success */
+      setSubmittedData({
+        name: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        position: formData.position.trim(),
+        date: new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      });
 
       setSubmitted(true);
 
@@ -343,11 +354,8 @@ export default function JobApply() {
       });
 
       setResumeFile(null);
-
-      const resumeInput = document.getElementById("jobResume");
-
-      if (resumeInput) {
-        resumeInput.value = "";
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
       }
 
       window.scrollTo({
@@ -382,39 +390,82 @@ export default function JobApply() {
           <section className="job-apply-success">
             <div className="job-success-container">
               <div className="job-success-icon">
-                <Check size={30} strokeWidth={2} />
+                <Check size={40} strokeWidth={2.6} />
               </div>
 
-              <span className="job-apply-label">
-                CAREERS <span>/</span> APPLICATION RECEIVED
-              </span>
+              <div className="job-apply-label" style={{ justifyContent: "center" }}>
+                <span className="job-eyebrow-pill">APPLICATION CONFIRMED</span>
+                <span className="job-eyebrow-dot" />
+                <span>COGNOLYNX CAREERS</span>
+              </div>
 
               <h1>
-                Thank you for
-                <br />
-                <span>applying.</span>
+                Application <span>Received!</span>
               </h1>
 
-              <p>
-                Your application has been successfully submitted to
-                Cognolynx. Our team will review your profile and
-                contact you if your experience matches a suitable
-                opportunity.
+              <p className="job-success-desc">
+                Thank you, <strong>{submittedData?.name || "Applicant"}</strong>. Your application for the{" "}
+                <strong>{submittedData?.position}</strong> role has been successfully submitted to Cognolynx.
               </p>
 
+              {submittedData && (
+                <div className="job-success-details">
+                  <div className="job-success-row">
+                    <span className="label">Position Applied:</span>
+                    <span className="value">{submittedData.position}</span>
+                  </div>
+                  <div className="job-success-row">
+                    <span className="label">Registered Email:</span>
+                    <span className="value">{submittedData.email}</span>
+                  </div>
+                  <div className="job-success-row">
+                    <span className="label">Submission Date:</span>
+                    <span className="value">{submittedData.date}</span>
+                  </div>
+                  <div className="job-success-row">
+                    <span className="label">Status:</span>
+                    <span className="value" style={{ color: "#16a34a" }}>Under Technical Review</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="job-next-steps">
+                <div className="job-next-steps-title">
+                  <Sparkles size={16} />
+                  What happens next?
+                </div>
+                <div className="job-step-item">
+                  <div className="job-step-bullet">1</div>
+                  <div>
+                    <strong>Profile & Portfolio Review:</strong> Our engineering leads and hiring team review your experience and past project track record within 2–3 business days.
+                  </div>
+                </div>
+                <div className="job-step-item">
+                  <div className="job-step-bullet">2</div>
+                  <div>
+                    <strong>Technical Discussion:</strong> Qualified candidates receive an official invitation via email with interview schedule and assessment details.
+                  </div>
+                </div>
+                <div className="job-step-item">
+                  <div className="job-step-bullet">3</div>
+                  <div>
+                    <strong>Check Inbox & Spam Folder:</strong> Please keep an eye on your email inbox ({submittedData?.email || "provided"}) and remember to check your spam/junk folder so you never miss an update.
+                  </div>
+                </div>
+              </div>
+
               <div className="job-success-actions">
-                <Link to="/careers" className="job-back-link">
+                <Link to="/careers" className="job-btn-primary">
                   <ArrowLeft size={16} />
                   Back to Careers
                 </Link>
 
                 <button
                   type="button"
-                  className="job-submit-button"
+                  className="job-btn-secondary"
                   onClick={() => {
                     setSubmitted(false);
                     setError("");
-
                     window.scrollTo({
                       top: 0,
                       left: 0,
@@ -423,7 +474,7 @@ export default function JobApply() {
                   }}
                 >
                   Submit Another Application
-                  <ArrowRight size={17} />
+                  <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -436,55 +487,76 @@ export default function JobApply() {
   }
 
   /* =========================
-     MAIN FORM
+     MAIN APPLICATION FORM
   ========================= */
 
   return (
     <>
       <SEO {...seoData["/careers/job"]} />
       <main className="job-apply-page">
+        {/* =================================================
+            HERO
+        ================================================= */}
         <section className="job-apply-hero">
-          <div className="job-apply-grid" />
+          <div className="job-apply-grid" aria-hidden="true" />
 
           <div className="job-apply-container">
             <Link to="/careers" className="job-back-link">
-              <ArrowLeft size={16} />
-              Careers
+              <ArrowLeft size={15} />
+              <span>Back to Careers</span>
             </Link>
 
             <div className="job-apply-label">
-              CAREERS <span>/</span> JOB APPLICATION
+              <span className="job-eyebrow-pill">CAREER OPPORTUNITIES</span>
+              <span className="job-eyebrow-dot" />
+              <span>COGNOLYNX ENGINEERING</span>
             </div>
 
             <h1>
-              Work with
-              <br />
+              Build the Future with <br />
               <span>Cognolynx.</span>
             </h1>
 
-            <p>
-              Tell us about your experience, skills and the role you
-              are interested in.
+            <p className="job-apply-desc">
+              Work alongside forward-thinking engineers and architects. Build mission-critical software,
+              solve deep technical problems, and elevate your professional career in an ambitious engineering culture.
             </p>
+
+            <div className="job-badges-strip">
+              <div className="job-badge-item">
+                <span className="job-badge-icon"><Briefcase size={15} /></span>
+                <span>High-Impact Systems</span>
+              </div>
+              <div className="job-badge-item">
+                <span className="job-badge-icon"><Sparkles size={15} /></span>
+                <span>Rapid Engineering Growth</span>
+              </div>
+              <div className="job-badge-item">
+                <span className="job-badge-icon"><Zap size={15} /></span>
+                <span>Competitive Compensation</span>
+              </div>
+              <div className="job-badge-item">
+                <span className="job-badge-icon"><Globe size={15} /></span>
+                <span>Remote / Hybrid Friendly</span>
+              </div>
+            </div>
           </div>
         </section>
 
+        {/* =================================================
+            FORM SECTION
+        ================================================= */}
         <section className="job-form-section">
           <div className="job-form-container">
-            <div className="job-form-heading">
-              <span>01 / APPLICATION</span>
-              <h2>Professional details.</h2>
-            </div>
-
-            {/* ERROR MESSAGE */}
-
             {error && (
               <div
+                id="job-error-banner"
                 className="job-form-error"
                 role="alert"
                 aria-live="polite"
               >
-                {error}
+                <AlertCircle size={20} />
+                <span>{error}</span>
               </div>
             )}
 
@@ -493,334 +565,394 @@ export default function JobApply() {
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="job-form-grid">
-
-                {/* FULL NAME */}
-
-                <div className="job-field">
-                  <label htmlFor="jobFullName">
-                    Full Name <span>*</span>
-                  </label>
-
-                  <input
-                    id="jobFullName"
-                    name="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    autoComplete="name"
-                  />
+              {/* CARD 1: ROLE & PERSONAL DETAILS */}
+              <div className="job-form-card">
+                <div className="job-section-header">
+                  <div className="job-step-num">01</div>
+                  <div className="job-step-title">
+                    <h2>Personal & Role Details</h2>
+                    <p>Enter your contact details and the specific technical position you are applying for.</p>
+                  </div>
                 </div>
 
-                {/* EMAIL */}
+                <div className="job-grid-2">
+                  {/* FULL NAME */}
+                  <div className="job-field">
+                    <label htmlFor="jobFullName" className="job-label">
+                      <span>Full Name <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="jobFullName"
+                      name="fullName"
+                      type="text"
+                      placeholder="e.g. Alex Morgan"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      className="job-input"
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
 
-                <div className="job-field">
-                  <label htmlFor="jobEmail">
-                    Email Address <span>*</span>
-                  </label>
+                  {/* EMAIL */}
+                  <div className="job-field">
+                    <label htmlFor="jobEmail" className="job-label">
+                      <span>Email Address <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="jobEmail"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="job-input"
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
 
-                  <input
-                    id="jobEmail"
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    autoComplete="email"
-                  />
-                </div>
+                  {/* PHONE */}
+                  <div className="job-field">
+                    <label htmlFor="jobPhone" className="job-label">
+                      <span>Phone Number <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="jobPhone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="job-input"
+                      autoComplete="tel"
+                      required
+                    />
+                  </div>
 
-                {/* PHONE */}
+                  {/* CITY */}
+                  <div className="job-field">
+                    <label htmlFor="jobCity" className="job-label">
+                      <span>City <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="jobCity"
+                      name="city"
+                      type="text"
+                      placeholder="e.g. Bengaluru / San Francisco"
+                      value={formData.city}
+                      onChange={handleChange}
+                      className="job-input"
+                      autoComplete="address-level2"
+                      required
+                    />
+                  </div>
 
-                <div className="job-field">
-                  <label htmlFor="jobPhone">
-                    Phone Number <span>*</span>
-                  </label>
+                  {/* POSITION */}
+                  <div className="job-field">
+                    <label htmlFor="position" className="job-label">
+                      <span>Position Applying For <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="position"
+                      name="position"
+                      type="text"
+                      placeholder="e.g. Senior Full Stack Engineer"
+                      value={formData.position}
+                      onChange={handleChange}
+                      className="job-input"
+                      required
+                    />
+                  </div>
 
-                  <input
-                    id="jobPhone"
-                    name="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    autoComplete="tel"
-                  />
-                </div>
-
-                {/* CITY */}
-
-                <div className="job-field">
-                  <label htmlFor="jobCity">
-                    City <span>*</span>
-                  </label>
-
-                  <input
-                    id="jobCity"
-                    name="city"
-                    type="text"
-                    placeholder="Enter your city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    autoComplete="address-level2"
-                  />
-                </div>
-
-                {/* POSITION */}
-
-                <div className="job-field">
-                  <label htmlFor="position">
-                    Position Applying For <span>*</span>
-                  </label>
-
-                  <input
-                    id="position"
-                    name="position"
-                    type="text"
-                    placeholder="e.g. Full Stack Developer"
-                    value={formData.position}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* QUALIFICATION */}
-
-                <div className="job-field">
-                  <label htmlFor="qualification">
-                    Highest Qualification <span>*</span>
-                  </label>
-
-                  <input
-                    id="qualification"
-                    name="qualification"
-                    type="text"
-                    placeholder="e.g. B.Tech Computer Science"
-                    value={formData.qualification}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* EXPERIENCE */}
-
-                <div className="job-field">
-                  <label htmlFor="experience">
-                    Years of Experience <span>*</span>
-                  </label>
-
-                  <input
-                    id="experience"
-                    name="experience"
-                    type="number"
-                    min="1"
-                    step="0.1"
-                    placeholder="e.g. 2"
-                    value={formData.experience}
-                    onChange={handleChange}
-                  />
-
-                  <small>
-                    Minimum 1 year of professional experience
-                    required.
-                  </small>
-                </div>
-
-                {/* COMPANY */}
-
-                <div className="job-field">
-                  <label htmlFor="company">
-                    Current / Previous Company
-                  </label>
-
-                  <input
-                    id="company"
-                    name="company"
-                    type="text"
-                    placeholder="Company name"
-                    value={formData.company}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* SKILLS */}
-
-                <div className="job-field job-field-full">
-                  <label htmlFor="skills">
-                    Key Skills <span>*</span>
-                  </label>
-
-                  <textarea
-                    id="skills"
-                    name="skills"
-                    rows="4"
-                    placeholder="List your key technical or professional skills"
-                    value={formData.skills}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* LINKEDIN */}
-
-                <div className="job-field">
-                  <label htmlFor="jobLinkedin">
-                    LinkedIn Profile
-                  </label>
-
-                  <input
-                    id="jobLinkedin"
-                    name="linkedin"
-                    type="url"
-                    placeholder="https://linkedin.com/in/yourprofile"
-                    value={formData.linkedin}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* PORTFOLIO */}
-
-                <div className="job-field">
-                  <label htmlFor="jobPortfolio">
-                    GitHub / Portfolio
-                  </label>
-
-                  <input
-                    id="jobPortfolio"
-                    name="portfolio"
-                    type="url"
-                    placeholder="https://github.com/username"
-                    value={formData.portfolio}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* SALARY */}
-
-                <div className="job-field">
-                  <label htmlFor="salary">
-                    Expected Salary
-                  </label>
-
-                  <input
-                    id="salary"
-                    name="expectedSalary"
-                    type="text"
-                    placeholder="e.g. ₹4,00,000 per annum"
-                    value={formData.expectedSalary}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* NOTICE PERIOD */}
-
-                <div className="job-field">
-                  <label htmlFor="notice">
-                    Notice Period
-                  </label>
-
-                  <select
-                    id="notice"
-                    name="noticePeriod"
-                    value={formData.noticePeriod}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>
-                      Select notice period
-                    </option>
-
-                    <option value="Immediate">
-                      Immediate
-                    </option>
-
-                    <option value="15 days">
-                      15 Days
-                    </option>
-
-                    <option value="30 days">
-                      30 Days
-                    </option>
-
-                    <option value="60 days">
-                      60 Days
-                    </option>
-
-                    <option value="90 days">
-                      90 Days
-                    </option>
-                  </select>
-                </div>
-
-                {/* RESUME */}
-
-                <div className="job-field job-field-full">
-                  <label htmlFor="jobResume">
-                    Resume <span>*</span>
-                  </label>
-
-                  <input
-                    id="jobResume"
-                    name="resume"
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleResumeChange}
-                  />
-
-                  <small>
-                    PDF, DOC or DOCX · Maximum 5 MB
-                  </small>
-
-                  {resumeFile && (
-                    <small className="job-file-selected">
-                      Selected: {resumeFile.name}
-                    </small>
-                  )}
-                </div>
-
-                {/* INTRODUCTION */}
-
-                <div className="job-field job-field-full">
-                  <label htmlFor="introduction">
-                    Short Introduction <span>*</span>
-                  </label>
-
-                  <textarea
-                    id="introduction"
-                    name="introduction"
-                    rows="6"
-                    placeholder="Briefly tell us about yourself, your experience and what you can bring to the role."
-                    value={formData.introduction}
-                    onChange={handleChange}
-                  />
+                  {/* QUALIFICATION */}
+                  <div className="job-field">
+                    <label htmlFor="qualification" className="job-label">
+                      <span>Highest Qualification <span className="required">*</span></span>
+                    </label>
+                    <input
+                      id="qualification"
+                      name="qualification"
+                      type="text"
+                      placeholder="e.g. B.Tech / M.S. in Computer Science"
+                      value={formData.qualification}
+                      onChange={handleChange}
+                      className="job-input"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* FOOTER */}
+              {/* CARD 2: EXPERIENCE & TECHNICAL BACKGROUND */}
+              <div className="job-form-card">
+                <div className="job-section-header">
+                  <div className="job-step-num">02</div>
+                  <div className="job-step-title">
+                    <h2>Experience & Background</h2>
+                    <p>Highlight your industry experience, current organization, and core technical skillsets.</p>
+                  </div>
+                </div>
 
-              <div className="job-form-footer">
-                <p>
-                  Applications are reviewed based on the role,
-                  experience and information provided.
-                </p>
+                <div className="job-grid-2">
+                  {/* EXPERIENCE */}
+                  <div className="job-field">
+                    <label htmlFor="experience" className="job-label">
+                      <span>Years of Experience <span className="required">*</span></span>
+                      <span className="optional">Min. 1 year</span>
+                    </label>
+                    <input
+                      id="experience"
+                      name="experience"
+                      type="number"
+                      min="1"
+                      step="0.1"
+                      placeholder="e.g. 3.5"
+                      value={formData.experience}
+                      onChange={handleChange}
+                      className="job-input"
+                      required
+                    />
+                    <p className="job-field-hint">
+                      Requires at least 1 year of professional work experience.
+                    </p>
+                  </div>
 
-                <button
-                  type="submit"
-                  className="job-submit-button"
-                  disabled={submitting}
-                >
-                  {submitting ? (
-                    <>
-                      <Loader2
-                        size={17}
-                        className="job-submit-spinner"
-                      />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit Application
-                      <ArrowRight size={17} />
-                    </>
-                  )}
-                </button>
+                  {/* COMPANY */}
+                  <div className="job-field">
+                    <label htmlFor="company" className="job-label">
+                      <span>Current / Previous Company</span>
+                      <span className="optional">Optional</span>
+                    </label>
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      placeholder="e.g. Acme Tech Corp"
+                      value={formData.company}
+                      onChange={handleChange}
+                      className="job-input"
+                    />
+                  </div>
+
+                  {/* NOTICE PERIOD */}
+                  <div className="job-field">
+                    <label htmlFor="notice" className="job-label">
+                      <span>Notice Period</span>
+                      <span className="optional">Availability</span>
+                    </label>
+                    <select
+                      id="notice"
+                      name="noticePeriod"
+                      value={formData.noticePeriod}
+                      onChange={handleChange}
+                      className="job-select"
+                    >
+                      <option value="">Select notice period</option>
+                      <option value="Immediate">Immediate / Serving Notice</option>
+                      <option value="15 days">15 Days</option>
+                      <option value="30 days">30 Days</option>
+                      <option value="60 days">60 Days</option>
+                      <option value="90 days">90 Days</option>
+                    </select>
+                  </div>
+
+                  {/* SALARY */}
+                  <div className="job-field">
+                    <label htmlFor="salary" className="job-label">
+                      <span>Expected Salary</span>
+                      <span className="optional">CTC per annum</span>
+                    </label>
+                    <input
+                      id="salary"
+                      name="expectedSalary"
+                      type="text"
+                      placeholder="e.g. ₹8,00,000 / $90,000"
+                      value={formData.expectedSalary}
+                      onChange={handleChange}
+                      className="job-input"
+                    />
+                  </div>
+
+                  {/* SKILLS */}
+                  <div className="job-field job-field-full">
+                    <label htmlFor="skills" className="job-label">
+                      <span>Key Technical Skills <span className="required">*</span></span>
+                      <span className="optional">Comma-separated</span>
+                    </label>
+                    <textarea
+                      id="skills"
+                      name="skills"
+                      rows="3"
+                      placeholder="e.g. React, Node.js, TypeScript, PostgreSQL, AWS, Docker, GraphQL, System Design"
+                      value={formData.skills}
+                      onChange={handleChange}
+                      className="job-textarea"
+                      required
+                    />
+                    <p className="job-field-hint">
+                      Include frameworks, databases, cloud tools, or methodologies you specialize in.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CARD 3: LINKS, RESUME & SUBMIT */}
+              <div className="job-form-card">
+                <div className="job-section-header">
+                  <div className="job-step-num">03</div>
+                  <div className="job-step-title">
+                    <h2>Links, Resume & Introduction</h2>
+                    <p>Share your professional profiles, upload your latest resume, and add a short introduction.</p>
+                  </div>
+                </div>
+
+                <div className="job-grid-2">
+                  {/* LINKEDIN */}
+                  <div className="job-field">
+                    <label htmlFor="jobLinkedin" className="job-label">
+                      <span>LinkedIn Profile</span>
+                      <span className="optional">Recommended</span>
+                    </label>
+                    <input
+                      id="jobLinkedin"
+                      name="linkedin"
+                      type="url"
+                      placeholder="https://linkedin.com/in/yourprofile"
+                      value={formData.linkedin}
+                      onChange={handleChange}
+                      className="job-input"
+                    />
+                  </div>
+
+                  {/* PORTFOLIO */}
+                  <div className="job-field">
+                    <label htmlFor="jobPortfolio" className="job-label">
+                      <span>GitHub / Portfolio</span>
+                      <span className="optional">Recommended</span>
+                    </label>
+                    <input
+                      id="jobPortfolio"
+                      name="portfolio"
+                      type="url"
+                      placeholder="https://github.com/yourhandle"
+                      value={formData.portfolio}
+                      onChange={handleChange}
+                      className="job-input"
+                    />
+                  </div>
+
+                  {/* RESUME UPLOAD */}
+                  <div className="job-field job-field-full" style={{ marginTop: "4px" }}>
+                    <label htmlFor="jobResume" className="job-label">
+                      <span>
+                        Resume / CV <span className="required">*</span>
+                      </span>
+                      <span className="optional">PDF, DOC, DOCX up to 5 MB</span>
+                    </label>
+
+                    {!resumeFile ? (
+                      <div className="job-upload-box">
+                        <input
+                          ref={fileInputRef}
+                          id="jobResume"
+                          name="resume"
+                          type="file"
+                          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                          onChange={handleResumeChange}
+                          className="job-upload-input"
+                          aria-label="Upload your resume"
+                        />
+                        <div className="job-upload-content">
+                          <div className="job-upload-icon-circle">
+                            <UploadCloud size={24} strokeWidth={2} />
+                          </div>
+                          <div className="job-upload-text">
+                            <span>Click to upload</span> or drag and drop your resume
+                          </div>
+                          <div className="job-upload-subtext">
+                            PDF, DOC, or DOCX files accepted (Max size 5 MB)
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="job-file-selected-card">
+                        <div className="job-file-info">
+                          <div className="job-file-badge">
+                            <FileText size={20} />
+                          </div>
+                          <div className="job-file-details">
+                            <div className="job-file-name" title={resumeFile.name}>
+                              {resumeFile.name}
+                            </div>
+                            <div className="job-file-size">
+                              {formatFileSize(resumeFile.size)} • Ready for submission
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="job-file-remove-btn"
+                          onClick={handleRemoveResume}
+                          title="Remove and select different file"
+                          aria-label="Remove uploaded file"
+                        >
+                          <X size={18} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* INTRODUCTION */}
+                  <div className="job-field job-field-full" style={{ marginTop: "4px" }}>
+                    <label htmlFor="introduction" className="job-label">
+                      <span>Short Introduction <span className="required">*</span></span>
+                    </label>
+                    <textarea
+                      id="introduction"
+                      name="introduction"
+                      rows="4"
+                      placeholder="Briefly tell us about yourself, key career accomplishments, and what you can bring to Cognolynx."
+                      value={formData.introduction}
+                      onChange={handleChange}
+                      className="job-textarea"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* FOOTER & SUBMIT BUTTON */}
+                <div className="job-form-footer">
+                  <div className="job-footer-info">
+                    <ShieldCheck size={20} />
+                    <span>
+                      Applications are kept strictly confidential and reviewed directly by Cognolynx technical leadership.
+                    </span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="job-submit-button"
+                    disabled={submitting}
+                    id="job-form-submit-btn"
+                    aria-label={submitting ? "Submitting application" : "Submit job application"}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2
+                          size={18}
+                          className="job-submit-spinner"
+                        />
+                        <span>Submitting Application...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Application</span>
+                        <Send size={16} />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

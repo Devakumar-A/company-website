@@ -32,7 +32,7 @@ const currentYear = new Date().getFullYear();
 const footerGroups = [
   {
     title: "COMPANY",
-    links: ["Home", "About", "Services", "Solutions", "Work", "Contact"],
+    links: ["Home", "About", "Services", "Solutions", "Work", "FAQ", "Contact"],
   },
   {
     title: "SERVICES",
@@ -60,11 +60,12 @@ const footerGroups = [
     links: [
       "Blog",
       "Case Studies",
-      "Privacy Policy",
-      "Terms & Conditions",
+      "FAQ",
       "Support",
       "Careers",
       "Certificate Verification",
+      "Privacy Policy",
+      "Terms & Conditions",
     ],
   },
 ];
@@ -78,6 +79,8 @@ const linkRouteMap = {
   Contact: "/contact",
   Careers: "/careers",
   Career: "/careers",
+  FAQ: "/faq",
+  "Frequently Asked Questions": "/faq",
   "Certificate Verification": "/certificate/verify",
   "Privacy Policy": "/privacy-policy",
   "Terms & Conditions": "/terms-conditions",
@@ -111,7 +114,7 @@ const socialLinks = [
   {
     label: "Email",
     icon: Mail,
-    href: "mailto:contact@cognolynx.com",
+    href: "mailto:cognolynxforge@gmail.com",
   },
 ];
 

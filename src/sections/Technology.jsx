@@ -592,10 +592,17 @@ export default function Technology({ headingTag = "h2" }) {
   useEffect(() => {
     let isIntersecting = false;
     let isRunning = false;
+    let scrollTicking = false;
 
     const handleScroll = () => {
       if (!isIntersecting) return;
-      targetProgress.current = calculateProgress();
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          targetProgress.current = calculateProgress();
+          scrollTicking = false;
+        });
+      }
     };
 
     // Initialize immediate progress on mount
@@ -636,11 +643,11 @@ export default function Technology({ headingTag = "h2" }) {
 
       smoothMouse.current = { x: mouseX, y: mouseY };
 
-      // Only re-render React state if value has meaningfully moved
+      // Only re-render React state if value has meaningfully moved (avoids 120fps CPU thrash)
       const pDiff = Math.abs(nextProgress - lastProgress);
       const mDiff = Math.abs(mouseX - lastMouseX) + Math.abs(mouseY - lastMouseY);
 
-      if (pDiff > 0.0001 || mDiff > 0.0008) {
+      if (pDiff > 0.0012 || mDiff > 0.002) {
         lastProgress = nextProgress;
         lastMouseX = mouseX;
         lastMouseY = mouseY;

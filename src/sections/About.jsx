@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import "../styles/About.css";
 
 export default function About() {
@@ -106,11 +108,19 @@ export default function About() {
             From software and digital platforms to intelligent systems, we turn ideas and complex challenges into technology that works — with a focus on simplicity, performance, and long-term value.
           </p>
 
-          {/* Founder Belief Callout */}
-          <div className="about-founder-box">
-            <p className="about-founder-belief">
-              <strong className="about-founder-name">Founded by Devakumar A</strong>, Cognolynx is built with a simple belief: technology should make businesses better, not more complicated.
+          {/* Internship Program Callout */}
+          <div className="about-intern-box">
+            <div className="about-intern-badge">
+              <span className="about-intern-pulse" />
+              <span>INTERNSHIP PROGRAM NOW OPEN</span>
+            </div>
+            <p className="about-intern-text">
+              We mentor and empower emerging engineers through practical work on live production software, AI models, and real client systems with verified MSME certification.
             </p>
+            <Link to="/careers/apply" className="about-intern-cta">
+              <span>Apply for Internship</span>
+              <ArrowRight size={15} />
+            </Link>
           </div>
         </div>
       </div>

@@ -342,37 +342,91 @@
   transition-delay: 0.22s;
 }
 
-/* Founder Statement Callout Card */
-.about-founder-box {
+/* Internship Program Callout Card */
+.about-intern-box {
   margin-top: clamp(18px, 2.6vh, 26px);
-  padding: 16px 20px;
-  border-left: 3px solid #7c3aed;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.045) 0%, rgba(37, 99, 235, 0.02) 100%);
-  border-radius: 0 12px 12px 0;
-  box-shadow: 0 2px 12px rgba(10, 15, 30, 0.03);
+  padding: 18px 22px;
+  border-left: 3px solid #1769e0;
+  background: linear-gradient(135deg, rgba(23, 105, 224, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+  border-radius: 0 14px 14px 0;
+  box-shadow: 0 4px 18px rgba(10, 15, 30, 0.035);
+  border: 1px solid rgba(23, 105, 224, 0.12);
+  border-left: 3px solid #1769e0;
   transform: translate3d(0, 16px, 0);
   opacity: 0;
   transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.32s,
               opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.32s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .about-in-view .about-description,
-.about-in-view .about-founder-box {
+.about-in-view .about-intern-box {
   transform: translate3d(0, 0, 0);
   opacity: 1;
 }
 
-.about-founder-belief {
-  margin: 0;
-  font-size: clamp(14px, 1vw, 15px);
-  line-height: 1.62;
-  color: #334155;
-  font-weight: 400;
+.about-intern-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  color: #1769e0;
 }
 
-.about-founder-name {
-  color: #080d1a;
+.about-intern-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1769e0;
+  box-shadow: 0 0 0 0 rgba(23, 105, 224, 0.5);
+  animation: internPulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes internPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(23, 105, 224, 0.6);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(23, 105, 224, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(23, 105, 224, 0);
+  }
+}
+
+.about-intern-text {
+  margin: 0;
+  font-size: clamp(13.5px, 1vw, 14.5px);
+  line-height: 1.6;
+  color: #334155;
+  font-weight: 450;
+}
+
+.about-intern-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 700;
+  color: #1769e0;
+  text-decoration: none;
+  margin-top: 2px;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.about-intern-cta:hover {
+  color: #1054b8;
+  gap: 9px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* =========================================================
@@ -414,10 +468,10 @@
     line-height: 1.65;
   }
 
-  .about-founder-box {
+  .about-intern-box {
     text-align: left;
     border-radius: 12px;
-    border-left: 3px solid #7c3aed;
+    border-left: 3px solid #1769e0;
   }
 }
 
@@ -444,12 +498,12 @@
     line-height: 1.62;
   }
 
-  .about-founder-box {
+  .about-intern-box {
     padding: 14px 16px;
   }
 
-  .about-founder-belief {
-    font-size: 13.5px;
+  .about-intern-text {
+    font-size: 13px;
   }
 }
 

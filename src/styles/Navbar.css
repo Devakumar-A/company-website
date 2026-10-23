@@ -151,15 +151,9 @@
 
 
   transition:
-
-    background 0.45s var(--cg-ease),
-
-    border-color 0.45s var(--cg-ease),
-
-    box-shadow 0.45s var(--cg-ease),
-
-    backdrop-filter 0.45s var(--cg-ease);
-
+    background 0.35s var(--cg-ease),
+    border-color 0.35s var(--cg-ease),
+    box-shadow 0.35s var(--cg-ease);
 }
 
 
