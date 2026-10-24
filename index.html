@@ -31,14 +31,55 @@
     <meta name="twitter:description" content="Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions to help forward-thinking businesses scale." />
     <meta name="twitter:image" content="https://cognolynx.tech/og-image.png" />
 
-    <!-- Site Name Structured Data (Homepage) -->
+    <!-- Structured Data: Site Name, Organization & Founder Knowledge Graph -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Cognolynx",
-      "alternateName": "Cognolynx Tech",
-      "url": "https://cognolynx.tech/"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://cognolynx.tech/#website",
+          "name": "Cognolynx",
+          "alternateName": "Cognolynx Tech",
+          "url": "https://cognolynx.tech/",
+          "publisher": {
+            "@id": "https://cognolynx.tech/#organization"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://cognolynx.tech/#organization",
+          "name": "Cognolynx",
+          "url": "https://cognolynx.tech/",
+          "logo": "https://cognolynx.tech/icon-512.png",
+          "founder": {
+            "@type": "Person",
+            "@id": "https://cognolynx.tech/#founder",
+            "name": "Devakumar A",
+            "jobTitle": "Founder & Chief Executive Officer",
+            "url": "https://cognolynx.tech/"
+          },
+          "foundingDate": "2024",
+          "description": "Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions."
+        },
+        {
+          "@type": "Person",
+          "@id": "https://cognolynx.tech/#founder",
+          "name": "Devakumar A",
+          "jobTitle": "Founder & Chief Executive Officer",
+          "url": "https://cognolynx.tech/",
+          "worksFor": {
+            "@id": "https://cognolynx.tech/#organization"
+          },
+          "knowsAbout": [
+            "Custom Software Engineering",
+            "Artificial Intelligence & Machine Learning",
+            "Full Stack Web Platforms",
+            "Cloud Infrastructure",
+            "Digital Product Architecture"
+          ]
+        }
+      ]
     }
     </script>
 

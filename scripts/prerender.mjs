@@ -294,26 +294,13 @@ async function prerender() {
     // Remove any existing JSON-LD from template before injecting route-specific JSON-LD
     pageHtml = pageHtml.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '');
 
-    // Requirement: On the homepage only, add this JSON-LD in the <head>
-    if (targetKey === '/') {
-      const siteNameJsonLd = {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Cognolynx",
-        "alternateName": "Cognolynx Tech",
-        "url": "https://cognolynx.tech/"
-      };
-      const jsonLdTag = `  <script type="application/ld+json">\n${JSON.stringify(siteNameJsonLd, null, 2)}\n  </script>\n  `;
-      pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
-    } else {
-      const routeJsonLd = seo.jsonLd !== undefined
-        ? seo.jsonLd
-        : (seo.noindex ? null : getJsonLdForRoute(targetKey, { ...seo, canonical: resolvedCanonical }));
+    const routeJsonLd = seo.jsonLd !== undefined
+      ? seo.jsonLd
+      : (seo.noindex ? null : getJsonLdForRoute(targetKey, { ...seo, canonical: resolvedCanonical }));
 
-      if (routeJsonLd) {
-        const jsonLdTag = `  <script type="application/ld+json">\n${JSON.stringify(routeJsonLd, null, 2)}\n  </script>\n  `;
-        pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
-      }
+    if (routeJsonLd) {
+      const jsonLdTag = `  <script type="application/ld+json">\n${JSON.stringify(routeJsonLd, null, 2)}\n  </script>\n  `;
+      pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
     }
 
     // Inject Prerendered HTML into #root

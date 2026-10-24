@@ -383,14 +383,57 @@ export function getJsonLdForRoute(routePath, seo = {}) {
   const cleanPath = (routePath || "").replace(/\/$/, "") || "/";
   const canonicalUrl = seo.canonical || (cleanPath === "/" ? SITE_URL : `${SITE_URL}${cleanPath}`);
 
-  // 1. Homepage schema (Google Site Name requirement)
+  const founderSchema = {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#founder`,
+    name: "Devakumar A",
+    jobTitle: "Founder & Chief Executive Officer",
+    url: SITE_URL,
+    worksFor: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    knowsAbout: [
+      "Custom Software Engineering",
+      "Artificial Intelligence & Machine Learning",
+      "Full Stack Web Platforms",
+      "Cloud Infrastructure",
+      "Digital Product Architecture",
+    ],
+  };
+
+  const orgSchema = {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: "Cognolynx",
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon-512.png`,
+    founder: {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#founder`,
+      name: "Devakumar A",
+      jobTitle: "Founder & Chief Executive Officer",
+      url: SITE_URL,
+    },
+    foundingDate: "2024",
+    description: "Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions.",
+  };
+
+  const webSiteSchema = {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: "Cognolynx",
+    alternateName: "Cognolynx Tech",
+    url: "https://cognolynx.tech/",
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+  };
+
+  // 1. Homepage schema (Google Site Name + Organization + Founder Knowledge Graph)
   if (cleanPath === "/") {
     return {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Cognolynx",
-      "alternateName": "Cognolynx Tech",
-      "url": "https://cognolynx.tech/",
+      "@graph": [webSiteSchema, orgSchema, founderSchema],
     };
   }
 
