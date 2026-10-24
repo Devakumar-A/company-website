@@ -5,7 +5,6 @@ import "../styles/About.css";
 
 export default function About() {
   const sectionRef = useRef(null);
-  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -14,7 +13,9 @@ export default function About() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsInView(true);
+          el.classList.add("about-in-view");
+        } else {
+          el.classList.remove("about-in-view");
         }
       },
       { threshold: 0.15 }
@@ -28,7 +29,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className={`about-section ${isInView ? "about-in-view" : ""}`}
+      className="about-section"
     >
       {/* Ambient background grid & light glow */}
       <div className="about-bg" aria-hidden="true">
@@ -44,19 +45,35 @@ export default function About() {
           {/* Ambient purple/blue halo behind the logo stage */}
           <div className="about-logo-halo" />
 
-          {/* Complete Cognolynx Logo */}
+          {/* 1355x1161 Aspect-Ratio Logo Assembly Stage */}
           <div className="about-logo-stage">
-            <picture>
-              <source srcSet="/assets/logo.webp" type="image/webp" />
+            {/* 1. BLACK LOGO SHARD — Enters from left, splits left when moving away */}
+            <picture className="about-logo-piece about-piece-black">
+              <source srcSet="/assets/logo-black.webp" type="image/webp" />
               <img
-                src="/assets/logo.png"
-                alt="Cognolynx Logo"
-                className="about-logo-full"
+                src="/assets/logo-black.png"
+                alt="Cognolynx Black Shard"
                 draggable="false"
                 loading="eager"
                 decoding="async"
                 width="800"
                 height="685"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
+            </picture>
+
+            {/* 2. PURPLE LOGO SHARD — Enters from right, splits right when moving away */}
+            <picture className="about-logo-piece about-piece-purple">
+              <source srcSet="/assets/logo-purple.webp" type="image/webp" />
+              <img
+                src="/assets/logo-purple.png"
+                alt="Cognolynx Purple Shard"
+                draggable="false"
+                loading="eager"
+                decoding="async"
+                width="800"
+                height="685"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             </picture>
           </div>

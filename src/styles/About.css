@@ -20,8 +20,8 @@
   isolation: isolate;
   border-top-left-radius: clamp(24px, 4vw, 44px);
   border-top-right-radius: clamp(24px, 4vw, 44px);
-  box-shadow: 0 -16px 36px -12px rgba(0, 0, 0, 0.35);
-  margin-top: -30px;
+  box-shadow: 0 -24px 60px -10px rgba(0, 0, 0, 0.5), 0 -6px 24px rgba(0, 0, 0, 0.25);
+  margin-top: 0;
   transform: translateZ(0);
   backface-visibility: hidden;
   font-family:
@@ -138,6 +138,7 @@
 }
 
 /* Stage preserving original 1355 x 1161 logo aspect ratio */
+/* Stage preserving original 1355 x 1161 logo aspect ratio */
 .about-logo-stage {
   position: relative;
   z-index: 2;
@@ -146,27 +147,52 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 20px 40px rgba(10, 15, 30, 0.08));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  filter: drop-shadow(0 14px 34px rgba(10, 15, 30, 0.10));
 }
 
-/* Complete Logo Styling */
-.about-logo-full {
+/* Common Logo Piece Styling — 100% GPU Hardware Accelerated */
+.about-logo-piece {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   user-select: none;
   pointer-events: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 0 24px rgba(124, 58, 237, 0.28)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.12));
-  transition: transform 1.25s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 1.25s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.25s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: scale(0.92);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Black Shard (Left): Enters smoothly from left, separates back when moving away */
+.about-piece-black {
+  z-index: 3;
+  transform: translate3d(-80px, -4px, 0);
   opacity: 0;
 }
 
-.about-in-view .about-logo-full {
-  transform: scale(1);
+/* Purple Shard (Right): Enters smoothly from right, separates back when moving away */
+.about-piece-purple {
+  z-index: 4;
+  transform: translate3d(80px, 4px, 0);
+  opacity: 0;
+}
+
+/* On In-View: Both Shards converge seamlessly into the complete logo */
+.about-in-view .about-piece-black {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.about-in-view .about-piece-purple {
+  transform: translate3d(0, 0, 0);
   opacity: 1;
 }
 
