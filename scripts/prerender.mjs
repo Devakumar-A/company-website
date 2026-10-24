@@ -189,11 +189,20 @@ async function prerender() {
         React.createElement(
           HelmetProvider,
           { context: helmetContext },
+          React.createElement(
+            'a',
+            { href: '#main', className: 'skip-link' },
+            'Skip to main content'
+          ),
           React.createElement(Navbar),
           React.createElement(
-            React.Suspense,
-            { fallback: null },
-            React.createElement(Component)
+            'main',
+            { id: 'main' },
+            React.createElement(
+              React.Suspense,
+              { fallback: null },
+              React.createElement(Component)
+            )
           )
         )
       )

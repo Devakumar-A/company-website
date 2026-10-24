@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   ThreeDBendCarousel,
@@ -69,7 +69,6 @@ const solutionsData = [
  */
 export default function Solutions({ headingTag = "h2" }) {
   const Heading = headingTag;
-  const navigate = useNavigate();
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const carouselRef = useRef(null);
 
@@ -126,12 +125,15 @@ export default function Solutions({ headingTag = "h2" }) {
                 to={item.path}
                 className="solution-card"
                 style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}
-                aria-label={`View ${item.title} solution`}
               >
                 {/* [01] DIGITAL PRODUCTS */}
                 <div className="sol-card-header">
                   <span className="sol-card-number">[{item.number}]</span>
-                  <h3 className="sol-card-title">{item.title}</h3>
+                  {headingTag === "h1" ? (
+                    <h2 className="sol-card-title">{item.title}</h2>
+                  ) : (
+                    <h3 className="sol-card-title">{item.title}</h3>
+                  )}
                 </div>
 
                 {/* Real Case-Study / Product Visual */}

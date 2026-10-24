@@ -6,7 +6,7 @@ import {
   Layers3,
   MonitorSmartphone,
 } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SEO from "../../../components/SEO";
 import { seoData } from "../../../data/seoData";
 import Footer from "../../../components/Footer";
@@ -48,8 +48,6 @@ const services = [
 ];
 
 export default function WebDigital() {
-  const navigate = useNavigate();
-
   return (
     <div className="service-category-wrapper">
       <SEO {...seoData["/services/web-digital"]} />

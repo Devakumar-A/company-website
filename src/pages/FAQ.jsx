@@ -22,7 +22,6 @@ import {
   MessageSquare,
   Building2,
   Mail,
-  Award,
 } from "lucide-react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";

@@ -1,0 +1,57 @@
+[
+  {
+    "route": "/",
+    "url": "http://localhost:4173/",
+    "performance": 98,
+    "accessibility": 100,
+    "seo": 100,
+    "lcp": "2.0 s",
+    "cls": "0",
+    "tbt": "30 ms",
+    "lcpElement": "header.cg-header > div.cg-nav-container > a.cg-brand > span.cg-brand-text (\"Cognolynx\")"
+  },
+  {
+    "route": "/about",
+    "url": "http://localhost:4173/about",
+    "performance": 94,
+    "accessibility": 100,
+    "seo": 100,
+    "lcp": "2.8 s",
+    "cls": "0.002",
+    "tbt": "50 ms",
+    "lcpElement": "section.about-intro > div.about-intro-content > div.about-intro-text > p (\"We work with businesses, teams and individuals to turn ideas into dependable di…\")"
+  },
+  {
+    "route": "/services",
+    "url": "http://localhost:4173/services",
+    "performance": 98,
+    "accessibility": 100,
+    "seo": 100,
+    "lcp": "2.0 s",
+    "cls": "0",
+    "tbt": "0 ms",
+    "lcpElement": "div.services-container > div.services-header > div.services-heading > h1 (\"Everything you need\nto move forward.\")"
+  },
+  {
+    "route": "/contact",
+    "url": "http://localhost:4173/contact",
+    "performance": 95,
+    "accessibility": 100,
+    "seo": 100,
+    "lcp": "2.8 s",
+    "cls": "0",
+    "tbt": "0 ms",
+    "lcpElement": "div.contact-page > section.contact-hero > div.contact-hero-content > p.contact-intro (\"Have a project in mind, need technical architecture guidance, or want to discus…\")"
+  },
+  {
+    "route": "/services/web-digital/ecommerce",
+    "url": "http://localhost:4173/services/web-digital/ecommerce",
+    "performance": 97,
+    "accessibility": 100,
+    "seo": 100,
+    "lcp": "2.4 s",
+    "cls": "0",
+    "tbt": "0 ms",
+    "lcpElement": "main.service-detail-page > section.service-detail-content > div.service-detail-copy > p (\"We build commerce experiences with clear product presentation, simple navigatio…\")"
+  }
+]

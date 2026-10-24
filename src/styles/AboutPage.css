@@ -6,7 +6,7 @@
 .about-page {
   --about-black: #07101f;
   --about-text: #101827;
-  --about-muted: #64748b;
+  --about-muted: #475569;
   --about-blue: #1769e0;
   --about-line: rgba(15, 23, 42, 0.1);
   --about-soft: #f5f8fc;
@@ -58,7 +58,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #718096;
+  color: #334155;
 }
 
 .about-section-label span:first-child {
@@ -75,7 +75,7 @@
 }
 
 .about-heading span {
-  color: #8a96a8;
+  color: #475569;
 }
 
 /* =========================================================

@@ -145,7 +145,6 @@ export default function Services({ headingTag = "h2" }) {
   const isDraggingRef = useRef(false);
   const isHoveredRef = useRef(false);
   const animFrameIdRef = useRef(null);
-  const lastActiveIndexRef = useRef(0);
 
   // Pointer & Gesture tracking state
   const gestureRef = useRef({
@@ -246,19 +245,6 @@ export default function Services({ headingTag = "h2" }) {
 
       // Hardware-accelerated direct transform update
       track.style.transform = `translate3d(${-positionRef.current}px, 0, 0)`;
-
-      // Sync active index for card highlight
-      if (oneSetWidth > 0) {
-        const cardWidth = cachedCardWidthRef.current || 384;
-        const currentCard =
-          Math.floor((positionRef.current + cardWidth * 0.45) / cardWidth) %
-          services.length;
-
-        if (currentCard !== lastActiveIndexRef.current) {
-          lastActiveIndexRef.current = currentCard;
-          setActiveIndex(currentCard);
-        }
-      }
 
       animFrameIdRef.current = requestAnimationFrame(tick);
     };
@@ -537,7 +523,11 @@ export default function Services({ headingTag = "h2" }) {
                   </div>
 
                   <div className="card-content">
-                    <h3>{service.title}</h3>
+                    {headingTag === "h1" ? (
+                      <h2>{service.title}</h2>
+                    ) : (
+                      <h3>{service.title}</h3>
+                    )}
                     <p>{service.short}</p>
                   </div>
 

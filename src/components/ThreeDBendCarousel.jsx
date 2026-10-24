@@ -21,12 +21,13 @@ export function BendCarouselItem({
   as: Component = "div",
   ...rest
 }) {
+  const isAnchor = Boolean(rest.to || rest.href || Component === "a");
+
   return (
     <Component
       className={`bend-carousel-item ${className}`}
       style={style}
-      role="group"
-      aria-roledescription="slide"
+      {...(!isAnchor ? { role: "group", "aria-roledescription": "slide" } : {})}
       {...rest}
     >
       {/* Subtle dynamic glass sheen moving with 3D rotation */}

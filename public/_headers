@@ -2,11 +2,24 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Root and all pages: Security headers (no strict CSP)
+# Static media and favicons
+/*.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/*.webp
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/*.ico
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/*.svg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# HTML files: always revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Global security headers for all routes
 /*
   X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-
-# Ensure HTML entry points always revalidate
-/index.html
-  Cache-Control: public, max-age=0, must-revalidate
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()

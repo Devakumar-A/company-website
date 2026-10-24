@@ -254,12 +254,16 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <a href="#main" className="skip-link">
+          Skip to main content
+        </a>
         <ScrollToTop />
-      <Navbar />
+        <Navbar />
 
-      <Suspense fallback={<PageLoadingFallback />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
+        <main id="main">
+          <Suspense fallback={<PageLoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/solutions" element={<SolutionsPage />} />
@@ -549,6 +553,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        </main>
       </BrowserRouter>
     </HelmetProvider>
   );

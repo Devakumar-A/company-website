@@ -6,7 +6,7 @@ import {
   Users2,
   FileText,
 } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Footer from "../../../components/Footer";
 import SEO from "../../../components/SEO";
 import { seoData } from "../../../data/seoData";
@@ -48,7 +48,6 @@ const services = [
 ];
 
 export default function GrowthMarketing() {
-  const navigate = useNavigate();
   const seo = seoData["/services/growth-marketing"];
 
   return (

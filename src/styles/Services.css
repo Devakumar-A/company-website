@@ -469,6 +469,7 @@
   margin-bottom: 35px;
 }
 
+.card-content h2,
 .card-content h3 {
   margin: 0 0 18px;
 
@@ -732,12 +733,10 @@
   }
 
   .service-card {
-    flex-basis: 320px;
-
-    width: 320px;
-
+    flex-basis: clamp(280px, 85vw, 320px);
+    width: clamp(280px, 85vw, 320px);
+    max-width: 100%;
     min-height: 410px;
-
     padding: 27px;
   }
 

@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "../styles/Technology.css";
 
@@ -525,7 +525,6 @@ const TechnologyCore = React.memo(
 
 export default function Technology({ headingTag = "h2" }) {
   const Heading = headingTag;
-  const navigate = useNavigate();
   const sectionRef = useRef(null);
 
   /*
@@ -909,7 +908,6 @@ export default function Technology({ headingTag = "h2" }) {
             to={activeChapter.path}
             className="technology-chapter-info"
             style={{ textDecoration: "none", color: "inherit", cursor: "pointer", pointerEvents: "auto" }}
-            aria-label={`View ${activeChapter.title} details`}
           >
             <span className="technology-chapter-number">
               {activeChapter.number}
@@ -920,7 +918,11 @@ export default function Technology({ headingTag = "h2" }) {
                 {activeChapter.eyebrow}
               </span>
 
-              <h3>{activeChapter.title}</h3>
+              {headingTag === "h1" ? (
+                <h2>{activeChapter.title}</h2>
+              ) : (
+                <h3>{activeChapter.title}</h3>
+              )}
 
               <p>{activeChapter.description}</p>
             </div>
@@ -943,12 +945,11 @@ export default function Technology({ headingTag = "h2" }) {
           {/* =============================================
               CHAPTER PROGRESS DOTS
           ============================================= */}
-          <div className="technology-progress">
+          <div className="technology-progress" aria-hidden="true">
             {TECHNOLOGY_CHAPTERS.map((chapter, index) => (
               <span
                 key={chapter.id}
                 className={index === activeChapterIndex ? "active" : ""}
-                aria-label={`Technology chapter ${index + 1}`}
               />
             ))}
           </div>

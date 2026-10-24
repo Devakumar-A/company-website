@@ -1,0 +1,33 @@
+{
+  "h1Issues": [],
+  "headingOrderIssues": [
+    {
+      "route": "/services",
+      "issues": [
+        "Skipped heading level: <1> followed directly by <h3> (\"Software Development\")"
+      ]
+    },
+    {
+      "route": "/solutions",
+      "issues": [
+        "Skipped heading level: <1> followed directly by <h3> (\"DIGITAL PRODUCTS\")"
+      ]
+    },
+    {
+      "route": "/technology",
+      "issues": [
+        "Skipped heading level: <1> followed directly by <h3> (\"Web Development\")"
+      ]
+    }
+  ],
+  "imagesMissingAlt": [],
+  "imagesMissingDimensions": [],
+  "genericAnchorText": [],
+  "onClickNavigation": [
+    {
+      "file": "src\\pages\\NotFound.jsx",
+      "line": 51,
+      "code": "onClick={() => navigate(-1)}"
+    }
+  ]
+}

@@ -760,6 +760,7 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
+.technology-chapter-copy h2,
 .technology-chapter-copy h3 {
   margin: 0;
   font-size: clamp(20px, 1.8vw, 30px);
@@ -937,7 +938,8 @@
   .technology-intro {
     left: 30px;
     top: 16%;
-    width: 320px;
+    width: min(320px, calc(100vw - 60px));
+    max-width: calc(100vw - 60px);
     transform: translateY(-50%);
   }
 
@@ -1080,7 +1082,8 @@
 
   /* Mobile Connection Lines */
   .technology-connections {
-    width: 320px;
+    width: min(320px, 90vw);
+    max-width: 90vw;
     height: 450px;
   }
 
