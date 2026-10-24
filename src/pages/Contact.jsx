@@ -4,6 +4,7 @@ import { Mail, MapPin, ArrowUpRight } from "lucide-react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import ContactForm from "../components/ContactForm";
 import "../styles/Contact.css";
 
 function LinkedinIcon({ size = 22, ...props }) {
@@ -212,7 +213,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span />
+            <span className="contact-hero-divider" aria-hidden="true" />
             <p>
               <AnimatedWords text="COMMUNICATION CHANNELS" delay={0.9} stagger={0.05} />
             </p>
@@ -338,19 +339,7 @@ export default function ContactPage() {
             />
           </p>
 
-          <motion.a
-            href="mailto:cognolynxforge@gmail.com"
-            className="contact-project-button"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span>
-              <AnimatedWords text="Send Us a Proposal" delay={0.5} />
-            </span>
-            <ArrowUpRight size={17} />
-          </motion.a>
+          <ContactForm />
         </div>
       </motion.section>
 
