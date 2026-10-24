@@ -1,0 +1,15 @@
+/* TEAM */
+Founder & CEO: Devakumar A
+Contact: devak9391@gmail.com
+LinkedIn: https://www.linkedin.com/in/devakumar-a-129561305/
+GitHub: https://github.com/Devakumar-A
+ORCID: https://orcid.org/0009-0003-8934-6744
+Location: Puducherry, India
+
+/* SITE */
+Software: Cognolynx Web Platform
+Architecture: React 19, Vite, Tailwind CSS v4, Vanilla CSS Design System
+Prerendering: Static SSR Pipeline (78+ Routes)
+Hosting: Netlify Edge CDN (Apex Domain https://cognolynx.tech)
+Structured Data: Schema.org JSON-LD (@graph with WebSite, Organization, Person, BreadcrumbList)
+Last Update: 2026-10-24

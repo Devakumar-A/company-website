@@ -103,7 +103,7 @@ function generateSitemap() {
     const item = seoData[route];
     const canonicalUrl = item.canonical
       ? (item.canonical.startsWith('http') ? item.canonical : `${SITE_URL}${item.canonical.startsWith('/') ? '' : '/'}${item.canonical}`)
-      : (route === '/' ? SITE_URL : `${SITE_URL}${route}`);
+      : (route === '/' ? `${SITE_URL}/` : `${SITE_URL}${route}`);
 
     const compFile = routeComponentMap[route];
     const lastmod = getFileLastmod(compFile);

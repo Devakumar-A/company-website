@@ -1,4 +1,39 @@
+# ==============================================================================
+# Cognolynx Robots & AI Crawl Policy
+# https://cognolynx.tech/
+# ==============================================================================
+
+# Default: allow all compliant web search engine crawlers
 User-agent: *
 Allow: /
 
+# Google Search Indexing Crawler
+User-agent: Googlebot
+Allow: /
+
+# Microsoft Bing & Copilot Search Indexing Crawler
+User-agent: Bingbot
+Allow: /
+
+# OpenAI GPTBot: Powers foundational AI model training and capabilities
+User-agent: GPTBot
+Allow: /
+
+# OpenAI SearchBot: Powers real-time search discovery in ChatGPT & SearchGPT
+User-agent: OAI-SearchBot
+Allow: /
+
+# Perplexity AI Search: Powers conversational search citations and discoverability
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic Claude: Powers web citations and conversational AI answers
+User-agent: ClaudeBot
+Allow: /
+
+# Google Extended: Powers Gemini knowledge grounding and AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+# XML Sitemap Index
 Sitemap: https://cognolynx.tech/sitemap.xml

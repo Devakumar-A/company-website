@@ -35,6 +35,19 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# Text and discoverability files
+[[headers]]
+  for = "/*.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/.well-known/security.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=86400"
+
 # Global security headers
 [[headers]]
   for = "/*"
@@ -45,8 +58,53 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
 
-# Fallback for dynamic SPA routes
+# Canonical domain redirects (301 permanent) to https://cognolynx.tech
+[[redirects]]
+  from = "https://www.cognolynx.tech/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.cognolynx.tech/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://cognolynx.tech/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+# Legacy domain redirects (.com -> .tech)
+[[redirects]]
+  from = "https://www.cognolynx.com/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.cognolynx.com/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://cognolynx.com/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://cognolynx.com/*"
+  to = "https://cognolynx.tech/:splat"
+  status = 301
+  force = true
+
+# Real 404 status for unknown URLs (prevents soft 404s in GSC)
+# All valid routes are prerendered as static HTML files in dist/ and served directly by Netlify.
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/404.html"
+  status = 404
