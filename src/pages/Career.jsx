@@ -67,10 +67,7 @@ export default function Career() {
 
           <div className="career-options">
             {/* Internship */}
-            <Link
-              to="/careers/apply"
-              className="career-option"
-            >
+            <div className="career-option">
               <div className="career-option-top">
                 <div className="career-option-icon">
                   <GraduationCap size={24} strokeWidth={1.5} />
@@ -80,19 +77,24 @@ export default function Career() {
               </div>
 
               <div className="career-option-content">
-                <h2>Internship</h2>
+                <h2>Internship Program</h2>
 
                 <p>
-                  Start your professional journey through practical work
-                  and real project experience.
+                  100% remote 1-month hands-on project sprints across 10 engineering domains with mentor code reviews and verified certification.
                 </p>
 
-                <span className="career-option-link">
-                  Apply for Internship
-                  <ArrowRight size={17} strokeWidth={1.7} />
-                </span>
+                <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginTop: "16px" }}>
+                  <Link to="/internship" className="career-option-link">
+                    <span>Explore 10 Domains</span>
+                    <ArrowRight size={17} strokeWidth={1.7} />
+                  </Link>
+                  <Link to="/careers/apply" className="career-option-link" style={{ color: "#a5b4fc" }}>
+                    <span>Apply Now</span>
+                    <ArrowRight size={17} strokeWidth={1.7} />
+                  </Link>
+                </div>
               </div>
-            </Link>
+            </div>
 
             {/* Jobs */}
             <Link

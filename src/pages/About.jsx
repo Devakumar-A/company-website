@@ -530,17 +530,31 @@ export default function AboutPage() {
             />
           </p>
 
-          <motion.a
-            href="/#contact"
-            className="about-cta-button"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            Start a Project
-            <span>↗</span>
-          </motion.a>
+          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
+            <motion.a
+              href="/#contact"
+              className="about-cta-button"
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Start a Project
+              <span>↗</span>
+            </motion.a>
+            <motion.a
+              href="/internship"
+              className="about-cta-button"
+              style={{ background: "rgba(255, 255, 255, 0.08)", color: "#ffffff", border: "1px solid rgba(255, 255, 255, 0.15)" }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Explore Internship Program
+              <span>↗</span>
+            </motion.a>
+          </div>
         </div>
       </motion.section>
 

@@ -104,12 +104,36 @@ const CloudInfrastructure = lazyWithPreload(() => import("./pages/technology/Clo
 const BackendDatabases = lazyWithPreload(() => import("./pages/technology/BackendDatabases"));
 const DesignSystemsTechnology = lazyWithPreload(() => import("./pages/technology/DesignSystems"));
 
+// Internship Pages
+const InternshipPage = lazyWithPreload(() => import("./pages/internship/Internship"));
+const WebDevelopmentInternship = lazyWithPreload(() => import("./pages/internship/domains/WebDevelopment"));
+const AiMlInternship = lazyWithPreload(() => import("./pages/internship/domains/AiMl"));
+const DataScienceInternship = lazyWithPreload(() => import("./pages/internship/domains/DataScience"));
+const MobileDevelopmentInternship = lazyWithPreload(() => import("./pages/internship/domains/MobileDevelopment"));
+const SoftwareEngineeringInternship = lazyWithPreload(() => import("./pages/internship/domains/SoftwareEngineering"));
+const UiUxDesignInternship = lazyWithPreload(() => import("./pages/internship/domains/UiUxDesign"));
+const DatabaseManagementInternship = lazyWithPreload(() => import("./pages/internship/domains/DatabaseManagement"));
+const SoftwareTestingInternship = lazyWithPreload(() => import("./pages/internship/domains/SoftwareTesting"));
+const CloudDevopsInternship = lazyWithPreload(() => import("./pages/internship/domains/CloudDevops"));
+const CybersecurityInternship = lazyWithPreload(() => import("./pages/internship/domains/Cybersecurity"));
+
 const routePreloadMap = {
   "/about": AboutPage,
   "/services": ServicesPage,
   "/solutions": SolutionsPage,
   "/technology": TechnologyPage,
   "/contact": ContactPage,
+  "/internship": InternshipPage,
+  "/internship/web-development": WebDevelopmentInternship,
+  "/internship/ai-ml": AiMlInternship,
+  "/internship/data-science": DataScienceInternship,
+  "/internship/mobile-development": MobileDevelopmentInternship,
+  "/internship/software-engineering": SoftwareEngineeringInternship,
+  "/internship/ui-ux-design": UiUxDesignInternship,
+  "/internship/database-management": DatabaseManagementInternship,
+  "/internship/software-testing": SoftwareTestingInternship,
+  "/internship/cloud-devops": CloudDevopsInternship,
+  "/internship/cybersecurity": CybersecurityInternship,
   "/careers": Career,
   "/career": Career,
   "/careers/apply": CareerApply,
@@ -346,6 +370,19 @@ export default function App() {
             <Route path="/career/apply" element={<CareerApply />} />
             <Route path="/careers/job" element={<JobApply />} />
             <Route path="/career/job" element={<JobApply />} />
+
+            {/* Internship Program & Domains */}
+            <Route path="/internship" element={<InternshipPage />} />
+            <Route path="/internship/web-development" element={<WebDevelopmentInternship />} />
+            <Route path="/internship/ai-ml" element={<AiMlInternship />} />
+            <Route path="/internship/data-science" element={<DataScienceInternship />} />
+            <Route path="/internship/mobile-development" element={<MobileDevelopmentInternship />} />
+            <Route path="/internship/software-engineering" element={<SoftwareEngineeringInternship />} />
+            <Route path="/internship/ui-ux-design" element={<UiUxDesignInternship />} />
+            <Route path="/internship/database-management" element={<DatabaseManagementInternship />} />
+            <Route path="/internship/software-testing" element={<SoftwareTestingInternship />} />
+            <Route path="/internship/cloud-devops" element={<CloudDevopsInternship />} />
+            <Route path="/internship/cybersecurity" element={<CybersecurityInternship />} />
 
             {/* Certificate Verification */}
             <Route

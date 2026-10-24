@@ -77,6 +77,72 @@ export const seoData = {
     description: "Find clear answers about Cognolynx custom software development, agile sprints, technology frameworks, pricing & IP rights, and our free internship program.",
     noindex: false,
   },
+  "/internship": {
+    path: "/internship",
+    title: "Internship Program | Remote Student Training | Cognolynx",
+    description: "Apply for Cognolynx's 1-month remote internship program for engineering, BCA, MCA & B.Sc students. Hands-on projects, mentorship & verified certificates.",
+    noindex: false,
+  },
+  "/internship/web-development": {
+    path: "/internship/web-development",
+    title: "Web Development Internship | Remote | Cognolynx",
+    description: "Apply for a 1-month remote Web Development internship at Cognolynx. Build production React, Next.js & Node.js apps with real mentorship & certification.",
+    noindex: false,
+  },
+  "/internship/ai-ml": {
+    path: "/internship/ai-ml",
+    title: "AI & ML Internship | Remote AI Training | Cognolynx",
+    description: "Join Cognolynx's remote AI & ML internship. Build Generative AI models, NLP pipelines & intelligent agents with practical projects and verified certificates.",
+    noindex: false,
+  },
+  "/internship/data-science": {
+    path: "/internship/data-science",
+    title: "Data Science Internship | Remote | Cognolynx",
+    description: "Apply for a 1-month remote Data Science & Analytics internship at Cognolynx. Master Python, SQL, Power BI & predictive models with hands-on projects.",
+    noindex: false,
+  },
+  "/internship/mobile-development": {
+    path: "/internship/mobile-development",
+    title: "Mobile App Internship | iOS & Android | Cognolynx",
+    description: "Build production mobile apps with Flutter & React Native in Cognolynx's 1-month remote mobile development internship. Earn verified certificate.",
+    noindex: false,
+  },
+  "/internship/software-engineering": {
+    path: "/internship/software-engineering",
+    title: "Software Engineering Internship | Remote | Cognolynx",
+    description: "Hands-on software engineering internship at Cognolynx. Master Java, Python, REST APIs, and core algorithms in real-world systems. Remote with certificate.",
+    noindex: false,
+  },
+  "/internship/ui-ux-design": {
+    path: "/internship/ui-ux-design",
+    title: "UI/UX Design Internship | Remote | Cognolynx",
+    description: "Design sleek, user-centric digital products in Figma. Apply for Cognolynx's 1-month remote UI/UX internship with real client briefs and portfolio review.",
+    noindex: false,
+  },
+  "/internship/database-management": {
+    path: "/internship/database-management",
+    title: "Database Management Internship | Remote | Cognolynx",
+    description: "Learn SQL, PostgreSQL, MongoDB schema design and query optimization in Cognolynx's 1-month remote database management internship. Apply online.",
+    noindex: false,
+  },
+  "/internship/software-testing": {
+    path: "/internship/software-testing",
+    title: "Software Testing Internship | Remote QA | Cognolynx",
+    description: "Master manual & automated QA testing with Selenium, Playwright & Postman. Join Cognolynx's 1-month remote software testing internship with certificate.",
+    noindex: false,
+  },
+  "/internship/cloud-devops": {
+    path: "/internship/cloud-devops",
+    title: "Cloud & DevOps Internship | Remote | Cognolynx",
+    description: "Deploy cloud architectures on AWS, Docker & CI/CD pipelines in Cognolynx's 1-month remote Cloud & DevOps internship. Practical engineering experience.",
+    noindex: false,
+  },
+  "/internship/cybersecurity": {
+    path: "/internship/cybersecurity",
+    title: "Cybersecurity Internship | Remote Training | Cognolynx",
+    description: "Gain hands-on ethical hacking, vulnerability assessment and web security skills in Cognolynx's 1-month remote cybersecurity internship with certificate.",
+    noindex: false,
+  },
 
   // Solutions sub-pages
   "/solutions/digital-products": {
@@ -374,6 +440,15 @@ export const SEGMENT_NAMES = {
   creative: "Design Systems",
   mobile: "Mobile Development",
   cloud: "Cloud Infrastructure",
+
+  // Internship routes
+  internship: "Internship Program",
+  "web-development": "Web Development",
+  "ai-ml": "AI & Machine Learning",
+  "data-science": "Data Science & Analytics",
+  "software-testing": "Software Testing & QA",
+  "cloud-devops": "Cloud & DevOps",
+  cybersecurity: "Cybersecurity",
 };
 
 export function getJsonLdForRoute(routePath, seo = {}) {
@@ -534,6 +609,24 @@ export function getJsonLdForRoute(routePath, seo = {}) {
         name: "Cognolynx",
         url: SITE_URL,
       },
+    });
+  } else if (cleanPath === "/internship") {
+    graph.push({
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+  } else if (cleanPath.startsWith("/internship/")) {
+    graph.push({
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
     });
   }
 

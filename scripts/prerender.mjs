@@ -89,6 +89,19 @@ const routeComponentMap = {
   '/certificate/verify': './src/pages/certificate/CertificateVerify.jsx',
   '/404': './src/pages/NotFound.jsx',
 
+  // Internship routes
+  '/internship': './src/pages/internship/Internship.jsx',
+  '/internship/web-development': './src/pages/internship/domains/WebDevelopment.jsx',
+  '/internship/ai-ml': './src/pages/internship/domains/AiMl.jsx',
+  '/internship/data-science': './src/pages/internship/domains/DataScience.jsx',
+  '/internship/mobile-development': './src/pages/internship/domains/MobileDevelopment.jsx',
+  '/internship/software-engineering': './src/pages/internship/domains/SoftwareEngineering.jsx',
+  '/internship/ui-ux-design': './src/pages/internship/domains/UiUxDesign.jsx',
+  '/internship/database-management': './src/pages/internship/domains/DatabaseManagement.jsx',
+  '/internship/software-testing': './src/pages/internship/domains/SoftwareTesting.jsx',
+  '/internship/cloud-devops': './src/pages/internship/domains/CloudDevops.jsx',
+  '/internship/cybersecurity': './src/pages/internship/domains/Cybersecurity.jsx',
+
   // Alias routes
   '/career': './src/pages/Career.jsx',
   '/career/apply': './src/pages/careers/CareerApply.jsx',

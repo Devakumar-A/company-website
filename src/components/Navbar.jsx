@@ -1101,6 +1101,19 @@ export default function Navbar() {
           </div>
 
 
+          {/* INTERNSHIP */}
+
+          <a
+            href="/internship"
+            className="cg-nav-btn"
+            onClick={(event) =>
+              navigateTo(event, "/internship")
+            }
+          >
+            Internship
+          </a>
+
+
           {/* CAREER */}
 
           <a
@@ -1421,6 +1434,21 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
+
+              {/* MOBILE INTERNSHIP */}
+              <a
+                href="/internship"
+                className="cg-mobile-direct-link"
+                onClick={(event) =>
+                  navigateTo(
+                    event,
+                    "/internship"
+                  )
+                }
+              >
+                <span>Internship</span>
+                <ArrowUpRight size={17} />
+              </a>
 
               {/* MOBILE CAREER */}
               <a

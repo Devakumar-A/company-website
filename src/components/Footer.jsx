@@ -40,7 +40,7 @@ const currentYear = new Date().getFullYear();
 const footerGroups = [
   {
     title: "COMPANY",
-    links: ["Home", "About", "Services", "Solutions", "Work", "FAQ", "Contact"],
+    links: ["Home", "About", "Services", "Solutions", "Internship", "Work", "FAQ", "Contact"],
   },
   {
     title: "SERVICES",
@@ -75,6 +75,7 @@ const footerGroups = [
     links: [
       "Blog",
       "Case Studies",
+      "Internship Program",
       "FAQ",
       "Support",
       "Careers",
@@ -90,6 +91,8 @@ const linkRouteMap = {
   About: "/about",
   Services: "/services",
   Solutions: "/solutions",
+  Internship: "/internship",
+  "Internship Program": "/internship",
   Work: "/case-studies",
   Contact: "/contact",
   Careers: "/careers",

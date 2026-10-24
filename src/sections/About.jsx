@@ -117,10 +117,15 @@ export default function About() {
             <p className="about-intern-text">
               We mentor and empower emerging engineers through practical work on live production software, AI models, and real client systems with verified MSME certification.
             </p>
-            <Link to="/careers/apply" className="about-intern-cta">
-              <span>Apply for Internship</span>
-              <ArrowRight size={15} />
-            </Link>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+              <Link to="/internship" className="about-intern-cta">
+                <span>Explore Internship Program</span>
+                <ArrowRight size={15} />
+              </Link>
+              <Link to="/careers/apply" style={{ color: "#a5b4fc", fontSize: "13px", fontWeight: "600", textDecoration: "none", padding: "8px 12px" }}>
+                <span>Direct Application →</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
