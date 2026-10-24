@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { getJsonLdForRoute } from "../data/seoData";
 
 const SITE_URL = "https://cognolynx.tech";
-const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.png`;
+const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 
 export default function SEO({
   title,
@@ -22,8 +22,8 @@ export default function SEO({
             ? canonical
             : `${SITE_URL}${canonical.startsWith("/") ? "" : "/"}${canonical.replace(/\/$/, "")}`)
         : (path
-            ? (path === "/" ? SITE_URL : `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path.replace(/\/$/, "")}`)
-            : SITE_URL));
+            ? (path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path.replace(/\/$/, "")}`)
+            : `${SITE_URL}/`));
 
   const fullImage = image.startsWith("http")
     ? image
@@ -53,6 +53,12 @@ export default function SEO({
 
   return (
     <Helmet>
+      {/* Favicons */}
+      <link rel="icon" href="/favicon.ico" sizes="48x48" />
+      <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
       {title && <title>{title}</title>}
       {description && <meta name="description" content={description} />}
       {resolvedCanonical && <link rel="canonical" href={resolvedCanonical} />}

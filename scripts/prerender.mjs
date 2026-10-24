@@ -203,7 +203,7 @@ async function prerender() {
     const cleanBodyHtml = rawHtml
       .replace(/<title[^>]*>.*?<\/title>/gi, '')
       .replace(/<meta[^>]*\/?>/gi, '')
-      .replace(/<link rel="canonical"[^>]*\/?>/gi, '')
+      .replace(/<link[^>]*\/?>/gi, '')
       .replace(/<script type="application\/ld\+json"[^>]*>.*?<\/script>/gi, '');
 
     const targetKey = aliasMap[route] || route;
@@ -213,7 +213,7 @@ async function prerender() {
       ? null
       : (seo.canonical
           ? (seo.canonical.startsWith('http') ? seo.canonical : `${SITE_URL}${seo.canonical.startsWith('/') ? '' : '/'}${seo.canonical}`)
-          : (targetKey === '/' ? SITE_URL : `${SITE_URL}${targetKey}`));
+          : (targetKey === '/' ? `${SITE_URL}/` : `${SITE_URL}${targetKey}`));
 
     const robotsContent = seo.noindex ? 'noindex, nofollow' : 'index, follow';
 
@@ -248,7 +248,7 @@ async function prerender() {
       `<meta name="robots" content="${robotsContent}" />`
     );
 
-    // Replace Open Graph Tags
+    // Replace Open Graph & Twitter Tags
     if (seo.title) {
       pageHtml = pageHtml.replace(
         /<meta property="og:title" content=".*?"\s*\/?>/,
@@ -278,17 +278,42 @@ async function prerender() {
       );
     }
 
+    const ogImage = seo.image
+      ? (seo.image.startsWith('http') ? seo.image : `${SITE_URL}${seo.image.startsWith('/') ? '' : '/'}${seo.image}`)
+      : `${SITE_URL}/og-image.png`;
+
+    pageHtml = pageHtml.replace(
+      /<meta property="og:image" content=".*?"\s*\/?>/,
+      `<meta property="og:image" content="${ogImage}" />`
+    );
+    pageHtml = pageHtml.replace(
+      /<meta name="twitter:image" content=".*?"\s*\/?>/,
+      `<meta name="twitter:image" content="${ogImage}" />`
+    );
+
     // Remove any existing JSON-LD from template before injecting route-specific JSON-LD
-    pageHtml = pageHtml.replace(/<script type="application\/ld\+json">.*?<\/script>\s*/gi, '');
+    pageHtml = pageHtml.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '');
 
-    // Inject JSON-LD if present or auto-generated for indexable routes
-    const routeJsonLd = seo.jsonLd !== undefined
-      ? seo.jsonLd
-      : (seo.noindex ? null : getJsonLdForRoute(targetKey, { ...seo, canonical: resolvedCanonical }));
-
-    if (routeJsonLd) {
-      const jsonLdTag = `  <script type="application/ld+json">${JSON.stringify(routeJsonLd)}</script>\n  `;
+    // Requirement: On the homepage only, add this JSON-LD in the <head>
+    if (targetKey === '/') {
+      const siteNameJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Cognolynx",
+        "alternateName": "Cognolynx Tech",
+        "url": "https://cognolynx.tech/"
+      };
+      const jsonLdTag = `  <script type="application/ld+json">\n${JSON.stringify(siteNameJsonLd, null, 2)}\n  </script>\n  `;
       pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
+    } else {
+      const routeJsonLd = seo.jsonLd !== undefined
+        ? seo.jsonLd
+        : (seo.noindex ? null : getJsonLdForRoute(targetKey, { ...seo, canonical: resolvedCanonical }));
+
+      if (routeJsonLd) {
+        const jsonLdTag = `  <script type="application/ld+json">\n${JSON.stringify(routeJsonLd, null, 2)}\n  </script>\n  `;
+        pageHtml = pageHtml.replace('</head>', `${jsonLdTag}</head>`);
+      }
     }
 
     // Inject Prerendered HTML into #root
