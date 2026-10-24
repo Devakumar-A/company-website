@@ -3,52 +3,68 @@ import { ArrowRight } from "lucide-react";
 import "../styles/Hero.css";
 
 export default function Hero() {
-  const desktopVideoRef = useRef(null);
-  const mobileVideoRef = useRef(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window !== "undefined" && window.matchMedia) {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Respect prefers-reduced-motion: if reduced motion is requested, do not autoplay
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionChange = (e) => setPrefersReducedMotion(e.matches);
+    if (motionQuery?.addEventListener) {
+      motionQuery.addEventListener("change", handleMotionChange);
+    } else if (motionQuery?.addListener) {
+      motionQuery.addListener(handleMotionChange);
     }
 
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile((prev) => (prev !== mobile ? mobile : prev));
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+
     const heroEl = document.getElementById("hero");
-    if (!heroEl) return;
+    if (!heroEl) return () => window.removeEventListener("resize", handleResize);
 
-    const playActive = () => {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      const activeVideo = isMobile ? mobileVideoRef.current : desktopVideoRef.current;
-      const otherVideo = isMobile ? desktopVideoRef.current : mobileVideoRef.current;
-
-      if (otherVideo) otherVideo.pause();
-      if (activeVideo) {
-        activeVideo.muted = true;
-        activeVideo.defaultMuted = true;
-        activeVideo.play().catch(() => {});
+    const playVideo = () => {
+      if (videoRef.current && !prefersReducedMotion) {
+        videoRef.current.muted = true;
+        videoRef.current.defaultMuted = true;
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            // Autoplay blocked by browser policy (e.g. low-power mode)
+            // First-frame poster remains seamlessly visible
+            console.warn("Hero video autoplay status:", err?.name);
+          });
+        }
       }
     };
 
-    playActive();
+    if (!prefersReducedMotion) {
+      playVideo();
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        const isVisible = entry.isIntersecting;
-        const isMobileScreen = typeof window !== "undefined" && window.innerWidth < 768;
-        const targetVideo = isMobileScreen ? mobileVideoRef.current : desktopVideoRef.current;
-        const otherVideo = isMobileScreen ? desktopVideoRef.current : mobileVideoRef.current;
-
-        if (otherVideo) otherVideo.pause();
-        if (targetVideo) {
-          if (isVisible) {
-            targetVideo.play().catch(() => {});
+        if (videoRef.current) {
+          if (entry.isIntersecting && !prefersReducedMotion) {
+            playVideo();
           } else {
-            targetVideo.pause();
+            videoRef.current.pause();
           }
         }
       },
@@ -56,11 +72,33 @@ export default function Hero() {
     );
 
     observer.observe(heroEl);
-    return () => observer.disconnect();
-  }, []);
 
-  const handleVideoReady = () => {
-    setVideoLoaded(true);
+    // Pause when tab is hidden to eliminate background CPU/GPU drain
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (videoRef.current) videoRef.current.pause();
+      } else {
+        if (heroEl.getBoundingClientRect().bottom > 0 && !prefersReducedMotion) {
+          playVideo();
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (motionQuery?.removeEventListener) {
+        motionQuery.removeEventListener("change", handleMotionChange);
+      } else if (motionQuery?.removeListener) {
+        motionQuery.removeListener(handleMotionChange);
+      }
+      observer.disconnect();
+    };
+  }, [isMobile, prefersReducedMotion]);
+
+  const handleVideoPlaying = () => {
+    setVideoPlaying(true);
   };
 
   const handleScrollToExplore = (e) => {
@@ -81,52 +119,73 @@ export default function Hero() {
     }
   };
 
+  const posterSrc = isMobile
+    ? "/assets/hero-poster-mobile.webp"
+    : "/assets/hero-poster-desktop.webp";
+
   return (
     <section id="hero" className="hero-section" aria-label="Cognolynx Hero">
       {/* ====================================================================
-          FULL-BLEED BACKGROUND VIDEOS
-          - Mobile: background_video_company.mp4
-          - Desktop: background_video.mp4
-          Played immediately on load with no static poster stutter/glitch.
+          FULL-BLEED BACKGROUND VIDEO & IDENTICAL FIRST-FRAME POSTER
+          - Preloaded identical first-frame WebP poster (< 30 KB) paints instantly
+          - Single active video mounted for current viewport: hidden video is NOT downloaded
+          - Fast WebM (VP9) with MP4 (faststart, no audio) fallback
+          - Fade-in on playing event: zero black screen, zero visual jump
+          - If autoplay blocked or reduced-motion requested: static first frame stays visible
           ==================================================================== */}
       <div className="hero-video-container" aria-hidden="true">
-        {/* Desktop video (>= 768px) */}
-        <video
-          ref={desktopVideoRef}
-          className={`hero-video hero-video-desktop ${videoLoaded ? "is-loaded" : ""}`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onCanPlay={handleVideoReady}
-          onPlaying={handleVideoReady}
-          disablePictureInPicture
-          tabIndex={-1}
-          width="100%"
-          height="100%"
-        >
-          <source src="/assets/background_video.mp4" type="video/mp4" />
-        </video>
+        <picture className="hero-poster-picture">
+          <source
+            media="(max-width: 767px)"
+            srcSet="/assets/hero-poster-mobile.webp"
+          />
+          <img
+            src="/assets/hero-poster-desktop.webp"
+            alt=""
+            className="hero-poster-image"
+            fetchPriority="high"
+            decoding="async"
+            width={isMobile ? 576 : 1280}
+            height={isMobile ? 1024 : 720}
+          />
+        </picture>
 
-        {/* Mobile video (< 768px) */}
-        <video
-          ref={mobileVideoRef}
-          className={`hero-video hero-video-mobile ${videoLoaded ? "is-loaded" : ""}`}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onCanPlay={handleVideoReady}
-          onPlaying={handleVideoReady}
-          disablePictureInPicture
-          tabIndex={-1}
-          width="100%"
-          height="100%"
-        >
-          <source src="/assets/background_video_company.mp4" type="video/mp4" />
-        </video>
+        {!prefersReducedMotion && (
+          <video
+            key={isMobile ? "mobile-hero-video" : "desktop-hero-video"}
+            ref={videoRef}
+            className={`hero-video ${videoPlaying ? "is-playing" : ""}`}
+            poster={posterSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onPlaying={handleVideoPlaying}
+            disablePictureInPicture
+            tabIndex={-1}
+            width="100%"
+            height="100%"
+          >
+            {isMobile ? (
+              <>
+                <source
+                  src="/assets/background_video_company.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="/assets/background_video_company.mp4"
+                  type="video/mp4"
+                />
+              </>
+            ) : (
+              <>
+                <source src="/assets/background_video.webm" type="video/webm" />
+                <source src="/assets/background_video.mp4" type="video/mp4" />
+              </>
+            )}
+          </video>
+        )}
       </div>
 
       {/* ====================================================================

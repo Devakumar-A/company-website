@@ -10,6 +10,24 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- Preload Hero First-Frame Posters matching exact video frames with zero layout shift -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/assets/hero-poster-desktop.webp"
+      media="(min-width: 768px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/assets/hero-poster-mobile.webp"
+      media="(max-width: 767px)"
+      fetchpriority="high"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
