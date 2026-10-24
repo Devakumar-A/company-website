@@ -388,7 +388,13 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     "@id": `${SITE_URL}/#founder`,
     name: "Devakumar A",
     jobTitle: "Founder & Chief Executive Officer",
-    url: SITE_URL,
+    email: "mailto:devak9391@gmail.com",
+    url: `${SITE_URL}/about`,
+    sameAs: [
+      "https://github.com/Devakumar-A",
+      "https://orcid.org/0009-0003-8934-6744",
+      "https://www.linkedin.com/in/devakumar-a-129561305/",
+    ],
     worksFor: {
       "@id": `${SITE_URL}/#organization`,
     },
@@ -408,12 +414,16 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     url: SITE_URL,
     logo: `${SITE_URL}/icon-512.png`,
     founder: {
-      "@type": "Person",
       "@id": `${SITE_URL}/#founder`,
-      name: "Devakumar A",
-      jobTitle: "Founder & Chief Executive Officer",
-      url: SITE_URL,
     },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        email: "devak9391@gmail.com",
+        contactType: "customer support",
+        availableLanguage: ["English"],
+      },
+    ],
     foundingDate: "2024",
     description: "Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions.",
   };
@@ -487,7 +497,11 @@ export function getJsonLdForRoute(routePath, seo = {}) {
       name: seo.title,
       description: seo.description,
       isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` },
+      mainEntity: { "@id": `${SITE_URL}/#founder` },
     });
+    graph.push(orgSchema);
+    graph.push(founderSchema);
   } else if (cleanPath === "/contact") {
     graph.push({
       "@type": "ContactPage",
