@@ -14,7 +14,7 @@ const solutionsData = [
     number: "01",
     title: "DIGITAL PRODUCTS",
     summary: "Websites · Web Apps · SaaS",
-    image: "/assets/solutions/digital-products.jpg",
+    image: "/assets/solutions/digital-products.webp",
     imageWebp: "/assets/solutions/digital-products.webp",
     alt: "Digital Products — Modern software interface displayed on minimalist tablet",
     path: "/solutions/digital-products",
@@ -24,7 +24,7 @@ const solutionsData = [
     number: "02",
     title: "AI & INTELLIGENT SYSTEMS",
     summary: "AI · Automation · Machine Learning",
-    image: "/assets/solutions/ai-systems.jpg",
+    image: "/assets/solutions/ai-systems.webp",
     imageWebp: "/assets/solutions/ai-systems.webp",
     alt: "AI & Intelligent Systems — Precision processor hardware and optical glass",
     path: "/solutions/ai-systems",
@@ -34,7 +34,7 @@ const solutionsData = [
     number: "03",
     title: "MOBILE EXPERIENCES",
     summary: "iOS · Android · Cross-Platform",
-    image: "/assets/solutions/mobile-experiences.jpg",
+    image: "/assets/solutions/mobile-experiences.webp",
     imageWebp: "/assets/solutions/mobile-experiences.webp",
     alt: "Mobile Experiences — Minimalist mobile product interface",
     path: "/solutions/mobile-experiences",
@@ -44,7 +44,7 @@ const solutionsData = [
     number: "04",
     title: "DESIGN & BRAND",
     summary: "UI/UX · Branding · Visual Identity",
-    image: "/assets/solutions/design-brand.jpg",
+    image: "/assets/solutions/design-brand.webp",
     imageWebp: "/assets/solutions/design-brand.webp",
     alt: "Design & Brand — Minimalist Swiss brand identity system",
     path: "/solutions/design-brand",
@@ -54,7 +54,7 @@ const solutionsData = [
     number: "05",
     title: "GROWTH & MARKETING",
     summary: "Digital Marketing · Ads · Content",
-    image: "/assets/solutions/growth-marketing.jpg",
+    image: "/assets/solutions/growth-marketing.webp",
     imageWebp: "/assets/solutions/growth-marketing.webp",
     alt: "Growth & Marketing — Editorial brand campaign collateral",
     path: "/solutions/growth-marketing",
@@ -141,7 +141,7 @@ export default function Solutions({ headingTag = "h2" }) {
                   <picture>
                     <source srcSet={item.imageWebp} type="image/webp" />
                     <img
-                      src={item.image}
+                      src={item.imageWebp}
                       alt={item.alt}
                       className="sol-card-image"
                       width="1200"
