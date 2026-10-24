@@ -588,10 +588,27 @@ export default function Technology({ headingTag = "h2" }) {
      layout thrashing, and throttles idle React state updates.
   ======================================================= */
 
+  const startLoopRef = useRef(null);
+
   useEffect(() => {
     let isIntersecting = false;
     let isRunning = false;
     let scrollTicking = false;
+
+    const startLoop = () => {
+      if (isRunning || !isIntersecting || document.hidden) return;
+      isRunning = true;
+      animationFrame.current = requestAnimationFrame(animate);
+    };
+    startLoopRef.current = startLoop;
+
+    const stopLoop = () => {
+      isRunning = false;
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+        animationFrame.current = null;
+      }
+    };
 
     const handleScroll = () => {
       if (!isIntersecting) return;
@@ -600,6 +617,7 @@ export default function Technology({ headingTag = "h2" }) {
         requestAnimationFrame(() => {
           targetProgress.current = calculateProgress();
           scrollTicking = false;
+          startLoop();
         });
       }
     };
@@ -617,15 +635,16 @@ export default function Technology({ headingTag = "h2" }) {
     let lastMouseY = 0;
 
     const animate = () => {
-      if (!isIntersecting || !isRunning) {
+      if (!isIntersecting || !isRunning || document.hidden) {
         isRunning = false;
+        animationFrame.current = null;
         return;
       }
 
       const target = targetProgress.current;
       const current = smoothProgress.current;
 
-      // Responsive, critically-damped lerp (0.085): zero input lag + 100% fluid easing
+      // Responsive, critically-damped lerp: zero input lag + 100% fluid easing
       const nextProgress = reducedMotion ? target : lerp(current, target, 0.085);
       smoothProgress.current = nextProgress;
 
@@ -646,7 +665,7 @@ export default function Technology({ headingTag = "h2" }) {
       const pDiff = Math.abs(nextProgress - lastProgress);
       const mDiff = Math.abs(mouseX - lastMouseX) + Math.abs(mouseY - lastMouseY);
 
-      if (pDiff > 0.0012 || mDiff > 0.002) {
+      if (pDiff > 0.0035 || mDiff > 0.006) {
         lastProgress = nextProgress;
         lastMouseX = mouseX;
         lastMouseY = mouseY;
@@ -654,26 +673,24 @@ export default function Technology({ headingTag = "h2" }) {
         setMouse({ x: mouseX, y: mouseY });
       }
 
-      animationFrame.current = requestAnimationFrame(animate);
-    };
+      // Automatically halt rAF loop when settled to reduce CPU to zero when scrolling pauses
+      const isProgressSettled = Math.abs(target - nextProgress) < 0.0003;
+      const isMouseSettled =
+        Math.abs(targetM.x - mouseX) < 0.001 &&
+        Math.abs(targetM.y - mouseY) < 0.001;
 
-    const startLoop = () => {
-      if (isRunning) return;
-      isRunning = true;
-      animationFrame.current = requestAnimationFrame(animate);
-    };
-
-    const stopLoop = () => {
-      isRunning = false;
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
+      if (!isProgressSettled || !isMouseSettled) {
+        animationFrame.current = requestAnimationFrame(animate);
+      } else {
+        isRunning = false;
+        animationFrame.current = null;
       }
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         isIntersecting = entry.isIntersecting;
-        if (isIntersecting) {
+        if (isIntersecting && !document.hidden) {
           handleScroll();
           startLoop();
         } else {
@@ -687,11 +704,22 @@ export default function Technology({ headingTag = "h2" }) {
       observer.observe(sectionRef.current);
     }
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (isIntersecting) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       stopLoop();
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
+      startLoopRef.current = null;
     };
   }, [calculateProgress, reducedMotion]);
 
@@ -713,12 +741,14 @@ export default function Technology({ headingTag = "h2" }) {
         x: clamp((relativeX - 0.5) * 2, -1, 1),
         y: clamp((relativeY - 0.5) * 2, -1, 1),
       };
+      startLoopRef.current?.();
     },
     [isMobile]
   );
 
   const handlePointerLeave = useCallback(() => {
     targetMouse.current = { x: 0, y: 0 };
+    startLoopRef.current?.();
   }, []);
 
   /* =======================================================

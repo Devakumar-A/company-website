@@ -181,6 +181,18 @@ async function prerender() {
     const mod = await vite.ssrLoadModule(compPath);
     const Component = mod.default;
 
+    let compProps = {};
+    if (route === '/') {
+      const ServicesSync = (await vite.ssrLoadModule('./src/sections/Services.jsx')).default;
+      const SolutionsSync = (await vite.ssrLoadModule('./src/sections/Solutions.jsx')).default;
+      const TechnologySync = (await vite.ssrLoadModule('./src/sections/Technology.jsx')).default;
+      compProps = {
+        ServicesComp: ServicesSync,
+        SolutionsComp: SolutionsSync,
+        TechnologyComp: TechnologySync,
+      };
+    }
+
     const helmetContext = {};
     const rawHtml = renderToString(
       React.createElement(
@@ -201,7 +213,7 @@ async function prerender() {
             React.createElement(
               React.Suspense,
               { fallback: null },
-              React.createElement(Component)
+              React.createElement(Component, compProps)
             )
           )
         )

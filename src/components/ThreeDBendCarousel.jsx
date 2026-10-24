@@ -294,25 +294,34 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
         if (offset > itemCount / 2) offset -= itemCount;
 
         const absOffset = Math.abs(offset);
+        const isMobileOrReduced =
+          (typeof window !== "undefined" && window.innerWidth < 768) ||
+          isReducedMotionRef.current;
 
-        // Cylindrical 3D coordinate calculation
-        const theta = offset * cfg.bendAngle; // degrees
+        // Cylindrical 3D coordinate calculation (flattened to 2D on mobile & reduced-motion for buttery 60fps)
+        const theta = isMobileOrReduced ? 0 : offset * cfg.bendAngle; // degrees
         const rad = (theta * Math.PI) / 180;
-        const x = cfg.radius * Math.sin(rad);
-        const z = cfg.radius * (Math.cos(rad) - 1) - absOffset * cfg.zExtra;
-        const rotateY = -theta;
-        const scale = Math.max(cfg.minScale, cfg.maxScale - absOffset * cfg.scaleStep);
-        const opacity = Math.max(cfg.minOpacity, 1 - absOffset * cfg.opacityStep);
+        const x = isMobileOrReduced
+          ? offset * cfg.cardSpacing
+          : cfg.radius * Math.sin(rad);
+        const z = isMobileOrReduced
+          ? 0
+          : cfg.radius * (Math.cos(rad) - 1) - absOffset * cfg.zExtra;
+        const rotateY = isMobileOrReduced ? 0 : -theta;
+        const scale = Math.max(
+          cfg.minScale,
+          cfg.maxScale - absOffset * cfg.scaleStep
+        );
+        const opacity = Math.max(
+          cfg.minOpacity,
+          1 - absOffset * cfg.opacityStep
+        );
         const zIndex = Math.round(120 - absOffset * 15);
 
-        // Contrast & brightness: active center card is sharp & full saturation
-        const brightness = absOffset < 0.25 ? 100 : Math.max(78, Math.round(100 - absOffset * 11));
-        const grayscale = absOffset < 0.25 ? 0 : Math.min(100, Math.round(absOffset * 55));
-
+        // Animate ONLY transform and opacity (no expensive per-frame filters or box-shadow recalculations)
         cardEl.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${rotateY}deg) scale(${scale})`;
         cardEl.style.opacity = opacity;
         cardEl.style.zIndex = zIndex;
-        cardEl.style.filter = `grayscale(${grayscale}%) brightness(${brightness}%)`;
 
         // Active center class toggle
         if (absOffset < 0.35) {
@@ -329,13 +338,19 @@ export const ThreeDBendCarousel = forwardRef(function ThreeDBendCarousel(
           }
         }
 
-        // Dynamic subtle glass sheen reflection
+        // Glare: completely disabled on mobile and reduced-motion
         const glareEl = glareElementsRef.current[i];
         if (glareEl) {
-          const glareAngle = 115 + offset * 22;
-          const glareOpacity = absOffset < 0.25 ? 0.22 : Math.max(0.04, 0.18 - absOffset * 0.07);
-          glareEl.style.opacity = glareOpacity;
-          glareEl.style.background = `linear-gradient(${glareAngle}deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%, transparent 80%)`;
+          if (isMobileOrReduced) {
+            glareEl.style.display = "none";
+          } else {
+            glareEl.style.display = "block";
+            const glareOpacity =
+              absOffset < 0.25
+                ? 0.18
+                : Math.max(0, 0.14 - absOffset * 0.08);
+            glareEl.style.opacity = glareOpacity;
+          }
         }
       }
 

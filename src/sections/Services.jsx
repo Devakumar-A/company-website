@@ -268,7 +268,7 @@ export default function Services({ headingTag = "h2" }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible) {
+        if (isVisible && !document.hidden) {
           startLoop();
         } else {
           stopLoop();
@@ -280,8 +280,19 @@ export default function Services({ headingTag = "h2" }) {
     const targetEl = sectionRef.current || track;
     observer.observe(targetEl);
 
+    // Pause physics marquee when tab is hidden to eliminate idle GPU/CPU work
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (isVisible) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", updateDimensions);
       if (mediaQuery?.removeEventListener) {
         mediaQuery.removeEventListener("change", handleMotionChange);

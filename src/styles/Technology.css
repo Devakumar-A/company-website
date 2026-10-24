@@ -63,6 +63,7 @@
   min-height: 560px;
   overflow: hidden;
   z-index: 20;
+  contain: layout paint;
 }
 
 /* =========================================================
@@ -176,8 +177,13 @@
   right: -10%;
   bottom: -15%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent 70%);
-  filter: blur(54px);
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.12) 0%,
+    rgba(99, 102, 241, 0.06) 35%,
+    rgba(99, 102, 241, 0.015) 55%,
+    transparent 70%
+  );
   transform:
     translate3d(
       calc(var(--technology-mouse-x) * -38px),
@@ -672,8 +678,8 @@
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 12px rgba(79, 156, 255, 0.25));
-  transition: transform 0.35s ease, filter 0.35s ease;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+  transition: transform 0.35s ease;
 }
 
 .technology-node-fallback {

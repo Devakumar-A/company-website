@@ -29,6 +29,18 @@ export default defineConfig({
               return "vendor-supabase";
             }
           }
+          if (id.includes("src/sections/Services")) {
+            return "section-services";
+          }
+          if (
+            id.includes("src/sections/Solutions") ||
+            id.includes("src/components/ThreeDBendCarousel")
+          ) {
+            return "section-solutions";
+          }
+          if (id.includes("src/sections/Technology")) {
+            return "section-technology";
+          }
         },
       },
     },
