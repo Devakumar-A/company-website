@@ -141,11 +141,6 @@ async function generateBrandAssets() {
   fs.writeFileSync(path.resolve(publicDir, 'icon-512.png'), png512);
   console.log('Created: public/icon-192.png, public/icon-512.png');
 
-  // Fallback copies for site.webmanifest
-  fs.writeFileSync(path.resolve(publicDir, 'favicon-192.png'), png192);
-  fs.writeFileSync(path.resolve(publicDir, 'favicon-512.png'), png512);
-  console.log('Created: public/favicon-192.png, public/favicon-512.png');
-
   // 5. favicon.svg
   const svg512Base64 = png512.toString('base64');
   const faviconSvgContent = `<?xml version="1.0" encoding="UTF-8"?>
@@ -227,8 +222,7 @@ async function generateBrandAssets() {
 
   const ogPngBuffer = await sharp(Buffer.from(ogSvg)).png().toBuffer();
   fs.writeFileSync(path.resolve(publicDir, 'og-image.png'), ogPngBuffer);
-  fs.writeFileSync(path.resolve(assetsDir, 'og-image.png'), ogPngBuffer);
-  console.log('Created: public/og-image.png & public/assets/og-image.png (1200x630)');
+  console.log('Created: public/og-image.png (1200x630)');
 
   console.log('All brand assets successfully generated!');
 }
