@@ -30,7 +30,7 @@
   align-items: center;
   overflow: hidden;
   contain: paint;
-  background-color: #010308;
+  background-color: #000009;
   color: #ffffff;
   user-select: none;
   box-sizing: border-box;
@@ -48,6 +48,7 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
+  background-color: #000009;
 }
 
 .hero-video {
@@ -58,7 +59,19 @@
   object-fit: cover;
   object-position: center center;
   transform: translateZ(0);
-  will-change: transform;
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.hero-video.is-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video {
+    display: none !important;
+  }
 }
 
 /* Desktop video: shown on >= 768px */

@@ -1,55 +1,39 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import "../styles/Hero.css";
 
 export default function Hero() {
   const desktopVideoRef = useRef(null);
   const mobileVideoRef = useRef(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
-  // Ensure smooth, deferrable playback without blocking initial paint or wasting data on mobile/saveData
   useEffect(() => {
-    if (typeof navigator !== "undefined" && navigator.connection?.saveData) return;
+    // Respect prefers-reduced-motion: if reduced motion is requested, do not autoplay
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
 
-    const startPlayback = () => {
+    const heroEl = document.getElementById("hero");
+    if (!heroEl) return;
+
+    const playActive = () => {
       const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
       const activeVideo = isMobile ? mobileVideoRef.current : desktopVideoRef.current;
       const otherVideo = isMobile ? desktopVideoRef.current : mobileVideoRef.current;
 
-      if (otherVideo) {
-        otherVideo.pause();
-        if (otherVideo.hasAttribute("src")) {
-          otherVideo.removeAttribute("src");
-          otherVideo.load();
-        }
-      }
-
-      if (!activeVideo) return;
-
-      const expectedSrc = isMobile
-        ? "/assets/background_video_company.mp4"
-        : "/assets/background_video.mp4";
-
-      if (!activeVideo.src || !activeVideo.src.includes(expectedSrc)) {
-        activeVideo.src = expectedSrc;
-      }
-
-      activeVideo.muted = true;
-      activeVideo.defaultMuted = true;
-      const playPromise = activeVideo.play();
-      if (playPromise !== undefined && typeof playPromise.catch === "function") {
-        playPromise.catch(() => {});
+      if (otherVideo) otherVideo.pause();
+      if (activeVideo) {
+        activeVideo.muted = true;
+        activeVideo.defaultMuted = true;
+        activeVideo.play().catch(() => {});
       }
     };
 
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      window.requestIdleCallback(startPlayback, { timeout: 2000 });
-    } else {
-      setTimeout(startPlayback, 1000);
-    }
-
-    // Keep Hero video playing naturally while visible, pause when completely off-screen
-    const heroEl = document.getElementById("hero");
-    if (!heroEl) return;
+    playActive();
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -75,6 +59,10 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  const handleVideoReady = () => {
+    setVideoLoaded(true);
+  };
+
   const handleScrollToExplore = (e) => {
     e.preventDefault();
     const target = document.getElementById("about");
@@ -99,42 +87,50 @@ export default function Hero() {
           FULL-BLEED BACKGROUND VIDEOS
           - Mobile: background_video_company.mp4
           - Desktop: background_video.mp4
+          Played immediately on load with no static poster stutter/glitch.
           ==================================================================== */}
       <div className="hero-video-container" aria-hidden="true">
-        {/* Desktop full-bleed video (loaded on demand to preserve bandwidth) */}
+        {/* Desktop video (>= 768px) */}
         <video
           ref={desktopVideoRef}
-          className="hero-video hero-video-desktop"
-          poster="/assets/hero-video-poster-desktop.webp"
+          className={`hero-video hero-video-desktop ${videoLoaded ? "is-loaded" : ""}`}
+          autoPlay
           muted
           loop
           playsInline
-          preload="none"
+          preload="auto"
+          onCanPlay={handleVideoReady}
+          onPlaying={handleVideoReady}
           disablePictureInPicture
           tabIndex={-1}
           width="100%"
           height="100%"
-        />
+        >
+          <source src="/assets/background_video.mp4" type="video/mp4" />
+        </video>
 
-        {/* Mobile full-bleed video (loaded on demand to preserve mobile data) */}
+        {/* Mobile video (< 768px) */}
         <video
           ref={mobileVideoRef}
-          className="hero-video hero-video-mobile"
-          poster="/assets/hero-video-poster-mobile.webp"
+          className={`hero-video hero-video-mobile ${videoLoaded ? "is-loaded" : ""}`}
+          autoPlay
           muted
           loop
           playsInline
-          preload="none"
+          preload="auto"
+          onCanPlay={handleVideoReady}
+          onPlaying={handleVideoReady}
           disablePictureInPicture
           tabIndex={-1}
           width="100%"
           height="100%"
-        />
+        >
+          <source src="/assets/background_video_company.mp4" type="video/mp4" />
+        </video>
       </div>
 
       {/* ====================================================================
           SUBTLE GRADIENT OVERLAYS (READABILITY ONLY)
-          Minimal top & bottom gradient to blend with navbar and next section
           ==================================================================== */}
       <div className="hero-overlay-top" aria-hidden="true" />
       <div className="hero-overlay-bottom" aria-hidden="true" />
@@ -178,12 +174,13 @@ export default function Hero() {
 
       {/* ====================================================================
           BOTTOM SCROLL INDICATOR: SCROLL TO EXPLORE ↓
+          Aria label matches visible text to satisfy WCAG 2.5.3 (Label in Name)
           ==================================================================== */}
       <button
         type="button"
         onClick={handleScrollToExplore}
         className="hero-scroll-indicator"
-        aria-label="Scroll down to explore about section"
+        aria-label="SCROLL TO EXPLORE about section"
       >
         <span>SCROLL TO EXPLORE</span>
         <span className="hero-scroll-arrow" aria-hidden="true">↓</span>
