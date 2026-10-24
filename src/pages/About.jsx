@@ -4,6 +4,7 @@ import { Mail } from "lucide-react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/AboutPage.css";
 
 function GithubIcon({ size = 18, ...props }) {
@@ -163,6 +164,7 @@ export default function AboutPage() {
   return (
     <div className="about-page">
       <SEO {...seoData["/about"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "About" }]} />
 
       {/* ───────────────── HERO ───────────────── */}
       <motion.section
@@ -477,13 +479,13 @@ export default function AboutPage() {
                   <span>LinkedIn</span>
                 </a>
                 <a
-                  href="mailto:devak9391@gmail.com"
+                  href="mailto:cognolynxforge@gmail.com"
                   rel="me"
-                  aria-label="Email Devakumar A directly at devak9391@gmail.com"
+                  aria-label="Email Cognolynx directly at cognolynxforge@gmail.com"
                   className="founder-link founder-email"
                 >
                   <Mail size={17} />
-                  <span>devak9391@gmail.com</span>
+                  <span>cognolynxforge@gmail.com</span>
                 </a>
               </div>
             </div>
@@ -530,7 +532,7 @@ export default function AboutPage() {
             />
           </p>
 
-          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
+          <div className="about-cta-actions">
             <motion.a
               href="/#contact"
               className="about-cta-button"
@@ -540,18 +542,6 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               Start a Project
-              <span>↗</span>
-            </motion.a>
-            <motion.a
-              href="/internship"
-              className="about-cta-button"
-              style={{ background: "rgba(255, 255, 255, 0.08)", color: "#ffffff", border: "1px solid rgba(255, 255, 255, 0.15)" }}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              Explore Internship Program
               <span>↗</span>
             </motion.a>
           </div>

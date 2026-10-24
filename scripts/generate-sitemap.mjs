@@ -27,17 +27,7 @@ const routeComponentMap = {
   '/terms-conditions': 'src/pages/TermsConditions.jsx',
   '/support': 'src/pages/Support.jsx',
   '/faq': 'src/pages/FAQ.jsx',
-  '/internship': 'src/pages/internship/Internship.jsx',
-  '/internship/web-development': 'src/pages/internship/domains/WebDevelopment.jsx',
-  '/internship/ai-ml': 'src/pages/internship/domains/AiMl.jsx',
-  '/internship/data-science': 'src/pages/internship/domains/DataScience.jsx',
-  '/internship/mobile-development': 'src/pages/internship/domains/MobileDevelopment.jsx',
-  '/internship/software-engineering': 'src/pages/internship/domains/SoftwareEngineering.jsx',
-  '/internship/ui-ux-design': 'src/pages/internship/domains/UiUxDesign.jsx',
-  '/internship/database-management': 'src/pages/internship/domains/DatabaseManagement.jsx',
-  '/internship/software-testing': 'src/pages/internship/domains/SoftwareTesting.jsx',
-  '/internship/cloud-devops': 'src/pages/internship/domains/CloudDevops.jsx',
-  '/internship/cybersecurity': 'src/pages/internship/domains/Cybersecurity.jsx',
+
 
   '/solutions/digital-products': 'src/pages/solutions/DigitalProducts.jsx',
   '/solutions/business-systems': 'src/pages/solutions/BusinessSystems.jsx',
@@ -55,6 +45,8 @@ const routeComponentMap = {
 
   '/services/software-engineering': 'src/pages/services/software/SoftwareEngineering.jsx',
   '/services/software-engineering/software-development': 'src/pages/services/software/SoftwareDevelopment.jsx',
+  '/services/software-engineering/ai-automation': 'src/pages/services/software/AiAutomation.jsx',
+  '/services/software-engineering/mobile-app-development': 'src/pages/services/software/MobileAppDevelopment.jsx',
   '/services/software-engineering/web-applications': 'src/pages/services/software/WebApplications.jsx',
   '/services/software-engineering/business-software': 'src/pages/services/software/BusinessSoftware.jsx',
   '/services/software-engineering/cloud-solutions': 'src/pages/services/software/CloudSolutions.jsx',
@@ -96,6 +88,15 @@ function getFileLastmod(relativeFilePath) {
   }
 }
 
+const routeImageMap = {
+  '/': { loc: `${SITE_URL}/images/cognolynx-engineering-platform.webp`, title: 'Cognolynx Custom Software and AI Product Engineering Platform' },
+  '/about': { loc: `${SITE_URL}/images/cognolynx-about-studio.webp`, title: 'Cognolynx Engineering Studio and Technology Philosophy' },
+  '/services': { loc: `${SITE_URL}/images/cognolynx-technology-services.webp`, title: 'Cognolynx Modern Technology Services' },
+  '/solutions': { loc: `${SITE_URL}/images/cognolynx-digital-solutions.webp`, title: 'Cognolynx Intelligent Digital Solutions' },
+
+  '/blog': { loc: `${SITE_URL}/images/cognolynx-blog-16x9.webp`, title: 'Cognolynx Engineering Insights and Architecture Articles' },
+};
+
 function generateSitemap() {
   console.log('Generating sitemap.xml...');
 
@@ -124,15 +125,20 @@ function generateSitemap() {
 
     const lastmodElement = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : '';
 
+    const imgData = routeImageMap[route];
+    const imageElement = imgData
+      ? `\n    <image:image>\n      <image:loc>${imgData.loc}</image:loc>\n      <image:title>${imgData.title}</image:title>\n    </image:image>`
+      : '';
+
     urlEntries.push(`  <url>
-    <loc>${canonicalUrl}</loc>${lastmodElement}
+    <loc>${canonicalUrl}</loc>${lastmodElement}${imageElement}
   </url>`);
   }
 
   console.log(`Distinct lastmod values in sitemap: ${distinctLastmods.size} (${Array.from(distinctLastmods).join(', ') || 'none'})`);
 
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${urlEntries.join('\n')}
 </urlset>
 `;

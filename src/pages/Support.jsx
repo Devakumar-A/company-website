@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/Support.css";
 
 const supportCategories = [
@@ -104,6 +105,7 @@ export default function Support() {
   return (
     <>
       <SEO {...seoData["/support"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Support" }]} />
       <main className="support-page">
 
         {/* =========================

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/PrivacyPolicy.css";
 
 export default function PrivacyPolicy() {
@@ -16,6 +17,7 @@ export default function PrivacyPolicy() {
   return (
     <>
       <SEO {...seoData["/privacy-policy"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Privacy Policy" }]} />
       <main className="privacy-page">
         {/* Hero */}
         <section className="privacy-hero">

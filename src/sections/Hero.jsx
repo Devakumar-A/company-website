@@ -4,7 +4,6 @@ import "../styles/Hero.css";
 
 export default function Hero() {
   const videoRef = useRef(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== "undefined") {
       return window.innerWidth < 768;
@@ -68,7 +67,7 @@ export default function Hero() {
           }
         }
       },
-      { threshold: 0 }
+      { threshold: 0.05 }
     );
 
     observer.observe(heroEl);
@@ -97,10 +96,6 @@ export default function Hero() {
     };
   }, [isMobile, prefersReducedMotion]);
 
-  const handleVideoPlaying = () => {
-    setVideoPlaying(true);
-  };
-
   const handleScrollToExplore = (e) => {
     e.preventDefault();
     const target = document.getElementById("about");
@@ -119,73 +114,44 @@ export default function Hero() {
     }
   };
 
-  const posterSrc = isMobile
-    ? "/assets/hero-poster-mobile.webp"
-    : "/assets/hero-poster-desktop.webp";
-
   return (
     <section id="hero" className="hero-section" aria-label="Cognolynx Hero">
       {/* ====================================================================
-          FULL-BLEED BACKGROUND VIDEO & IDENTICAL FIRST-FRAME POSTER
-          - Preloaded identical first-frame WebP poster (< 30 KB) paints instantly
-          - Single active video mounted for current viewport: hidden video is NOT downloaded
-          - Fast WebM (VP9) with MP4 (faststart, no audio) fallback
-          - Fade-in on playing event: zero black screen, zero visual jump
-          - If autoplay blocked or reduced-motion requested: static first frame stays visible
+          FULL-BLEED BACKGROUND VIDEO
           ==================================================================== */}
       <div className="hero-video-container" aria-hidden="true">
-        <picture className="hero-poster-picture">
-          <source
-            media="(max-width: 767px)"
-            srcSet="/assets/hero-poster-mobile.webp"
-          />
-          <img
-            src="/assets/hero-poster-desktop.webp"
-            alt=""
-            className="hero-poster-image"
-            fetchPriority="high"
-            decoding="async"
-            width={isMobile ? 576 : 1280}
-            height={isMobile ? 1024 : 720}
-          />
-        </picture>
-
-        {!prefersReducedMotion && (
-          <video
-            key={isMobile ? "mobile-hero-video" : "desktop-hero-video"}
-            ref={videoRef}
-            className={`hero-video ${videoPlaying ? "is-playing" : ""}`}
-            poster={posterSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            onPlaying={handleVideoPlaying}
-            disablePictureInPicture
-            tabIndex={-1}
-            width="100%"
-            height="100%"
-          >
-            {isMobile ? (
-              <>
-                <source
-                  src="/assets/background_video_company.webm"
-                  type="video/webm"
-                />
-                <source
-                  src="/assets/background_video_company.mp4"
-                  type="video/mp4"
-                />
-              </>
-            ) : (
-              <>
-                <source src="/assets/background_video.webm" type="video/webm" />
-                <source src="/assets/background_video.mp4" type="video/mp4" />
-              </>
-            )}
-          </video>
-        )}
+        <video
+          key={isMobile ? "mobile-hero-video" : "desktop-hero-video"}
+          ref={videoRef}
+          className="hero-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          tabIndex={-1}
+          width="100%"
+          height="100%"
+        >
+          {isMobile ? (
+            <>
+              <source
+                src="/assets/background_video_company.webm"
+                type="video/webm"
+              />
+              <source
+                src="/assets/background_video_company.mp4"
+                type="video/mp4"
+              />
+            </>
+          ) : (
+            <>
+              <source src="/assets/background_video.webm" type="video/webm" />
+              <source src="/assets/background_video.mp4" type="video/mp4" />
+            </>
+          )}
+        </video>
       </div>
 
       {/* ====================================================================

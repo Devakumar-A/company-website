@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/CaseStudies.css";
 
 const featuredProjects = [
@@ -481,6 +482,7 @@ export default function CaseStudies() {
   return (
     <div className="case-page">
       <SEO {...seoData["/case-studies"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Case Studies" }]} />
       {/* HERO */}
       <section className="case-hero">
         <div className="case-container">

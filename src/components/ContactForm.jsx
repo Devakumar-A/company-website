@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Send, CheckCircle2, AlertCircle, ArrowUpRight } from "lucide-react";
+import { Send, CheckCircle2, AlertCircle, ArrowUpRight, ChevronDown } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import "../styles/ContactForm.css";
 
@@ -127,7 +127,7 @@ export default function ContactForm() {
           <button type="button" onClick={handleReset} className="contact-form-reset-btn">
             Submit Another Request
           </button>
-          <a href="mailto:info@cognolynx.tech" className="contact-fallback-email">
+          <a href="mailto:cognolynxforge@gmail.com" className="contact-fallback-email">
             <span>Direct Email Fallback</span>
             <ArrowUpRight size={15} />
           </a>
@@ -238,23 +238,26 @@ export default function ContactForm() {
           <label htmlFor="contact-service">
             Primary Service Area <span className="contact-req">*</span>
           </label>
-          <select
-            id="contact-service"
-            name="service"
-            value={formData.service}
-            onChange={handleChange}
-            aria-required="true"
-            aria-invalid={Boolean(errors.service)}
-            aria-describedby={errors.service ? "service-error" : undefined}
-            className={errors.service ? "contact-input-error" : ""}
-          >
-            <option value="">Select a service category...</option>
-            {SERVICE_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+          <div className="contact-select-wrapper">
+            <select
+              id="contact-service"
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+              aria-required="true"
+              aria-invalid={Boolean(errors.service)}
+              aria-describedby={errors.service ? "service-error" : undefined}
+              className={errors.service ? "contact-input-error" : ""}
+            >
+              <option value="">Select a service category...</option>
+              {SERVICE_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="contact-select-arrow" size={18} aria-hidden="true" />
+          </div>
           {errors.service && (
             <span id="service-error" className="contact-field-error" role="alert">
               {errors.service}

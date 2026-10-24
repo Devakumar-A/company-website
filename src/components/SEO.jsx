@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { getJsonLdForRoute } from "../data/seoData";
+import { getJsonLdForRoute, seoData } from "../data/seoData";
 
 const SITE_URL = "https://cognolynx.tech";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
@@ -11,7 +11,7 @@ export default function SEO({
   path = "",
   canonical,
   noindex = false,
-  image = DEFAULT_IMAGE,
+  image,
   type = "website",
   jsonLd,
 }) {
@@ -25,9 +25,11 @@ export default function SEO({
             ? (path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path.replace(/\/$/, "")}`)
             : `${SITE_URL}/`));
 
-  const fullImage = image.startsWith("http")
-    ? image
-    : `${SITE_URL}${image.startsWith("/") ? "" : "/"}${image}`;
+  const resolvedImage = image || (path && seoData[path]?.image) || DEFAULT_IMAGE;
+
+  const fullImage = resolvedImage.startsWith("http")
+    ? resolvedImage
+    : `${SITE_URL}${resolvedImage.startsWith("/") ? "" : "/"}${resolvedImage}`;
 
   const robotsContent = noindex ? "noindex, nofollow" : "index, follow";
 

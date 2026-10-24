@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/Career.css";
 
 export default function Career() {
@@ -22,6 +23,7 @@ export default function Career() {
   return (
     <>
       <SEO {...seoData["/careers"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Careers" }]} />
       <main className="career-page">
         {/* =====================================================
             HERO
@@ -84,11 +86,7 @@ export default function Career() {
                 </p>
 
                 <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginTop: "16px" }}>
-                  <Link to="/internship" className="career-option-link">
-                    <span>Explore 10 Domains</span>
-                    <ArrowRight size={17} strokeWidth={1.7} />
-                  </Link>
-                  <Link to="/careers/apply" className="career-option-link" style={{ color: "#a5b4fc" }}>
+                  <Link to="/careers/apply" className="career-option-link">
                     <span>Apply Now</span>
                     <ArrowRight size={17} strokeWidth={1.7} />
                   </Link>

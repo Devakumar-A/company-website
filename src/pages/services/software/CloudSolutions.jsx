@@ -1,102 +1,55 @@
 import React from "react";
-import { ArrowRight, Check } from "lucide-react";
-import { Link } from "react-router-dom";
-import SEO from "../../../components/SEO";
+import ServicePageTemplate from "../../../components/ServicePageTemplate";
 import { seoData } from "../../../data/seoData";
-import Footer from "../../../components/Footer";
-import "../../../styles/services/ServiceDetail.css";
 
-const features = [
-  "Cloud application deployment",
-  "Database infrastructure",
-  "Application hosting",
-  "Storage and backups",
-  "Performance and scalability",
-  "Monitoring and maintenance",
+const DELIVERABLES = [
+  "Cloud setup on AWS or Google Cloud",
+  "Automated build and deployment pipelines",
+  "Monitoring and alerts",
+  "Backup and recovery planning",
+  "Cloud cost review",
+];
+
+const FAQS = [
+  {
+    q: "How long does a cloud infrastructure setup or migration take?",
+    a: "Typical cloud setups and migration sprints take between 2 to 6 weeks, depending on existing infrastructure state and environment complexity.",
+  },
+  {
+    q: "Which cloud platforms do you support?",
+    a: "We work primarily across Amazon Web Services (AWS) and Google Cloud Platform (GCP), utilizing Infrastructure-as-Code with Terraform.",
+  },
+  {
+    q: "Who owns the cloud accounts and infrastructure code?",
+    a: "All infrastructure is provisioned directly inside your organization's cloud account, giving you 100% administrative control and ownership.",
+  },
+  {
+    q: "Can you help optimize existing high cloud bills?",
+    a: "Yes, our cloud cost review audit identifies idle resources, over-provisioned compute, and unused storage to streamline monthly spend.",
+  },
+  {
+    q: "How do we get started?",
+    a: "We conduct an initial infrastructure audit to review your workloads, security baseline, and deployment goals.",
+  },
 ];
 
 export default function CloudSolutions() {
   return (
-    <>
-    <SEO {...seoData["/services/software-engineering/cloud-solutions"]} />
-    <main className="service-detail-page">
-      <section className="service-detail-hero">
-        <div className="service-detail-eyebrow">
-          SOFTWARE & ENGINEERING / 04
-        </div>
-
-        <h1>
-          Cloud
-          <br />
-          <span>solutions.</span>
-        </h1>
-
-        <p>
-          Reliable infrastructure that gives your applications room to grow
-          without making the technology harder to manage.
-        </p>
-
-        <Link to="/contact" className="service-detail-cta">
-          Discuss a project
-          <ArrowRight size={18} />
-        </Link>
-      </section>
-
-      <section className="service-detail-content">
-        <div className="service-detail-section-label">
-          <span>01</span>
-          THE WORK
-        </div>
-
-        <div className="service-detail-copy">
-          <h2>Infrastructure should support the product, not slow it down.</h2>
-
-          <p>
-            As applications grow, hosting, databases, storage and performance
-            become important parts of the product itself.
-          </p>
-
-          <p>
-            We help businesses set up cloud infrastructure that is dependable,
-            maintainable and prepared for the amount of traffic and data the
-            application actually needs.
-          </p>
-        </div>
-      </section>
-
-      <section className="service-detail-features">
-        <div className="service-detail-section-label">
-          <span>02</span>
-          WHAT WE HANDLE
-        </div>
-
-        <div className="service-feature-list">
-          {features.map((feature, index) => (
-            <div className="service-feature" key={feature}>
-              <span>0{index + 1}</span>
-              <Check size={17} />
-              <p>{feature}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="service-detail-bottom">
-        <span>BUILD WITH ROOM TO GROW</span>
-
-        <h2>
-          Planning something
-          <br />
-          bigger?
-        </h2>
-
-        <Link to="/contact" className="service-detail-bottom-link">
-          Start a conversation
-          <ArrowRight size={18} />
-        </Link>
-      </section>
-    </main>
-    <Footer />
-    </>
+    <ServicePageTemplate
+      seoProps={seoData["/services/software-engineering/cloud-solutions"]}
+      breadcrumbs={[
+        { label: "Home", path: "/" },
+        { label: "Services", path: "/services" },
+        { label: "Cloud & DevOps", path: "/services/software-engineering/cloud-solutions" },
+      ]}
+      eyebrow="SOFTWARE & CLOUD ENGINEERING / 04"
+      serviceName="Cloud & DevOps"
+      benefitHeadline="dependable hosting, deployment, and monitoring."
+      overviewP1="We set up cloud infrastructure that is easy to deploy to, easy to monitor, and easy to understand, so your team can release updates with confidence."
+      typicalTimeline="Typical timeline: 2 – 6 weeks (scope dependent)"
+      deliverables={DELIVERABLES}
+      techStack={["AWS", "Google Cloud", "Kubernetes", "Docker", "Terraform", "GitHub Actions"]}
+      faqs={FAQS}
+    />
   );
 }

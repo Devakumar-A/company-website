@@ -26,6 +26,7 @@ import {
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/FAQ.css";
 
 const CATEGORIES = [
@@ -690,6 +691,7 @@ export default function FAQ() {
         {...seoData["/faq"]}
         schema={faqSchema}
       />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "FAQ" }]} />
 
       <main className="faq-page">
         <div className="faq-container">

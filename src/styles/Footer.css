@@ -27,8 +27,6 @@
   width: 100%;
   max-width: 100%;
   contain: paint;
-  content-visibility: auto;
-  contain-intrinsic-size: 600px;
   min-height: 600px;
 
   color: var(--footer-text);

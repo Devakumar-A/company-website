@@ -101,20 +101,12 @@
 /* Noise */
 .technology-noise {
   position: absolute;
-  inset: -50%;
-  opacity: 0.038;
+  inset: 0;
+  opacity: 0.035;
   pointer-events: none;
   background-image:
     url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-  animation: technologyNoise 0.22s steps(2) infinite;
-}
-
-@keyframes technologyNoise {
-  0%   { transform: translate3d(0, 0, 0); }
-  25%  { transform: translate3d(-2%, 1%, 0); }
-  50%  { transform: translate3d(1%, -2%, 0); }
-  75%  { transform: translate3d(2%, 1%, 0); }
-  100% { transform: translate3d(0, 0, 0); }
+  transform: translateZ(0);
 }
 
 /* Perspective Cyber Grid */
@@ -135,7 +127,7 @@
       0
     )
     scale(1.05);
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 /* Volumetric Blue Core Glow */
@@ -225,6 +217,8 @@
   inset: 0;
   overflow: hidden;
   opacity: 0.65;
+  contain: strict;
+  pointer-events: none;
 }
 
 .technology-particle {
@@ -232,8 +226,9 @@
   display: block;
   border-radius: 999px;
   background: rgba(111, 177, 255, 0.85);
-  box-shadow: 0 0 10px rgba(71, 151, 255, 0.6);
+  box-shadow: 0 0 6px rgba(71, 151, 255, 0.5);
   animation: technologyParticleFloat 5.5s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 @keyframes technologyParticleFloat {
@@ -656,16 +651,16 @@
     linear-gradient(
       120deg,
       transparent 25%,
-      rgba(255, 255, 255, 0.12) 48%,
+      rgba(255, 255, 255, 0.16) 48%,
       transparent 65%
     );
   transform: translateX(-120%);
-  animation: technologyNodeShine 5.5s ease-in-out infinite;
+  pointer-events: none;
+  transition: transform 0.65s ease;
 }
 
-@keyframes technologyNodeShine {
-  0%, 65%   { transform: translateX(-120%); }
-  85%, 100% { transform: translateX(120%); }
+.technology-node-card:hover::before {
+  transform: translateX(120%);
 }
 
 .technology-node-logo {
@@ -1141,8 +1136,6 @@
 
   .technology-node-card {
     border-radius: 17px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
 
   .technology-node-logo {

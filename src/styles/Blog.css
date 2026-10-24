@@ -32,7 +32,7 @@
 .blog-hero {
   position: relative;
   min-height: auto;
-  padding: 105px 0 50px;
+  padding: clamp(32px, 5vw, 55px) 0 50px;
   display: flex;
   align-items: center;
   background:

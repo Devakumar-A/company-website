@@ -17,23 +17,7 @@ function Linkedin({ size = 24, strokeWidth = 2, ...props }) {
   );
 }
 
-function Github({ size = 24, strokeWidth = 2, ...props }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-}
 
-function Orcid({ size = 24, ...props }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 256 256" fill="currentColor" {...props}>
-      <path fill="#A6CE39" d="M128 0C57.308 0 0 57.308 0 128s57.308 128 128 128 128-57.308 128-128S198.692 0 128 0z" />
-      <path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 66.8c-5.4 0-9.7-4.4-9.7-9.7s4.3-9.7 9.7-9.7 9.7 4.4 9.7 9.7c0 5.4-4.3 9.7-9.7 9.7zM108.9 79.1h41.6c39.6 0 57.1 28.3 57.1 53.6 0 27.5-20 53.5-56.8 53.5h-41.9V79.1zm15.4 92.4h24.5c34.9 0 43.6-25.2 43.6-38.8 0-20-13.4-38.9-43.2-38.9h-24.9v77.7z" />
-    </svg>
-  );
-}
 
 const currentYear = new Date().getFullYear();
 
@@ -46,6 +30,8 @@ const footerGroups = [
     title: "SERVICES",
     links: [
       "Software Development",
+      "AI & Automation",
+      "Mobile App Development",
       "Web Development",
       "Ecommerce Solutions",
       "Web Platforms",
@@ -111,12 +97,13 @@ const linkRouteMap = {
   "Design & Brand": "/solutions/design-brand",
   "Growth & Marketing": "/solutions/growth-marketing",
   "Software Development": "/services/software-engineering/software-development",
+  "AI & Automation": "/services/software-engineering/ai-automation",
+  "Mobile App Development": "/services/software-engineering/mobile-app-development",
+  "Mobile Applications": "/services/software-engineering/mobile-app-development",
   "Web Development": "/services/web-digital/website-development",
   "Ecommerce Solutions": "/services/web-digital/ecommerce",
   "Web Platforms": "/services/web-digital/web-platforms",
   "Digital Experiences": "/services/web-digital/digital-experiences",
-  "Mobile Applications": "/services/software-engineering",
-  "AI & Automation": "/solutions/ai-systems",
   "UI/UX Design": "/services/design-brand/ui-ux-design",
   "Design Systems": "/services/design-brand/design-systems",
   "Product Design": "/services/design-brand/product-design",
@@ -129,34 +116,16 @@ const linkRouteMap = {
 
 const socialLinks = [
   {
-    label: "Devakumar A on LinkedIn",
-    icon: Linkedin,
-    href: "https://www.linkedin.com/in/devakumar-a-129561305/",
-    rel: "me noopener",
-  },
-  {
-    label: "Devakumar A on GitHub",
-    icon: Github,
-    href: "https://github.com/Devakumar-A",
-    rel: "me noopener",
-  },
-  {
-    label: "Devakumar A on ORCID",
-    icon: Orcid,
-    href: "https://orcid.org/0009-0003-8934-6744",
-    rel: "me noopener",
-  },
-  {
     label: "Cognolynx on LinkedIn",
     icon: Linkedin,
     href: "https://www.linkedin.com/company/133397624/",
     rel: "noopener noreferrer",
   },
   {
-    label: "Email Cognolynx & Founder",
+    label: "Email Cognolynx",
     icon: Mail,
-    href: "mailto:devak9391@gmail.com",
-    rel: "me",
+    href: "mailto:cognolynxforge@gmail.com",
+    rel: "noopener noreferrer",
   },
 ];
 
@@ -164,6 +133,7 @@ export default function Footer() {
   const [openGroup, setOpenGroup] = useState(null);
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const toggleGroup = (index) => {
     setOpenGroup((current) => (current === index ? null : index));
@@ -184,7 +154,14 @@ export default function Footer() {
       return;
     }
 
-    // Connect your newsletter API here later.
+    setSubmitted(true);
+
+    const subject = encodeURIComponent("Newsletter Subscription & Inquiry from " + cleanEmail);
+    const body = encodeURIComponent(
+      `Hello Cognolynx Team,\n\nPlease subscribe my email (${cleanEmail}) to technology updates and reach out to me regarding your services.\n\nBest regards,\n${cleanEmail}`
+    );
+    window.location.href = `mailto:cognolynxforge@gmail.com?subject=${subject}&body=${body}`;
+
     setEmail("");
   };
 
@@ -346,9 +323,33 @@ export default function Footer() {
               </button>
             </form>
 
-            <span className="footer-newsletter-note">
-              No spam. Only useful updates.
-            </span>
+            {submitted && (
+              <div style={{ color: "#34d399", fontSize: "12.5px", fontWeight: "600", marginTop: "8px" }}>
+                ✓ Connecting with cognolynxforge@gmail.com...
+              </div>
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "10px" }}>
+              <span className="footer-newsletter-note" style={{ margin: 0 }}>
+                No spam. Only useful updates.
+              </span>
+              <a
+                href="mailto:cognolynxforge@gmail.com"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#93c5fd",
+                  fontSize: "12.5px",
+                  fontWeight: "600",
+                  textDecoration: "none",
+                }}
+                aria-label="Direct Email to Cognolynx"
+              >
+                <Mail size={13} />
+                <span>cognolynxforge@gmail.com</span>
+              </a>
+            </div>
           </div>
         </div>
 

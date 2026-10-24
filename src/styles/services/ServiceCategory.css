@@ -18,7 +18,7 @@
 
 .service-category-hero {
   min-height: auto;
-  padding: 105px 7vw 55px;
+  padding: clamp(32px, 5vw, 55px) 7vw 55px;
   display: flex;
   flex-direction: column;
   justify-content: center;

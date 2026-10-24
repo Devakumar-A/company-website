@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 110px 6vw 55px;
+  padding: clamp(36px, 5vw, 60px) 6vw 55px;
 
   background:
     radial-gradient(
@@ -186,6 +186,25 @@
   color: #65748a;
   font-size: clamp(16px, 1.45vw, 20px);
   line-height: 1.72;
+}
+
+.about-hero-image-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 36px auto 0;
+  border-radius: clamp(14px, 2vw, 22px);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.14);
+  background: #02040a;
+}
+
+.about-hero-feature-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
 }
 
 .about-scroll {
@@ -653,12 +672,20 @@
   line-height: 1.75;
 }
 
+.about-cta-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 36px;
+}
+
 .about-cta-button {
   display: inline-flex;
   align-items: center;
   gap: 14px;
 
-  margin-top: 42px;
   padding: 16px 30px;
 
   border-radius: 999px;
@@ -677,6 +704,19 @@
     transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     background 0.3s ease,
     box-shadow 0.3s ease;
+}
+
+.about-cta-button-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+
+.about-cta-button-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .about-cta-button:hover {
@@ -824,6 +864,21 @@
 
   .about-cta-text {
     font-size: 15px;
+  }
+
+  .about-cta-actions {
+    margin-top: 24px;
+    gap: 12px;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .about-cta-button {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+    padding: 14px 24px;
   }
 }
 

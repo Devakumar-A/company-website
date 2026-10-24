@@ -32,7 +32,7 @@
 .case-hero {
   position: relative;
   min-height: auto;
-  padding: 105px 0 55px;
+  padding: clamp(32px, 5vw, 55px) 0 55px;
   display: flex;
   align-items: center;
   background:

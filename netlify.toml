@@ -57,6 +57,18 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+# Legacy split logo redirects -> canonical complete logo
+[[redirects]]
+  from = "/assets/logo-purple.webp"
+  to = "/assets/logo.webp"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/assets/logo-black.webp"
+  to = "/assets/logo.webp"
+  status = 301
+  force = true
 
 # Canonical domain redirects (301 permanent) to https://cognolynx.tech
 [[redirects]]

@@ -1,25 +1,6 @@
 {
   "h1Issues": [],
-  "headingOrderIssues": [
-    {
-      "route": "/services",
-      "issues": [
-        "Skipped heading level: <1> followed directly by <h3> (\"Software Development\")"
-      ]
-    },
-    {
-      "route": "/solutions",
-      "issues": [
-        "Skipped heading level: <1> followed directly by <h3> (\"DIGITAL PRODUCTS\")"
-      ]
-    },
-    {
-      "route": "/technology",
-      "issues": [
-        "Skipped heading level: <1> followed directly by <h3> (\"Web Development\")"
-      ]
-    }
-  ],
+  "headingOrderIssues": [],
   "imagesMissingAlt": [],
   "imagesMissingDimensions": [],
   "genericAnchorText": [],

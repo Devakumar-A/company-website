@@ -14,7 +14,7 @@
 ========================= */
 
 .terms-hero {
-  padding: 105px 0 45px;
+  padding: clamp(32px, 5vw, 55px) 0 45px;
   background: linear-gradient(
     180deg,
     #f8fbff 0%,

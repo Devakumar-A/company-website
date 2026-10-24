@@ -3,6 +3,7 @@ import { ArrowUpRight, Search, Clock3 } from "lucide-react";
 import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/Blog.css";
 
 const categories = [
@@ -316,6 +317,7 @@ export default function Blog() {
   return (
     <div className="blog-page">
       <SEO {...seoData["/blog"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Blog" }]} />
       {/* HERO */}
       <section className="blog-hero">
         <div className="blog-container">

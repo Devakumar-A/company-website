@@ -44,7 +44,7 @@
   display: flex;
   align-items: center;
 
-  padding: 105px 7vw 55px;
+  padding: clamp(32px, 5vw, 55px) 7vw 55px;
 
   overflow: hidden;
 

@@ -1,104 +1,55 @@
 import React from "react";
-import { ArrowRight, Check } from "lucide-react";
-import { Link } from "react-router-dom";
-import SEO from "../../../components/SEO";
+import ServicePageTemplate from "../../../components/ServicePageTemplate";
 import { seoData } from "../../../data/seoData";
-import Footer from "../../../components/Footer";
-import "../../../styles/services/ServiceDetail.css";
 
-const points = [
-  "Custom business applications",
-  "Internal management systems",
-  "Customer-facing platforms",
-  "API and backend development",
-  "Database design and integration",
-  "Third-party service integration",
+const DELIVERABLES = [
+  "Web and back-end systems with secure APIs",
+  "Database design and data migration",
+  "User accounts, roles, and permissions",
+  "Automated testing and deployment",
+  "Documentation and team handover",
+];
+
+const FAQS = [
+  {
+    q: "How long does custom software development typically take?",
+    a: "Typical timeline ranges between 4 to 12 weeks depending on scope, architecture complexity, and integration requirements.",
+  },
+  {
+    q: "How do you structure project pricing?",
+    a: "We provide fixed milestone-based scopes with clearly defined deliverables so your team has predictable investment and zero hidden costs.",
+  },
+  {
+    q: "Who owns the code and intellectual property?",
+    a: "You retain full ownership and intellectual property rights of all custom source code, documentation, and assets upon project completion.",
+  },
+  {
+    q: "Do you provide support and maintenance after launch?",
+    a: "Yes, we offer ongoing maintenance, monitoring, and feature iteration agreements tailored to your operational needs.",
+  },
+  {
+    q: "How do we get started?",
+    a: "We start with a workflow discovery session to review requirements, agree on milestones, and outline a project proposal.",
+  },
 ];
 
 export default function SoftwareDevelopment() {
   return (
-    <>
-    <SEO {...seoData["/services/software-engineering/software-development"]} />
-    <main className="service-detail-page">
-      <section className="service-detail-hero">
-        <div className="service-detail-eyebrow">
-          SOFTWARE & ENGINEERING / 01
-        </div>
-
-        <h1>
-          Software
-          <br />
-          <span>development.</span>
-        </h1>
-
-        <p>
-          Software built around your business, your processes and the people
-          who use it every day.
-        </p>
-
-        <Link to="/contact" className="service-detail-cta">
-          Discuss a project
-          <ArrowRight size={18} />
-        </Link>
-      </section>
-
-      <section className="service-detail-content">
-        <div className="service-detail-section-label">
-          <span>01</span>
-          THE WORK
-        </div>
-
-        <div className="service-detail-copy">
-          <h2>Built for the job it needs to do.</h2>
-
-          <p>
-            Off-the-shelf software can work well until your business starts
-            doing things differently. That is where custom software becomes
-            useful.
-          </p>
-
-          <p>
-            We build applications that fit your actual workflow — whether that
-            means replacing spreadsheets, connecting disconnected systems,
-            improving an existing process or creating a completely new
-            product.
-          </p>
-        </div>
-      </section>
-
-      <section className="service-detail-features">
-        <div className="service-detail-section-label">
-          <span>02</span>
-          WHAT WE BUILD
-        </div>
-
-        <div className="service-feature-list">
-          {points.map((point, index) => (
-            <div className="service-feature" key={point}>
-              <span>0{index + 1}</span>
-              <Check size={17} />
-              <p>{point}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="service-detail-bottom">
-        <span>READY WHEN YOU ARE</span>
-
-        <h2>
-          Have a process
-          <br />
-          worth improving?
-        </h2>
-
-        <Link to="/contact" className="service-detail-bottom-link">
-          Start a conversation
-          <ArrowRight size={18} />
-        </Link>
-      </section>
-    </main>
-    <Footer />
-    </>
+    <ServicePageTemplate
+      seoProps={seoData["/services/software-engineering/software-development"]}
+      breadcrumbs={[
+        { label: "Home", path: "/" },
+        { label: "Services", path: "/services" },
+        { label: "Custom Software Development", path: "/services/software-engineering/software-development" },
+      ]}
+      eyebrow="SOFTWARE & ENGINEERING / 01"
+      serviceName="Custom Software Development"
+      benefitHeadline="reliable software built around how your business actually works."
+      overviewP1="We design, build, and maintain custom software for teams that have outgrown off-the-shelf tools. We start with your workflow, agree on scope and milestones, and deliver in small releases you can review along the way."
+      typicalTimeline="Typical timeline: 4 – 12 weeks (scope dependent)"
+      deliverables={DELIVERABLES}
+      techStack={["Node.js", "Python", "TypeScript", "PostgreSQL", "Docker", "AWS"]}
+      faqs={FAQS}
+    />
   );
 }

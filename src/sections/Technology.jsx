@@ -1,7 +1,6 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -133,11 +132,11 @@ const TECHNOLOGY_CHAPTERS = [
     technologies: [
       {
         name: "AWS",
-        logo: "https://api.iconify.design/logos:aws.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
       },
       {
         name: "Azure",
-        logo: "https://api.iconify.design/logos:microsoft-azure.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg",
       },
       {
         name: "Google Cloud",
@@ -209,19 +208,19 @@ const TECHNOLOGY_CHAPTERS = [
       },
       {
         name: "Photoshop",
-        logo: "https://api.iconify.design/logos:adobe-photoshop.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-original.svg",
       },
       {
         name: "Illustrator",
-        logo: "https://api.iconify.design/logos:adobe-illustrator.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/illustrator/illustrator-original.svg",
       },
       {
         name: "After Effects",
-        logo: "https://api.iconify.design/logos:adobe-after-effects.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/aftereffects/aftereffects-original.svg",
       },
       {
         name: "Premiere Pro",
-        logo: "https://api.iconify.design/logos:adobe-premiere.svg",
+        logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/premierepro/premierepro-original.svg",
       },
       {
         name: "Canva",
@@ -286,7 +285,8 @@ const TechnologyNode = React.memo(
     total,
     chapterDiff,
     chapterIndex,
-    mouse,
+    mouseX,
+    mouseY,
     mobile,
   }) {
     const [hasError, setHasError] = useState(false);
@@ -317,8 +317,8 @@ const TechnologyNode = React.memo(
         z = chapterDiff * -480;
         scale = 0.52 + 0.5 * ease;
         opacity = clamp(progressToFocus * 1.3, 0, 1);
-        x = Math.cos(baseAngle) * baseRadiusX + mouse.x * 5;
-        y = Math.sin(baseAngle) * baseRadiusY + mouse.y * 5;
+        x = Math.cos(baseAngle) * baseRadiusX + mouseX * 5;
+        y = Math.sin(baseAngle) * baseRadiusY + mouseY * 5;
       } else {
         // Gliding past the camera: gently parts outward and clears out
         const pastFocus = Math.abs(chapterDiff);
@@ -326,8 +326,8 @@ const TechnologyNode = React.memo(
         z = pastFocus * 300;
         scale = clamp(1.02 + pastFocus * 0.22, 1.0, 1.3);
         opacity = clamp(1 - pastFocus * 1.25, 0, 1);
-        x = Math.cos(baseAngle) * (baseRadiusX * spread) + mouse.x * 5;
-        y = Math.sin(baseAngle) * (baseRadiusY * spread) + mouse.y * 5;
+        x = Math.cos(baseAngle) * (baseRadiusX * spread) + mouseX * 5;
+        y = Math.sin(baseAngle) * (baseRadiusY * spread) + mouseY * 5;
       }
     } else {
       // Desktop: widescreen 3D tunnel with generous negative space
@@ -342,8 +342,8 @@ const TechnologyNode = React.memo(
         z = chapterDiff * -550 + depthStagger;
         scale = 0.54 + 0.48 * ease;
         opacity = clamp(progressToFocus * 1.35, 0, 1);
-        x = Math.cos(baseAngle) * baseRadiusX + mouse.x * 16;
-        y = Math.sin(baseAngle) * baseRadiusY + mouse.y * 13;
+        x = Math.cos(baseAngle) * baseRadiusX + mouseX * 16;
+        y = Math.sin(baseAngle) * baseRadiusY + mouseY * 13;
       } else {
         // Moving past the viewer: expands laterally to create a portal pass-through
         const pastFocus = Math.abs(chapterDiff);
@@ -351,8 +351,8 @@ const TechnologyNode = React.memo(
         z = pastFocus * 380 + depthStagger;
         scale = clamp(1.02 + pastFocus * 0.24, 1.0, 1.35);
         opacity = clamp(1 - pastFocus * 1.2, 0, 1);
-        x = Math.cos(baseAngle) * (baseRadiusX * spread) + mouse.x * 16;
-        y = Math.sin(baseAngle) * (baseRadiusY * spread) + mouse.y * 13;
+        x = Math.cos(baseAngle) * (baseRadiusX * spread) + mouseX * 16;
+        y = Math.sin(baseAngle) * (baseRadiusY * spread) + mouseY * 13;
       }
     }
 
@@ -395,14 +395,129 @@ const TechnologyNode = React.memo(
   (prev, next) => {
     if (prev.technology.name !== next.technology.name) return false;
     if (prev.mobile !== next.mobile) return false;
-    // Skip re-render if position has moved less than 0.0008 units
     return (
-      Math.abs(prev.chapterDiff - next.chapterDiff) < 0.0008 &&
-      Math.abs(prev.mouse.x - next.mouse.x) < 0.015 &&
-      Math.abs(prev.mouse.y - next.mouse.y) < 0.015
+      Math.abs(prev.chapterDiff - next.chapterDiff) < 0.0035 &&
+      Math.abs(prev.mouseX - next.mouseX) < 0.02 &&
+      Math.abs(prev.mouseY - next.mouseY) < 0.02
     );
   }
 );
+
+/* =========================================================
+   STATIC BACKGROUND PARTICLES (Zero Re-render)
+   ========================================================= */
+
+const STATIC_PARTICLES = Array.from({ length: 16 }, (_, index) => ({
+  id: index,
+  left: ((index * 37.17) % 100).toFixed(2),
+  top: ((index * 61.43) % 100).toFixed(2),
+  size: 1 + ((index * 11) % 3),
+  delay: ((index * 0.41) % 4).toFixed(2),
+}));
+
+const TechnologyParticles = React.memo(function TechnologyParticles() {
+  return (
+    <div className="technology-particles">
+      {STATIC_PARTICLES.map((particle) => (
+        <span
+          key={particle.id}
+          className="technology-particle"
+          style={{
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            animationDelay: `${particle.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+/* =========================================================
+   MEMOIZED TOPBAR & PROGRESS DOTS & CHAPTER INFO
+   ========================================================= */
+
+const TechnologyTopbar = React.memo(function TechnologyTopbar({ chapterNumber }) {
+  return (
+    <header className="technology-topbar">
+      <div className="technology-label">
+        <span className="technology-label-dot" />
+        TECHNOLOGY ECOSYSTEM
+      </div>
+      <div className="technology-counter">
+        <strong>{chapterNumber}</strong>
+        <span>/</span>
+        <span>06</span>
+      </div>
+    </header>
+  );
+});
+
+const TechnologyIntro = React.memo(function TechnologyIntro({ progress, headingTag: Heading }) {
+  if (progress > 0.3) return null;
+  return (
+    <div
+      className="technology-intro"
+      style={{
+        opacity: clamp(1 - progress * 4.5, 0, 1),
+        transform: `translate3d(0, ${-progress * 85}px, 0)`,
+      }}
+    >
+      <span className="technology-intro-eyebrow">THE STACK</span>
+      <Heading>
+        Technology
+        <br />
+        behind
+        <br />
+        what we build.
+      </Heading>
+      <p>
+        Scroll to travel through our core technology stack and digital
+        capabilities.
+      </p>
+    </div>
+  );
+});
+
+const TechnologyChapterInfo = React.memo(function TechnologyChapterInfo({ chapter, headingTag }) {
+  return (
+    <Link
+      to={chapter.path}
+      className="technology-chapter-info"
+      style={{ textDecoration: "none", color: "inherit", cursor: "pointer", pointerEvents: "auto" }}
+    >
+      <span className="technology-chapter-number">
+        {chapter.number}
+      </span>
+      <div className="technology-chapter-copy">
+        <span className="technology-chapter-eyebrow">
+          {chapter.eyebrow}
+        </span>
+        {headingTag === "h1" ? (
+          <h2>{chapter.title}</h2>
+        ) : (
+          <h3>{chapter.title}</h3>
+        )}
+        <p>{chapter.description}</p>
+      </div>
+    </Link>
+  );
+});
+
+const TechnologyProgressDots = React.memo(function TechnologyProgressDots({ activeIndex }) {
+  return (
+    <div className="technology-progress" aria-hidden="true">
+      {TECHNOLOGY_CHAPTERS.map((chapter, index) => (
+        <span
+          key={chapter.id}
+          className={index === activeIndex ? "active" : ""}
+        />
+      ))}
+    </div>
+  );
+});
 
 /* =========================================================
    GLOWING CONNECTION LINES
@@ -565,27 +680,28 @@ export default function Technology({ headingTag = "h2" }) {
   }, []);
 
   /* =======================================================
-     RELIABLE SECTION-BASED SCROLL PROGRESS CALCULATION
-     scrollableDistance = section.offsetHeight - window.innerHeight
-     progress = -section.getBoundingClientRect().top / scrollableDistance
+     CACHED MEASUREMENTS (Eliminates getBoundingClientRect layout thrash)
   ======================================================= */
 
-  const calculateProgress = useCallback(() => {
+  const cachedTop = useRef(0);
+  const cachedDistance = useRef(1);
+
+  const updateMeasurements = useCallback(() => {
     const section = sectionRef.current;
-    if (!section) return 0;
-
+    if (!section) return;
     const rect = section.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const scrollableDistance = Math.max(section.offsetHeight - viewportHeight, 1);
+    cachedTop.current = rect.top + (window.scrollY || window.pageYOffset);
+    cachedDistance.current = Math.max(section.offsetHeight - window.innerHeight, 1);
+  }, []);
 
-    const rawProgress = -rect.top / scrollableDistance;
+  const calculateProgress = useCallback(() => {
+    const scrollY = window.scrollY || window.pageYOffset;
+    const rawProgress = (scrollY - cachedTop.current) / cachedDistance.current;
     return clamp(rawProgress, 0, 1);
   }, []);
 
   /* =======================================================
      STEADY, LAG-FREE CINEMATIC ANIMATION LOOP
-     Decouples scroll measurement from rAF rendering to prevent
-     layout thrashing, and throttles idle React state updates.
   ======================================================= */
 
   const startLoopRef = useRef(null);
@@ -593,7 +709,6 @@ export default function Technology({ headingTag = "h2" }) {
   useEffect(() => {
     let isIntersecting = false;
     let isRunning = false;
-    let scrollTicking = false;
 
     const startLoop = () => {
       if (isRunning || !isIntersecting || document.hidden) return;
@@ -612,23 +727,22 @@ export default function Technology({ headingTag = "h2" }) {
 
     const handleScroll = () => {
       if (!isIntersecting) return;
-      if (!scrollTicking) {
-        scrollTicking = true;
-        requestAnimationFrame(() => {
-          targetProgress.current = calculateProgress();
-          scrollTicking = false;
-          startLoop();
-        });
-      }
+      targetProgress.current = calculateProgress();
+      startLoop();
     };
 
-    // Initialize immediate progress on mount
+    const handleResize = () => {
+      updateMeasurements();
+      handleScroll();
+    };
+
+    updateMeasurements();
     const initialProgress = calculateProgress();
     targetProgress.current = initialProgress;
     smoothProgress.current = initialProgress;
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
 
     let lastProgress = -1;
     let lastMouseX = 0;
@@ -644,8 +758,8 @@ export default function Technology({ headingTag = "h2" }) {
       const target = targetProgress.current;
       const current = smoothProgress.current;
 
-      // Responsive, critically-damped lerp: zero input lag + 100% fluid easing
-      const nextProgress = reducedMotion ? target : lerp(current, target, 0.085);
+      // Responsive, snappy easing: 0.28 reaches target cleanly in ~3-4 frames with zero sluggish delay
+      const nextProgress = reducedMotion ? target : lerp(current, target, 0.28);
       smoothProgress.current = nextProgress;
 
       const targetM = targetMouse.current;
@@ -653,19 +767,19 @@ export default function Technology({ headingTag = "h2" }) {
 
       const mouseX = reducedMotion
         ? targetM.x
-        : lerp(currentM.x, targetM.x, 0.06);
+        : lerp(currentM.x, targetM.x, 0.15);
 
       const mouseY = reducedMotion
         ? targetM.y
-        : lerp(currentM.y, targetM.y, 0.06);
+        : lerp(currentM.y, targetM.y, 0.15);
 
       smoothMouse.current = { x: mouseX, y: mouseY };
 
-      // Only re-render React state if value has meaningfully moved (avoids 120fps CPU thrash)
+      // Only re-render React state if value has meaningfully moved
       const pDiff = Math.abs(nextProgress - lastProgress);
       const mDiff = Math.abs(mouseX - lastMouseX) + Math.abs(mouseY - lastMouseY);
 
-      if (pDiff > 0.0035 || mDiff > 0.006) {
+      if (pDiff > 0.006 || mDiff > 0.012) {
         lastProgress = nextProgress;
         lastMouseX = mouseX;
         lastMouseY = mouseY;
@@ -673,11 +787,11 @@ export default function Technology({ headingTag = "h2" }) {
         setMouse({ x: mouseX, y: mouseY });
       }
 
-      // Automatically halt rAF loop when settled to reduce CPU to zero when scrolling pauses
-      const isProgressSettled = Math.abs(target - nextProgress) < 0.0003;
+      // Automatically halt rAF loop when settled
+      const isProgressSettled = Math.abs(target - nextProgress) < 0.0004;
       const isMouseSettled =
-        Math.abs(targetM.x - mouseX) < 0.001 &&
-        Math.abs(targetM.y - mouseY) < 0.001;
+        Math.abs(targetM.x - mouseX) < 0.002 &&
+        Math.abs(targetM.y - mouseY) < 0.002;
 
       if (!isProgressSettled || !isMouseSettled) {
         animationFrame.current = requestAnimationFrame(animate);
@@ -691,13 +805,14 @@ export default function Technology({ headingTag = "h2" }) {
       ([entry]) => {
         isIntersecting = entry.isIntersecting;
         if (isIntersecting && !document.hidden) {
+          updateMeasurements();
           handleScroll();
           startLoop();
         } else {
           stopLoop();
         }
       },
-      { rootMargin: "250px 0px" }
+      { rootMargin: "150px 0px" }
     );
 
     if (sectionRef.current) {
@@ -708,6 +823,7 @@ export default function Technology({ headingTag = "h2" }) {
       if (document.hidden) {
         stopLoop();
       } else if (isIntersecting) {
+        updateMeasurements();
         startLoop();
       }
     };
@@ -718,10 +834,10 @@ export default function Technology({ headingTag = "h2" }) {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       stopLoop();
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("resize", handleResize);
       startLoopRef.current = null;
     };
-  }, [calculateProgress, reducedMotion]);
+  }, [calculateProgress, reducedMotion, updateMeasurements]);
 
   /* =======================================================
      MOUSE PARALLAX (Desktop only)
@@ -770,19 +886,7 @@ export default function Technology({ headingTag = "h2" }) {
   // Fraction of distance from exact chapter alignment
   const activeFraction = Math.abs(tunnelPosition - activeChapterIndex);
 
-  /* =======================================================
-     BACKGROUND PARTICLES
-  ======================================================= */
 
-  const particles = useMemo(() => {
-    return Array.from({ length: 42 }, (_, index) => ({
-      id: index,
-      left: ((index * 37.17) % 100).toFixed(2),
-      top: ((index * 61.43) % 100).toFixed(2),
-      size: 1 + ((index * 11) % 3),
-      delay: ((index * 0.41) % 4).toFixed(2),
-    }));
-  }, []);
 
   /* =======================================================
      RENDER
@@ -822,62 +926,18 @@ export default function Technology({ headingTag = "h2" }) {
             <div className="technology-blue-glow" />
             <div className="technology-purple-glow" />
 
-            <div className="technology-particles">
-              {particles.map((particle) => (
-                <span
-                  key={particle.id}
-                  className="technology-particle"
-                  style={{
-                    left: `${particle.left}%`,
-                    top: `${particle.top}%`,
-                    width: `${particle.size}px`,
-                    height: `${particle.size}px`,
-                    animationDelay: `${particle.delay}s`,
-                  }}
-                />
-              ))}
-            </div>
+            <TechnologyParticles />
           </div>
 
           {/* =============================================
               TOP BAR
           ============================================= */}
-          <header className="technology-topbar">
-            <div className="technology-label">
-              <span className="technology-label-dot" />
-              TECHNOLOGY ECOSYSTEM
-            </div>
-
-            <div className="technology-counter">
-              <strong>{activeChapter.number}</strong>
-              <span>/</span>
-              <span>06</span>
-            </div>
-          </header>
+          <TechnologyTopbar chapterNumber={activeChapter.number} />
 
           {/* =============================================
               INTRO HEADLINE (Fades as you enter tunnel)
           ============================================= */}
-          <div
-            className="technology-intro"
-            style={{
-              opacity: clamp(1 - progress * 4.5, 0, 1),
-              transform: `translate3d(0, ${-progress * 85}px, 0)`,
-            }}
-          >
-            <span className="technology-intro-eyebrow">THE STACK</span>
-            <Heading>
-              Technology
-              <br />
-              behind
-              <br />
-              what we build.
-            </Heading>
-            <p>
-              Scroll to travel through our core technology stack and digital
-              capabilities.
-            </p>
-          </div>
+          <TechnologyIntro progress={progress} headingTag={Heading} />
 
           {/* =============================================
               3D TECHNOLOGY TUNNEL
@@ -923,7 +983,8 @@ export default function Technology({ headingTag = "h2" }) {
                     total={chapter.technologies.length}
                     chapterDiff={chapterDiff}
                     chapterIndex={cIndex}
-                    mouse={mouse}
+                    mouseX={mouse.x}
+                    mouseY={mouse.y}
                     mobile={isMobile}
                   />
                 ));
@@ -934,29 +995,7 @@ export default function Technology({ headingTag = "h2" }) {
           {/* =============================================
               ACTIVE CHAPTER INFO PANEL
           ============================================= */}
-          <Link
-            to={activeChapter.path}
-            className="technology-chapter-info"
-            style={{ textDecoration: "none", color: "inherit", cursor: "pointer", pointerEvents: "auto" }}
-          >
-            <span className="technology-chapter-number">
-              {activeChapter.number}
-            </span>
-
-            <div className="technology-chapter-copy">
-              <span className="technology-chapter-eyebrow">
-                {activeChapter.eyebrow}
-              </span>
-
-              {headingTag === "h1" ? (
-                <h2>{activeChapter.title}</h2>
-              ) : (
-                <h3>{activeChapter.title}</h3>
-              )}
-
-              <p>{activeChapter.description}</p>
-            </div>
-          </Link>
+          <TechnologyChapterInfo chapter={activeChapter} headingTag={headingTag} />
 
           {/* =============================================
               SCROLL INDICATOR
@@ -975,14 +1014,7 @@ export default function Technology({ headingTag = "h2" }) {
           {/* =============================================
               CHAPTER PROGRESS DOTS
           ============================================= */}
-          <div className="technology-progress" aria-hidden="true">
-            {TECHNOLOGY_CHAPTERS.map((chapter, index) => (
-              <span
-                key={chapter.id}
-                className={index === activeChapterIndex ? "active" : ""}
-              />
-            ))}
-          </div>
+          <TechnologyProgressDots activeIndex={activeChapterIndex} />
 
           {/* =============================================
               MOBILE SCROLL HINT

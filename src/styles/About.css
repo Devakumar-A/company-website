@@ -20,10 +20,10 @@
   isolation: isolate;
   border-top-left-radius: clamp(24px, 4vw, 44px);
   border-top-right-radius: clamp(24px, 4vw, 44px);
-  box-shadow:
-    0 -30px 70px -15px rgba(0, 0, 0, 0.55),
-    0 -12px 30px -5px rgba(0, 0, 0, 0.35),
-    0 -1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 -16px 36px -12px rgba(0, 0, 0, 0.35);
+  margin-top: -30px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   font-family:
     Inter,
     ui-sans-serif,
@@ -53,6 +53,7 @@
   pointer-events: none;
   overflow: hidden;
   user-select: none;
+  contain: strict;
 }
 
 .about-grid {
@@ -74,7 +75,8 @@
   height: 70vw;
   max-width: 900px;
   max-height: 900px;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -147,49 +149,25 @@
   filter: drop-shadow(0 20px 40px rgba(10, 15, 30, 0.08));
 }
 
-/* Common Logo Piece Styling */
-.about-logo-piece {
-  position: absolute;
-  inset: 0;
+/* Complete Logo Styling */
+.about-logo-full {
   width: 100%;
   height: 100%;
   object-fit: contain;
   user-select: none;
   pointer-events: none;
   -webkit-user-drag: none;
-  transition: transform 1.45s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 1.45s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Black Piece: Crisp depth contrast - enters from left */
-.about-piece-black {
-  z-index: 3;
-  transform: translate3d(-95px, -8px, 0);
+  filter: drop-shadow(0 0 24px rgba(124, 58, 237, 0.28)) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.12));
+  transition: transform 1.25s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.25s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.92);
   opacity: 0;
-  filter: blur(5px) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
 }
 
-/* Purple Piece: Restrained high-tech neon glow - enters from right */
-.about-piece-purple {
-  z-index: 4;
-  transform: translate3d(95px, 8px, 0);
-  opacity: 0;
-  filter: blur(5px) drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
-                    drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
-}
-
-.about-in-view .about-piece-black {
-  transform: translate3d(0, 0, 0);
+.about-in-view .about-logo-full {
+  transform: scale(1);
   opacity: 1;
-  filter: blur(0px) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.12));
-}
-
-.about-in-view .about-piece-purple {
-  transform: translate3d(0, 0, 0);
-  opacity: 1;
-  filter: blur(0px) drop-shadow(0 0 16px rgba(124, 58, 237, 0.38))
-                    drop-shadow(0 4px 18px rgba(139, 92, 246, 0.22));
 }
 
 /* =========================================================
@@ -512,7 +490,7 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .about-logo-piece,
+  .about-logo-full,
   .about-split-left,
   .about-split-right {
     animation: none !important;

@@ -58,6 +58,8 @@ const routeComponentMap = {
   // Services: Software Engineering
   '/services/software-engineering': './src/pages/services/software/SoftwareEngineering.jsx',
   '/services/software-engineering/software-development': './src/pages/services/software/SoftwareDevelopment.jsx',
+  '/services/software-engineering/ai-automation': './src/pages/services/software/AiAutomation.jsx',
+  '/services/software-engineering/mobile-app-development': './src/pages/services/software/MobileAppDevelopment.jsx',
   '/services/software-engineering/web-applications': './src/pages/services/software/WebApplications.jsx',
   '/services/software-engineering/business-software': './src/pages/services/software/BusinessSoftware.jsx',
   '/services/software-engineering/cloud-solutions': './src/pages/services/software/CloudSolutions.jsx',
@@ -88,19 +90,6 @@ const routeComponentMap = {
   '/careers/job': './src/pages/careers/JobApply.jsx',
   '/certificate/verify': './src/pages/certificate/CertificateVerify.jsx',
   '/404': './src/pages/NotFound.jsx',
-
-  // Internship routes
-  '/internship': './src/pages/internship/Internship.jsx',
-  '/internship/web-development': './src/pages/internship/domains/WebDevelopment.jsx',
-  '/internship/ai-ml': './src/pages/internship/domains/AiMl.jsx',
-  '/internship/data-science': './src/pages/internship/domains/DataScience.jsx',
-  '/internship/mobile-development': './src/pages/internship/domains/MobileDevelopment.jsx',
-  '/internship/software-engineering': './src/pages/internship/domains/SoftwareEngineering.jsx',
-  '/internship/ui-ux-design': './src/pages/internship/domains/UiUxDesign.jsx',
-  '/internship/database-management': './src/pages/internship/domains/DatabaseManagement.jsx',
-  '/internship/software-testing': './src/pages/internship/domains/SoftwareTesting.jsx',
-  '/internship/cloud-devops': './src/pages/internship/domains/CloudDevops.jsx',
-  '/internship/cybersecurity': './src/pages/internship/domains/Cybersecurity.jsx',
 
   // Alias routes
   '/career': './src/pages/Career.jsx',

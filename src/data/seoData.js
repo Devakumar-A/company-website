@@ -3,144 +3,91 @@ export const seoData = {
     path: "/",
     title: "Cognolynx: Custom Software & AI Product Engineering",
     description: "Cognolynx builds high-performance custom software, modern digital products, and intelligent technology solutions to help forward-thinking businesses scale.",
+    image: "/images/cognolynx-engineering-platform.webp",
     noindex: false,
   },
   "/about": {
     path: "/about",
     title: "About Us | Cognolynx",
     description: "Discover Cognolynx, our engineering philosophy, and how our purposeful approach delivers scalable custom software and modern digital product experiences.",
+    image: "/images/cognolynx-about-studio.webp",
     noindex: false,
   },
   "/services": {
     path: "/services",
     title: "Services | Cognolynx",
     description: "Explore full-spectrum technology services from Cognolynx, spanning custom software development, web platforms, design systems, and growth engineering.",
+    image: "/images/cognolynx-technology-services.webp",
     noindex: false,
   },
   "/solutions": {
     path: "/solutions",
     title: "Solutions | Cognolynx",
     description: "Discover end-to-end technology solutions tailored for business challenges, from custom digital products and automation systems to scalable mobile apps.",
+    image: "/images/cognolynx-digital-solutions.webp",
     noindex: false,
   },
   "/technology": {
     path: "/technology",
     title: "Technology | Cognolynx",
     description: "Explore the modern engineering stack behind Cognolynx, featuring React, Node.js, Python, cloud infrastructure, AI models, and secure database systems.",
+    image: "/images/cognolynx-engineering-platform.webp",
     noindex: false,
   },
   "/contact": {
     path: "/contact",
     title: "Contact Us | Cognolynx",
     description: "Get in touch with Cognolynx for project inquiries, technical architecture consultation, or partnerships. We respond within twenty-four business hours.",
+    image: "/images/cognolynx-about-studio.webp",
     noindex: false,
   },
   "/careers": {
     path: "/careers",
     title: "Careers | Cognolynx",
     description: "Join Cognolynx to build meaningful digital products and scalable systems. Explore engineering, design, and growth opportunities with our global team.",
+    image: "/images/cognolynx-internship-program.webp",
     noindex: false,
   },
   "/case-studies": {
     path: "/case-studies",
     title: "Case Studies | Cognolynx",
     description: "Read how Cognolynx partners with ambitious companies to build scalable digital products, modernize software architecture, and drive sustainable growth.",
+    image: "/images/cognolynx-digital-solutions.webp",
     noindex: false,
   },
   "/blog": {
     path: "/blog",
     title: "Blog | Cognolynx",
     description: "Read the latest technical perspectives, design principles, and software engineering insights from the Cognolynx digital product engineering team.",
+    image: "/images/cognolynx-blog-16x9.webp",
     noindex: false,
   },
   "/privacy-policy": {
     path: "/privacy-policy",
     title: "Privacy Policy | Cognolynx",
     description: "Review the Cognolynx Privacy Policy to learn how we collect, handle, safeguard, and respect your personal information across our website and services.",
+    image: "/images/cognolynx-engineering-platform.webp",
     noindex: false,
   },
   "/terms-conditions": {
     path: "/terms-conditions",
     title: "Terms & Conditions | Cognolynx",
     description: "Read the terms and conditions governing access to and use of the Cognolynx website, digital products, software applications, and technological services.",
+    image: "/images/cognolynx-engineering-platform.webp",
     noindex: false,
   },
   "/support": {
     path: "/support",
     title: "Support | Cognolynx",
     description: "Get help and technical assistance from Cognolynx. Find answers to common questions or submit support requests directly to our technical team.",
+    image: "/images/cognolynx-about-studio.webp",
     noindex: false,
   },
   "/faq": {
     path: "/faq",
     title: "FAQ | Cognolynx",
-    description: "Find clear answers about Cognolynx custom software development, agile sprints, technology frameworks, pricing & IP rights, and our free internship program.",
-    noindex: false,
-  },
-  "/internship": {
-    path: "/internship",
-    title: "Internship Program | Remote Student Training | Cognolynx",
-    description: "Apply for Cognolynx's 1-month remote internship program for engineering, BCA, MCA & B.Sc students. Hands-on projects, mentorship & verified certificates.",
-    noindex: false,
-  },
-  "/internship/web-development": {
-    path: "/internship/web-development",
-    title: "Web Development Internship | Remote | Cognolynx",
-    description: "Apply for a 1-month remote Web Development internship at Cognolynx. Build production React, Next.js & Node.js apps with real mentorship & certification.",
-    noindex: false,
-  },
-  "/internship/ai-ml": {
-    path: "/internship/ai-ml",
-    title: "AI & ML Internship | Remote AI Training | Cognolynx",
-    description: "Join Cognolynx's remote AI & ML internship. Build Generative AI models, NLP pipelines & intelligent agents with practical projects and verified certificates.",
-    noindex: false,
-  },
-  "/internship/data-science": {
-    path: "/internship/data-science",
-    title: "Data Science Internship | Remote | Cognolynx",
-    description: "Apply for a 1-month remote Data Science & Analytics internship at Cognolynx. Master Python, SQL, Power BI & predictive models with hands-on projects.",
-    noindex: false,
-  },
-  "/internship/mobile-development": {
-    path: "/internship/mobile-development",
-    title: "Mobile App Internship | iOS & Android | Cognolynx",
-    description: "Build production mobile apps with Flutter & React Native in Cognolynx's 1-month remote mobile development internship. Earn verified certificate.",
-    noindex: false,
-  },
-  "/internship/software-engineering": {
-    path: "/internship/software-engineering",
-    title: "Software Engineering Internship | Remote | Cognolynx",
-    description: "Hands-on software engineering internship at Cognolynx. Master Java, Python, REST APIs, and core algorithms in real-world systems. Remote with certificate.",
-    noindex: false,
-  },
-  "/internship/ui-ux-design": {
-    path: "/internship/ui-ux-design",
-    title: "UI/UX Design Internship | Remote | Cognolynx",
-    description: "Design sleek, user-centric digital products in Figma. Apply for Cognolynx's 1-month remote UI/UX internship with real client briefs and portfolio review.",
-    noindex: false,
-  },
-  "/internship/database-management": {
-    path: "/internship/database-management",
-    title: "Database Management Internship | Remote | Cognolynx",
-    description: "Learn SQL, PostgreSQL, MongoDB schema design and query optimization in Cognolynx's 1-month remote database management internship. Apply online.",
-    noindex: false,
-  },
-  "/internship/software-testing": {
-    path: "/internship/software-testing",
-    title: "Software Testing Internship | Remote QA | Cognolynx",
-    description: "Master manual & automated QA testing with Selenium, Playwright & Postman. Join Cognolynx's 1-month remote software testing internship with certificate.",
-    noindex: false,
-  },
-  "/internship/cloud-devops": {
-    path: "/internship/cloud-devops",
-    title: "Cloud & DevOps Internship | Remote | Cognolynx",
-    description: "Deploy cloud architectures on AWS, Docker & CI/CD pipelines in Cognolynx's 1-month remote Cloud & DevOps internship. Practical engineering experience.",
-    noindex: false,
-  },
-  "/internship/cybersecurity": {
-    path: "/internship/cybersecurity",
-    title: "Cybersecurity Internship | Remote Training | Cognolynx",
-    description: "Gain hands-on ethical hacking, vulnerability assessment and web security skills in Cognolynx's 1-month remote cybersecurity internship with certificate.",
+    description: "Find clear answers about Cognolynx custom software development, agile sprints, tech frameworks, pricing & IP rights, and our student internship track.",
+    image: "/images/cognolynx-about-studio.webp",
     noindex: false,
   },
 
@@ -230,25 +177,43 @@ export const seoData = {
   "/services/software-engineering/software-development": {
     path: "/services/software-engineering/software-development",
     title: "Custom Software Development | Cognolynx",
-    description: "Build reliable, maintainable software designed around your business processes with tailored engineering solutions from the Cognolynx team.",
+    description: "Reliable custom software built around how your business works. Scoped milestones, iterative sprints, and documentation from the Cognolynx team.",
+    image: "/images/cognolynx-technology-services.webp",
     noindex: false,
   },
   "/services/software-engineering/web-applications": {
     path: "/services/software-engineering/web-applications",
     title: "Web Applications | Cognolynx",
-    description: "Develop rich, interactive web applications with modern frontend frameworks and scalable backend APIs engineered for enterprise workloads.",
+    description: "Fast, accessible web applications built with modern frameworks, clear navigation, and performance and accessibility from day one.",
+    image: "/images/cognolynx-technology-services.webp",
+    noindex: false,
+  },
+  "/services/software-engineering/ai-automation": {
+    path: "/services/software-engineering/ai-automation",
+    title: "AI & Automation Services | Cognolynx",
+    description: "Practical AI that removes repetitive work from your team. Document processing, search over your content, and workflow automation.",
+    image: "/images/cognolynx-technology-services.webp",
+    noindex: false,
+  },
+  "/services/software-engineering/cloud-solutions": {
+    path: "/services/software-engineering/cloud-solutions",
+    title: "Cloud & DevOps Services | Cognolynx",
+    description: "Dependable cloud hosting, deployment, and monitoring. We set up infrastructure on AWS and Google Cloud so teams release with confidence.",
+    image: "/images/cognolynx-technology-services.webp",
+    noindex: false,
+  },
+  "/services/software-engineering/mobile-app-development": {
+    path: "/services/software-engineering/mobile-app-development",
+    title: "Mobile App Development | Cognolynx",
+    description: "Android and iOS apps from a single, well-tested codebase. Cross-platform engineering with React Native or Flutter through store release.",
+    image: "/images/cognolynx-technology-services.webp",
     noindex: false,
   },
   "/services/software-engineering/business-software": {
     path: "/services/software-engineering/business-software",
     title: "Business Software | Cognolynx",
     description: "Empower operational workflows with specialized internal tools, administrative dashboards, and bespoke enterprise software built by Cognolynx.",
-    noindex: false,
-  },
-  "/services/software-engineering/cloud-solutions": {
-    path: "/services/software-engineering/cloud-solutions",
-    title: "Cloud Solutions | Cognolynx",
-    description: "Design and deploy modern cloud solutions with automated provisioning, auto-scaling clusters, and secure serverless computing from Cognolynx.",
+    image: "/images/cognolynx-technology-services.webp",
     noindex: false,
   },
 
@@ -463,7 +428,7 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     "@id": `${SITE_URL}/#founder`,
     name: "Devakumar A",
     jobTitle: "Founder & Chief Executive Officer",
-    email: "mailto:devak9391@gmail.com",
+    email: "mailto:cognolynxforge@gmail.com",
     url: `${SITE_URL}/about`,
     sameAs: [
       "https://github.com/Devakumar-A",
@@ -487,14 +452,18 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     "@id": `${SITE_URL}/#organization`,
     name: "Cognolynx",
     url: SITE_URL,
-    logo: `${SITE_URL}/icon-512.png`,
+    logo: `${SITE_URL}/assets/logo.png`,
+    image: `${SITE_URL}/assets/logo.png`,
     founder: {
       "@id": `${SITE_URL}/#founder`,
     },
+    sameAs: [
+      "https://www.linkedin.com/company/133397624/",
+    ],
     contactPoint: [
       {
         "@type": "ContactPoint",
-        email: "devak9391@gmail.com",
+        email: "cognolynxforge@gmail.com",
         contactType: "customer support",
         availableLanguage: ["English"],
       },
@@ -514,11 +483,37 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     },
   };
 
-  // 1. Homepage schema (Google Site Name + Organization + Founder Knowledge Graph)
+  // Resolve primary image for the route
+  const pageImage = seo.image || (seoData[cleanPath] && seoData[cleanPath].image) || "/og-image.png";
+  const fullImageUrl = pageImage.startsWith("http")
+    ? pageImage
+    : `${SITE_URL}${pageImage.startsWith("/") ? "" : "/"}${pageImage}`;
+
+  const primaryImageObject = {
+    "@type": "ImageObject",
+    "@id": `${canonicalUrl}#primaryimage`,
+    url: fullImageUrl,
+    contentUrl: fullImageUrl,
+    width: 1200,
+    height: 675,
+  };
+
+  // 1. Homepage schema (Google Site Name + Organization + Founder Knowledge Graph + WebPage with Image)
   if (cleanPath === "/") {
+    const homeWebPage = {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/#webpage`,
+      url: `${SITE_URL}/`,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` },
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
+    };
     return {
       "@context": "https://schema.org",
-      "@graph": [webSiteSchema, orgSchema, founderSchema],
+      "@graph": [webSiteSchema, orgSchema, founderSchema, homeWebPage],
     };
   }
 
@@ -541,7 +536,7 @@ export function getJsonLdForRoute(routePath, seo = {}) {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: SITE_URL,
+      item: `${SITE_URL}/`,
     },
   ];
 
@@ -563,7 +558,7 @@ export function getJsonLdForRoute(routePath, seo = {}) {
     itemListElement: breadcrumbItems,
   });
 
-  // 3. Page-specific schemas
+  // 3. Page-specific schemas with primaryImageOfPage & image
   if (cleanPath === "/about") {
     graph.push({
       "@type": "AboutPage",
@@ -571,6 +566,8 @@ export function getJsonLdForRoute(routePath, seo = {}) {
       url: canonicalUrl,
       name: seo.title,
       description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
       isPartOf: { "@id": `${SITE_URL}/#website` },
       about: { "@id": `${SITE_URL}/#organization` },
       mainEntity: { "@id": `${SITE_URL}/#founder` },
@@ -584,48 +581,107 @@ export function getJsonLdForRoute(routePath, seo = {}) {
       url: canonicalUrl,
       name: seo.title,
       description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
       isPartOf: { "@id": `${SITE_URL}/#website` },
     });
-  } else if (cleanPath === "/blog" || cleanPath === "/case-studies") {
+  } else if (cleanPath === "/blog") {
     graph.push({
       "@type": "CollectionPage",
       "@id": `${canonicalUrl}#webpage`,
       url: canonicalUrl,
       name: seo.title,
       description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+    // Article schema with 16:9, 4:3, and 1:1 image versions for Google Discover / Search rich results
+    graph.push({
+      "@type": "BlogPosting",
+      "@id": `${canonicalUrl}#featured-article`,
+      headline: "Building AI Systems That Solve Real-World Problems",
+      description: "A practical look at how we approach AI-driven systems and production digital product architecture at Cognolynx.",
+      image: [
+        `${SITE_URL}/images/cognolynx-blog-16x9.webp`,
+        `${SITE_URL}/images/cognolynx-blog-4x3.webp`,
+        `${SITE_URL}/images/cognolynx-blog-1x1.webp`,
+      ],
+      datePublished: "2026-10-08T00:00:00+05:30",
+      dateModified: "2026-10-24T12:00:00+05:30",
+      author: {
+        "@type": "Person",
+        name: "Devakumar A",
+        url: `${SITE_URL}/about`,
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Cognolynx",
+        url: `${SITE_URL}/`,
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/assets/logo.png`,
+        },
+      },
+      mainEntityOfPage: canonicalUrl,
+    });
+  } else if (cleanPath === "/case-studies") {
+    graph.push({
+      "@type": "CollectionPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
       isPartOf: { "@id": `${SITE_URL}/#website` },
     });
   } else if (cleanPath.startsWith("/services")) {
     const lastSeg = segments[segments.length - 1] || "services";
     const serviceName = SEGMENT_NAMES[lastSeg] || (seo.title ? seo.title.split("|")[0].trim() : "Service");
     graph.push({
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: seo.title,
+      description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+    graph.push({
       "@type": "Service",
       "@id": `${canonicalUrl}#service`,
       name: serviceName,
       description: seo.description,
       url: canonicalUrl,
+      image: fullImageUrl,
       provider: {
         "@type": "Organization",
         name: "Cognolynx",
         url: SITE_URL,
       },
     });
-  } else if (cleanPath === "/internship") {
+  } else if (cleanPath.startsWith("/solutions")) {
     graph.push({
       "@type": "WebPage",
       "@id": `${canonicalUrl}#webpage`,
       url: canonicalUrl,
       name: seo.title,
       description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
       isPartOf: { "@id": `${SITE_URL}/#website` },
     });
-  } else if (cleanPath.startsWith("/internship/")) {
+  } else if (cleanPath === "/internship" || cleanPath.startsWith("/internship/")) {
     graph.push({
       "@type": "WebPage",
       "@id": `${canonicalUrl}#webpage`,
       url: canonicalUrl,
       name: seo.title,
       description: seo.description,
+      image: fullImageUrl,
+      primaryImageOfPage: primaryImageObject,
       isPartOf: { "@id": `${SITE_URL}/#website` },
     });
   }

@@ -1,133 +1,55 @@
 import React from "react";
-import { ArrowRight, Check } from "lucide-react";
-import { Link } from "react-router-dom";
-import SEO from "../../../components/SEO";
+import ServicePageTemplate from "../../../components/ServicePageTemplate";
 import { seoData } from "../../../data/seoData";
-import Footer from "../../../components/Footer";
-import "../../../styles/services/ServiceDetail.css";
 
-const features = [
-  "Corporate websites",
-  "Business websites",
-  "Landing pages",
-  "Service and product websites",
-  "Responsive development",
-  "CMS and content integration",
+const DELIVERABLES = [
+  "Custom responsive website",
+  "SEO-ready structure and structured data",
+  "Content management setup",
+  "Analytics and enquiry tracking",
+  "Hosting and domain setup",
+];
+
+const FAQS = [
+  {
+    q: "How long does building a new website typically take?",
+    a: "Most corporate and marketing website projects take between 2 to 5 weeks from initial design approval to live domain deployment.",
+  },
+  {
+    q: "Can non-technical team members update content easily?",
+    a: "Yes, we integrate modern headless content management systems (CMS) so your marketing team can update copy, images, and blog posts with zero coding required.",
+  },
+  {
+    q: "Who owns the domain, hosting, and code?",
+    a: "You own 100% of your website code, domain registrations, and hosting accounts. We hand over all administrator credentials upon launch.",
+  },
+  {
+    q: "Is search engine optimization included?",
+    a: "Yes, every website we deliver includes semantic HTML5 structure, OpenGraph meta tags, XML sitemaps, and validated JSON-LD schema markup.",
+  },
+  {
+    q: "How do we get started?",
+    a: "We begin with a brief consultation to review your brand positioning, page requirements, and target launch date.",
+  },
 ];
 
 export default function WebsiteDevelopment() {
   return (
-    <>
-    <SEO {...seoData["/services/web-digital/website-development"]} />
-    <main className="service-detail-page">
-
-      <section className="service-detail-hero">
-
-        <div className="service-detail-eyebrow">
-          WEB & DIGITAL / 01
-        </div>
-
-        <h1>
-          Website
-          <br />
-          <span>development.</span>
-        </h1>
-
-        <p>
-          A clear, professional website that gives your business a strong
-          presence and makes it easy for customers to understand what you do.
-        </p>
-
-        <Link
-          to="/contact"
-          className="service-detail-cta"
-        >
-          Discuss a project
-          <ArrowRight size={18} />
-        </Link>
-
-      </section>
-
-      <section className="service-detail-content">
-
-        <div className="service-detail-section-label">
-          <span>01</span>
-          THE WORK
-        </div>
-
-        <div className="service-detail-copy">
-
-          <h2>
-            More than a website.
-            <br />
-            A proper first impression.
-          </h2>
-
-          <p>
-            Your website is often the first place someone meets your business.
-            It needs to explain what you offer quickly, look trustworthy and
-            make the next step obvious.
-          </p>
-
-          <p>
-            We combine thoughtful design with solid development to create
-            websites that work properly across phones, tablets and desktops.
-          </p>
-
-        </div>
-
-      </section>
-
-      <section className="service-detail-features">
-
-        <div className="service-detail-section-label">
-          <span>02</span>
-          WHAT WE BUILD
-        </div>
-
-        <div className="service-feature-list">
-
-          {features.map((feature, index) => (
-            <div
-              className="service-feature"
-              key={feature}
-            >
-              <span>
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              <Check size={17} />
-
-              <p>{feature}</p>
-            </div>
-          ))}
-
-        </div>
-
-      </section>
-
-      <section className="service-detail-bottom">
-
-        <span>YOUR BUSINESS DESERVES A BETTER PRESENCE</span>
-
-        <h2>
-          Ready to build
-          <br />
-          your website?
-        </h2>
-
-        <Link
-          to="/contact"
-          className="service-detail-bottom-link"
-        >
-          Start a conversation
-          <ArrowRight size={18} />
-        </Link>
-
-      </section>
-
-    </main>
-    <Footer />
-    </>
+    <ServicePageTemplate
+      seoProps={seoData["/services/web-digital/website-development"]}
+      breadcrumbs={[
+        { label: "Home", path: "/" },
+        { label: "Services", path: "/services" },
+        { label: "Website Development", path: "/services/web-digital/website-development" },
+      ]}
+      eyebrow="WEB & DIGITAL / 07"
+      serviceName="Website Development"
+      benefitHeadline="fast, search-friendly websites that explain what you do and bring in enquiries."
+      overviewP1="We design and build business websites that load quickly, work on every device, and are structured so search engines and visitors understand them."
+      typicalTimeline="Typical timeline: 2 – 5 weeks (scope dependent)"
+      deliverables={DELIVERABLES}
+      techStack={["React", "HTML5", "CSS3", "Headless CMS", "Sharp", "Netlify"]}
+      faqs={FAQS}
+    />
   );
 }

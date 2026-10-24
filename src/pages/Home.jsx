@@ -5,25 +5,18 @@ import Hero from "../sections/Hero";
 import About from "../sections/About";
 import Footer from "../components/Footer";
 
+import InternshipPopup from "../components/InternshipPopup";
+
 // Lazy-load below-the-fold heavy sections to keep the initial client bundle light
 const LazyServices = lazy(() => import("../sections/Services"));
 const LazySolutions = lazy(() => import("../sections/Solutions"));
 const LazyTechnology = lazy(() => import("../sections/Technology"));
-
-// Lazy-load after hydration to keep critical bundle & hydration path untouched
-const InternshipPopup = lazy(() => import("../components/InternshipPopup"));
 
 export default function Home({
   ServicesComp = LazyServices,
   SolutionsComp = LazySolutions,
   TechnologyComp = LazyTechnology,
 }) {
-  const [isClientMounted, setIsClientMounted] = useState(false);
-
-  useEffect(() => {
-    setIsClientMounted(true);
-  }, []);
-
   return (
     <>
       <SEO {...seoData["/"]} />
@@ -45,12 +38,7 @@ export default function Home({
       </Suspense>
 
       <Footer />
-
-      {isClientMounted && (
-        <Suspense fallback={null}>
-          <InternshipPopup />
-        </Suspense>
-      )}
+      <InternshipPopup />
     </>
   );
 }

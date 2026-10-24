@@ -7,7 +7,7 @@ Cognolynx is a modern software and product engineering company founded by Devaku
 ## Company Information
 - Website: https://cognolynx.tech
 - Founded & Led by: Devakumar A, Founder & Chief Executive Officer
-- Contact Email: devak9391@gmail.com
+- Contact Email: cognolynxforge@gmail.com
 - Mode: Remote-first engineering studio (originating in Puducherry, India)
 
 ## Leadership & Founder Profiles
@@ -15,7 +15,7 @@ Cognolynx is a modern software and product engineering company founded by Devaku
 - LinkedIn: https://www.linkedin.com/in/devakumar-a-129561305/
 - GitHub: https://github.com/Devakumar-A
 - ORCID: https://orcid.org/0009-0003-8934-6744
-- Direct Email: devak9391@gmail.com
+- Direct Email: cognolynxforge@gmail.com
 
 ## Core Service Capabilities
 1. Custom Software Engineering: Tailored business applications, automated enterprise workflows, backend database architectures, and secure REST/GraphQL APIs.
@@ -25,32 +25,13 @@ Cognolynx is a modern software and product engineering company founded by Devaku
 5. UI/UX Design Systems: Cohesive design tokens, component libraries, and ergonomic user journeys.
 6. Growth & Performance Marketing: Data-driven acquisition funnels, conversion rate optimization, and digital campaign infrastructure.
 
-## Internship Program
-Cognolynx operates a 1-month remote internship program designed for undergraduate and postgraduate students (B.E., B.Tech, BCA, MCA, B.Sc) seeking hands-on exposure to live production systems.
-- Mode: 100% Remote / Online (open to eligible students across India).
-- Duration: 1 month initial project sprint (with performance evaluation for stipend track extension).
-- Cost: Training and project participation are free; an optional verified certificate of completion is provided with a nominal ₹149 processing fee.
-- Stipend Policy: Initial 1 month is learning- and project-focused (unpaid); candidates demonstrating outstanding technical contribution are reviewed and selected for paid stipend internships.
-- Available Domains:
-  - Web Development (Frontend, Backend, Full-Stack, MERN)
-  - Artificial Intelligence & Machine Learning (NLP, Computer Vision, LLMs)
-  - Data Science & Analytics (Python, Power BI, Statistical Modeling)
-  - Mobile App Development (Flutter, React Native, Android)
-  - Programming & Software Engineering (Python, Java, Data Structures)
-  - UI/UX & Product Design (Figma, Design Systems, Prototyping)
-  - Database Management (PostgreSQL, MongoDB, SQL Optimization)
-  - Software Testing & Quality Assurance (Automation, Selenium, API Testing)
-  - Cloud Computing & DevOps (Docker, AWS, CI/CD Pipelines)
-  - Cybersecurity & Ethical Hacking (Network Security, App Security)
-- Application Link: https://cognolynx.tech/internship
-
 ## Key URLs
 - Homepage: https://cognolynx.tech/
 - About Us: https://cognolynx.tech/about
 - Services: https://cognolynx.tech/services
 - Solutions: https://cognolynx.tech/solutions
 - Technology: https://cognolynx.tech/technology
-- Internship Portal: https://cognolynx.tech/internship
+- Careers: https://cognolynx.tech/careers
 - Contact Us: https://cognolynx.tech/contact
 - Certificate Verification: https://cognolynx.tech/certificate/verify
 - Terms & Conditions: https://cognolynx.tech/terms-conditions

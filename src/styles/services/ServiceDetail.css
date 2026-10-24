@@ -10,7 +10,7 @@
 
 .service-detail-hero {
   min-height: auto;
-  padding: 105px 7vw 50px;
+  padding: clamp(32px, 5vw, 55px) 7vw 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -157,6 +157,133 @@
   font-weight: 500;
 }
 
+/* PROCESS (HOW WE WORK) */
+
+.service-detail-process {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 40px;
+  padding: 65px 7vw;
+  background: #fcfdfe;
+  border-top: 1px solid #dfe3e8;
+}
+
+.service-process-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.service-process-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px 22px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+.service-process-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.service-process-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.service-process-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* TECH STACK */
+
+.service-detail-tech {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 40px;
+  padding: 60px 7vw;
+  background: #ffffff;
+  border-top: 1px solid #dfe3e8;
+}
+
+.service-tech-chips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.service-tech-tag {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+
+/* FAQ */
+
+.service-detail-faq {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 40px;
+  padding: 65px 7vw;
+  background: #fcfdfe;
+  border-top: 1px solid #dfe3e8;
+}
+
+.service-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.service-faq-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.service-faq-item h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.service-faq-item p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.service-faq-neutral {
+  margin-top: 12px !important;
+  font-size: 13px !important;
+  color: #64748b !important;
+  font-style: italic;
+}
+
 /* FINAL */
 
 .service-detail-bottom {
@@ -200,7 +327,10 @@
   }
 
   .service-detail-content,
-  .service-detail-features {
+  .service-detail-features,
+  .service-detail-process,
+  .service-detail-tech,
+  .service-detail-faq {
     grid-template-columns: 1fr;
     padding: 50px 6vw;
   }

@@ -44,31 +44,21 @@ export default function About() {
           {/* Ambient purple/blue halo behind the logo stage */}
           <div className="about-logo-halo" />
 
-          {/* 1355x1161 Aspect-Ratio Logo Assembly Stage */}
+          {/* Complete Cognolynx Logo */}
           <div className="about-logo-stage">
-            {/* 1. BLACK LOGO PIECE — Enters from left */}
-            <img
-              src="/assets/logo-black.webp"
-              alt="Cognolynx Black Shard"
-              className="about-logo-piece about-piece-black"
-              draggable="false"
-              loading="lazy"
-              decoding="async"
-              width="800"
-              height="685"
-            />
-
-            {/* 2. PURPLE LOGO PIECE — Enters from right */}
-            <img
-              src="/assets/logo-purple.webp"
-              alt="Cognolynx Purple Shard"
-              className="about-logo-piece about-piece-purple"
-              draggable="false"
-              loading="lazy"
-              decoding="async"
-              width="800"
-              height="685"
-            />
+            <picture>
+              <source srcSet="/assets/logo.webp" type="image/webp" />
+              <img
+                src="/assets/logo.png"
+                alt="Cognolynx Logo"
+                className="about-logo-full"
+                draggable="false"
+                loading="eager"
+                decoding="async"
+                width="800"
+                height="685"
+              />
+            </picture>
           </div>
         </div>
 
@@ -108,24 +98,11 @@ export default function About() {
             From software and digital platforms to intelligent systems, we turn ideas and complex challenges into technology that works — with a focus on simplicity, performance, and long-term value.
           </p>
 
-          {/* Internship Program Callout */}
-          <div className="about-intern-box">
-            <div className="about-intern-badge">
-              <span className="about-intern-pulse" />
-              <span>INTERNSHIP PROGRAM NOW OPEN</span>
-            </div>
-            <p className="about-intern-text">
-              We mentor and empower emerging engineers through practical work on live production software, AI models, and real client systems with verified MSME certification.
-            </p>
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-              <Link to="/internship" className="about-intern-cta">
-                <span>Explore Internship Program</span>
-                <ArrowRight size={15} />
-              </Link>
-              <Link to="/careers/apply" style={{ color: "#a5b4fc", fontSize: "13px", fontWeight: "600", textDecoration: "none", padding: "8px 12px" }}>
-                <span>Direct Application →</span>
-              </Link>
-            </div>
+          <div className="about-actions" style={{ marginTop: "28px" }}>
+            <Link to="/about" className="about-intern-cta">
+              <span>Learn More About Cognolynx</span>
+              <ArrowRight size={15} />
+            </Link>
           </div>
         </div>
       </div>

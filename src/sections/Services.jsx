@@ -1,467 +1,308 @@
 import React, {
+  useCallback,
   useEffect,
-  useRef,
   useState,
+  useRef,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  motion,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  CheckCircle2,
+  Clock,
+  Layers,
+  Sparkles,
+  X,
+} from "lucide-react";
 import "../styles/Services.css";
 
-const services = [
+/* ==========================================================================
+   COGNOLYNX SERVICES DATASET (BENEFIT-FIRST PROFESSIONAL COPY)
+   Google Cloud & Microsoft style: plain language, short sentences, verified facts
+   ========================================================================== */
+
+const SERVICES_DATA = [
   {
     id: 1,
     number: "01",
-    title: "Software Development",
-    short: "Custom software built around your business.",
-    tags: ["Web Apps", "SaaS", "Business Software"],
+    title: "Custom Software Development",
+    category: "Enterprise Systems",
+    timeline: "Typical timeline: 4 – 12 weeks (scope dependent)",
+    short: "Reliable software built around how your business actually works.",
     path: "/services/software-engineering/software-development",
+    gradient: "linear-gradient(135deg, #090e1f 0%, #0d1b3e 50%, #152758 100%)",
+    accent: "#3b82f6",
+    deliverables: [
+      "Web and back-end systems with secure APIs",
+      "Database design and data migration",
+      "User accounts, roles, and permissions",
+      "Automated testing and deployment",
+      "Documentation and team handover",
+    ],
+    techStack: ["Node.js", "Python", "TypeScript", "PostgreSQL", "Docker", "AWS"],
+    description:
+      "We design, build, and maintain custom software for teams that have outgrown off-the-shelf tools. We start with your workflow, agree on scope and milestones, and deliver in small releases you can review along the way.",
   },
   {
     id: 2,
     number: "02",
-    title: "Website Development",
-    short: "Modern websites designed to convert visitors.",
-    tags: ["Corporate", "Business", "Landing Pages"],
-    path: "/services/web-digital/website-development",
+    title: "Web Applications",
+    category: "Digital Products",
+    timeline: "Typical timeline: 3 – 8 weeks (scope dependent)",
+    short: "Fast, accessible web apps that your customers and teams enjoy using.",
+    path: "/services/software-engineering/web-applications",
+    gradient: "linear-gradient(135deg, #0b0f24 0%, #171f45 50%, #202b63 100%)",
+    accent: "#6366f1",
+    deliverables: [
+      "Responsive apps for desktop, tablet, and mobile",
+      "Dashboards and reporting views",
+      "Accessibility aligned with WCAG 2.1 AA guidelines",
+      "Performance tuning for Core Web Vitals",
+      "Analytics and error monitoring",
+    ],
+    techStack: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Vite", "Supabase"],
+    description:
+      "We build responsive web applications with modern frameworks, clear navigation, and thoughtful performance and accessibility from day one.",
   },
   {
     id: 3,
     number: "03",
-    title: "Website Redesign",
-    short: "Transform outdated websites into modern experiences.",
-    tags: ["UI/UX", "Modernization", "Performance"],
+    title: "AI & Automation",
+    category: "Applied AI",
+    timeline: "Typical timeline: 8 – 12 weeks (scope dependent)",
+    short: "Practical AI that removes repetitive work from your team.",
+    path: "/services/software-engineering/ai-automation",
+    gradient: "linear-gradient(135deg, #120a2a 0%, #21124a 50%, #351a75 100%)",
+    accent: "#8b5cf6",
+    deliverables: [
+      "Document and email processing",
+      "Chat assistants and search over your own content",
+      "Workflow automation connected to your existing tools",
+      "Review steps so people stay in control",
+      "Guidance on data privacy and access",
+    ],
+    techStack: ["Python", "PyTorch", "LangChain", "OpenAI / Claude API", "FastAPI", "Vector DBs"],
+    description:
+      "We help you apply AI where it saves time: reading documents, answering questions from your own content, and automating routine steps. Every project starts with a clear goal, a small pilot, and a way to measure whether it works.",
   },
   {
     id: 4,
     number: "04",
-    title: "Web Applications",
-    short: "Scalable and interactive web applications.",
-    tags: ["React", "Node.js", "Full Stack"],
-    path: "/services/software-engineering/web-applications",
+    title: "Cloud & DevOps",
+    category: "Cloud Engineering",
+    timeline: "Typical timeline: 2 – 6 weeks (scope dependent)",
+    short: "Dependable hosting, deployment, and monitoring.",
+    path: "/services/software-engineering/cloud-solutions",
+    gradient: "linear-gradient(135deg, #061524 0%, #0c2b4a 50%, #124373 100%)",
+    accent: "#0ea5e9",
+    deliverables: [
+      "Cloud setup on AWS or Google Cloud",
+      "Automated build and deployment pipelines",
+      "Monitoring and alerts",
+      "Backup and recovery planning",
+      "Cloud cost review",
+    ],
+    techStack: ["AWS", "Google Cloud", "Kubernetes", "Docker", "Terraform", "GitHub Actions"],
+    description:
+      "We set up cloud infrastructure that is easy to deploy to, easy to monitor, and easy to understand, so your team can release updates with confidence.",
   },
   {
     id: 5,
     number: "05",
-    title: "AI & Automation",
-    short: "Automate repetitive work with intelligent systems.",
-    tags: ["AI", "Automation", "Machine Learning"],
+    title: "UI/UX & Design Systems",
+    category: "Experience Design",
+    timeline: "Typical timeline: 2 – 6 weeks (scope dependent)",
+    short: "Interfaces that are clear, consistent, and easy to use.",
+    path: "/services/design-brand/ui-ux-design",
+    gradient: "linear-gradient(135deg, #1b0c26 0%, #301444 50%, #4b1f69 100%)",
+    accent: "#a855f7",
+    deliverables: [
+      "User journeys and information architecture",
+      "Wireframes and clickable prototypes",
+      "Design system and components in Figma",
+      "Usability testing",
+      "Developer-ready handoff files",
+    ],
+    techStack: ["Figma", "Design Tokens", "Prototyping", "WCAG 2.1 AA", "Storybook"],
+    description:
+      "We research how people use your product, design the flows, and turn them into prototypes and reusable components so design and development stay in sync.",
   },
   {
     id: 6,
     number: "06",
-    title: "Mobile Applications",
-    short: "Mobile experiences designed for modern users.",
-    tags: ["Android", "iOS", "Cross Platform"],
+    title: "Mobile App Development",
+    category: "Mobile",
+    timeline: "Typical timeline: 6 – 12 weeks (scope dependent)",
+    short: "Android and iOS apps from a single, well-tested codebase.",
+    path: "/services/software-engineering/mobile-app-development",
+    gradient: "linear-gradient(135deg, #07191e 0%, #0e303a 50%, #174b5c 100%)",
+    accent: "#14b8a6",
+    deliverables: [
+      "Cross-platform app for Android and iOS",
+      "Push notifications and offline support where needed",
+      "Camera, location, and biometric features",
+      "App Store and Google Play submission",
+      "Crash reporting and analytics",
+    ],
+    techStack: ["React Native", "Flutter", "iOS", "Android", "Firebase", "TypeScript"],
+    description:
+      "We build mobile apps with React Native or Flutter, from first prototype through store release, with a focus on speed, usability, and reliability.",
   },
   {
     id: 7,
     number: "07",
-    title: "Cloud & Technology",
-    short: "Reliable infrastructure for growing products.",
-    tags: ["Cloud", "Deployment", "Infrastructure"],
-    path: "/services/software-engineering/cloud-solutions",
+    title: "Website Development",
+    category: "Web & Digital",
+    timeline: "Typical timeline: 2 – 5 weeks (scope dependent)",
+    short: "Fast, search-friendly websites that explain what you do and bring in enquiries.",
+    path: "/services/web-digital/website-development",
+    gradient: "linear-gradient(135deg, #1f1107 0%, #3b210c 50%, #5d3413 100%)",
+    accent: "#f59e0b",
+    deliverables: [
+      "Custom responsive website",
+      "SEO-ready structure and structured data",
+      "Content management setup",
+      "Analytics and enquiry tracking",
+      "Hosting and domain setup",
+    ],
+    techStack: ["React", "HTML5", "CSS3", "Headless CMS", "Sharp", "Netlify"],
+    description:
+      "We design and build business websites that load quickly, work on every device, and are structured so search engines and visitors understand them.",
   },
   {
     id: 8,
     number: "08",
-    title: "UI / UX Design",
-    short: "Interfaces that feel simple, premium and intuitive.",
-    tags: ["UX", "UI", "Prototyping"],
-    path: "/services/design-brand/ui-ux-design",
-  },
-  {
-    id: 9,
-    number: "09",
-    title: "Graphic Design",
-    short: "Visual identities that make businesses recognizable.",
-    tags: ["Creative", "Social Media", "Marketing"],
-    path: "/services/design-brand/product-design",
-  },
-  {
-    id: 10,
-    number: "10",
-    title: "Logo & Brand Design",
-    short: "Build a visual identity people remember.",
-    tags: ["Logo", "Branding", "Identity"],
-    path: "/services/design-brand/brand-identity",
-  },
-  {
-    id: 11,
-    number: "11",
-    title: "Meta Ads",
-    short: "Performance campaigns built to generate leads.",
-    tags: ["Facebook", "Instagram", "Lead Generation"],
-    path: "/services/growth-marketing/performance-marketing",
-  },
-  {
-    id: 12,
-    number: "12",
-    title: "Digital Marketing",
-    short: "Grow your online presence with measurable strategies.",
-    tags: ["SEO", "Ads", "Social Media"],
+    title: "Growth & SEO",
+    category: "Growth Engineering",
+    timeline: "Typical timeline: Ongoing sprint (scope dependent)",
+    short: "Measurement, search, and campaigns that work together.",
     path: "/services/growth-marketing/digital-marketing",
-  },
-  {
-    id: 13,
-    number: "13",
-    title: "Video Editing",
-    short: "Short-form and branded content that gets attention.",
-    tags: ["Reels", "YouTube", "Promotional"],
-    path: "/services/growth-marketing/content-marketing",
-  },
-  {
-    id: 14,
-    number: "14",
-    title: "Business Analysis",
-    short: "Turn business problems into practical solutions.",
-    tags: ["Analysis", "Strategy", "Research"],
-    path: "/services/software-engineering/business-software",
-  },
-  {
-    id: 15,
-    number: "15",
-    title: "Business Solutions",
-    short: "Technology and strategy working together.",
-    tags: ["Consulting", "Systems", "Growth"],
-    path: "/services/software-engineering",
+    gradient: "linear-gradient(135deg, #061917 0%, #0d332e 50%, #16524b 100%)",
+    accent: "#10b981",
+    deliverables: [
+      "Technical SEO audit and fixes",
+      "Analytics and conversion tracking setup",
+      "Landing pages for campaigns",
+      "Search and social ad campaign setup",
+      "Monthly reporting",
+    ],
+    techStack: ["Google Analytics 4", "Meta Pixel", "Search Console", "Mixpanel", "Tag Manager"],
+    description:
+      "We help you understand where visitors come from and what they do, then improve search visibility and landing pages based on that data.",
   },
 ];
-
-// 3 sets of the 15 services ensures seamless modulo wrap without any jumps
-const marqueeItems = [...services, ...services, ...services];
 
 export default function Services({ headingTag = "h2" }) {
   const Heading = headingTag;
   const navigate = useNavigate();
-  const containerRef = useRef(null);
-  const trackRef = useRef(null);
-  const sectionRef = useRef(null);
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [exitDirection, setExitDirection] = useState(1); // 1 = swipe left, -1 = swipe right
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const savedScrollY = useRef(null);
 
-  // Physics animation state stored in refs for 60/120fps direct DOM manipulation
-  const positionRef = useRef(0);
-  const velocityRef = useRef(0);
-  const baseSpeedRef = useRef(0.6); // Base speed in px/frame (normalized to 60fps)
-  const isDraggingRef = useRef(false);
-  const isHoveredRef = useRef(false);
-  const animFrameIdRef = useRef(null);
+  const activeService = SERVICES_DATA[currentIndex];
 
-  // Pointer & Gesture tracking state
-  const gestureRef = useRef({
-    isDown: false,
-    isLocked: false,
-    isVertical: false,
-    startX: 0,
-    startY: 0,
-    lastX: 0,
-    lastTime: 0,
-    totalMoved: 0,
-    pointerId: null,
-  });
-
-  // Cached dimensions to prevent per-frame style recalculations (layout thrashing)
-  const cachedCardWidthRef = useRef(384);
-  const cachedSetWidthRef = useRef(0);
-
-  /*
-   * Main 60fps/120fps physics loop:
-   * Combines continuous marquee auto-scrolling with user drag momentum,
-   * gentle hover deceleration, and seamless modulo wrap.
-   * Pauses completely when off-screen via IntersectionObserver.
-   */
+  /* --------------------------------------------------------------------------
+     BODY SCROLL LOCK & SCROLL PRESERVATION
+     Locks page scroll when Apple drop-up sheet is open so content behind stays frozen.
+     Restores exact scroll position when closed so the user stays in the Services section.
+     -------------------------------------------------------------------------- */
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    let isVisible = false;
-    let isRunning = false;
-    let previousTime = performance.now();
-
-    const updateDimensions = () => {
-      if (!track) return;
-      const card = track.querySelector(".service-card");
-      if (card) {
-        const style = window.getComputedStyle(track);
-        const gap = parseFloat(style.columnGap || style.gap || "24");
-        cachedCardWidthRef.current = card.offsetWidth + gap;
-      }
-      cachedSetWidthRef.current = track.scrollWidth / 3;
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions, { passive: true });
-
-    const mediaQuery =
-      typeof window !== "undefined" && window.matchMedia
-        ? window.matchMedia("(prefers-reduced-motion: reduce)")
-        : null;
-    let isReducedMotion = mediaQuery ? mediaQuery.matches : false;
-    const handleMotionChange = (e) => {
-      isReducedMotion = e.matches;
-    };
-    if (mediaQuery?.addEventListener) {
-      mediaQuery.addEventListener("change", handleMotionChange);
-    }
-
-    const tick = (currentTime) => {
-      if (!isVisible) {
-        isRunning = false;
-        return;
-      }
-
-      // Normalized delta time factor (1.0 at 60fps, ~0.5 at 120fps)
-      const rawDelta = currentTime - previousTime;
-      const dt = Math.min(32, Math.max(6, rawDelta)) / 16.667;
-      previousTime = currentTime;
-
-      const oneSetWidth = cachedSetWidthRef.current;
-
-      if (!isDraggingRef.current) {
-        // Momentum decay when thrown by user swipe / drag
-        if (Math.abs(velocityRef.current) > 0.08) {
-          positionRef.current += velocityRef.current * dt;
-          // Fluid friction deceleration
-          velocityRef.current *= Math.pow(0.93, dt);
-        } else {
-          velocityRef.current = 0;
-          // Smooth continuous marquee cruising (paused if reduced motion and not dragging)
-          const baseSpeed = isReducedMotion ? 0 : baseSpeedRef.current;
-          const speed = isHoveredRef.current
-            ? baseSpeed * 0.2
-            : baseSpeed;
-          positionRef.current += speed * dt;
-        }
-      }
-
-      // Seamless infinite wrap in both directions
-      if (oneSetWidth > 0) {
-        while (positionRef.current >= oneSetWidth) {
-          positionRef.current -= oneSetWidth;
-        }
-        while (positionRef.current < 0) {
-          positionRef.current += oneSetWidth;
-        }
-      }
-
-      // Hardware-accelerated direct transform update
-      track.style.transform = `translate3d(${-positionRef.current}px, 0, 0)`;
-
-      animFrameIdRef.current = requestAnimationFrame(tick);
-    };
-
-    const startLoop = () => {
-      if (isRunning || !isVisible) return;
-      updateDimensions();
-      isRunning = true;
-      previousTime = performance.now();
-      animFrameIdRef.current = requestAnimationFrame(tick);
-    };
-
-    const stopLoop = () => {
-      isRunning = false;
-      if (animFrameIdRef.current) {
-        cancelAnimationFrame(animFrameIdRef.current);
-        animFrameIdRef.current = null;
-      }
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible && !document.hidden) {
-          startLoop();
-        } else {
-          stopLoop();
-        }
-      },
-      { rootMargin: "200px 0px" }
-    );
-
-    const targetEl = sectionRef.current || track;
-    observer.observe(targetEl);
-
-    // Pause physics marquee when tab is hidden to eliminate idle GPU/CPU work
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        stopLoop();
-      } else if (isVisible) {
-        startLoop();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("resize", updateDimensions);
-      if (mediaQuery?.removeEventListener) {
-        mediaQuery.removeEventListener("change", handleMotionChange);
-      }
-      stopLoop();
-    };
-  }, []);
-
-  /*
-   * Pointer down: initiates gesture detection
-   */
-  const handlePointerDown = (e) => {
-    // Only respond to primary mouse click or touch
-    if (e.button !== undefined && e.button !== 0) return;
-
-    const g = gestureRef.current;
-    g.isDown = true;
-    g.isLocked = false;
-    g.isVertical = false;
-    g.startX = e.clientX;
-    g.startY = e.clientY;
-    g.lastX = e.clientX;
-    g.lastTime = performance.now();
-    g.totalMoved = 0;
-    g.pointerId = e.pointerId;
-
-    // Halt existing throw momentum while finger/mouse touches
-    velocityRef.current = 0;
-  };
-
-  /*
-   * Pointer move: direction-locking gesture handler
-   * - Vertical movement preserves normal mobile page scrolling
-   * - Horizontal movement locks drag and scrubs the marquee with 1:1 precision
-   */
-  const handlePointerMove = (e) => {
-    const g = gestureRef.current;
-    if (!g.isDown || g.isVertical) return;
-
-    const diffX = e.clientX - g.startX;
-    const diffY = e.clientY - g.startY;
-
-    // Gesture direction threshold determination
-    if (!g.isLocked) {
-      if (Math.abs(diffY) > 7 && Math.abs(diffY) > Math.abs(diffX)) {
-        // Vertical page scroll detected — yield immediately so mobile scrolling is 100% smooth
-        g.isVertical = true;
-        return;
-      }
-      if (Math.abs(diffX) > 7 && Math.abs(diffX) >= Math.abs(diffY)) {
-        // Horizontal swipe detected — lock gesture and capture pointer
-        g.isLocked = true;
-        isDraggingRef.current = true;
-        if (trackRef.current) {
-          trackRef.current.style.cursor = "grabbing";
-        }
-        if (e.currentTarget?.setPointerCapture) {
-          try {
-            e.currentTarget.setPointerCapture(e.pointerId);
-          } catch {
-            // ignore
+    if (isModalOpen) {
+      savedScrollY.current =
+        window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      if (savedScrollY.current !== null) {
+        const targetY = savedScrollY.current;
+        window.scrollTo({
+          top: targetY,
+          behavior: "instant",
+        });
+        requestAnimationFrame(() => {
+          if (Math.abs(window.scrollY - targetY) > 20) {
+            window.scrollTo({
+              top: targetY,
+              behavior: "instant",
+            });
           }
-        }
+        });
       }
     }
 
-    if (g.isLocked) {
-      const now = performance.now();
-      const step = e.clientX - g.lastX;
-      g.totalMoved += Math.abs(step);
-
-      // Scrub marquee position directly with the cursor/finger
-      positionRef.current -= step;
-
-      // Track throw velocity (px per 16.6ms frame)
-      const timeElapsed = Math.max(1, now - g.lastTime);
-      const instantVelocity = (-step / timeElapsed) * 16.667;
-      // Filtered velocity for natural momentum release
-      velocityRef.current = velocityRef.current * 0.3 + instantVelocity * 0.7;
-
-      g.lastX = e.clientX;
-      g.lastTime = now;
-    }
-  };
-
-  /*
-   * Pointer release: smoothly transitions drag into momentum decay & auto-scroll
-   */
-  const handlePointerUp = (e) => {
-    const g = gestureRef.current;
-    if (!g.isDown) return;
-
-    g.isDown = false;
-    isDraggingRef.current = false;
-    g.isLocked = false;
-    g.isVertical = false;
-
-    if (trackRef.current) {
-      trackRef.current.style.cursor = "grab";
-    }
-
-    // Clamp throw velocity to pleasant bounds
-    velocityRef.current = Math.max(-26, Math.min(26, velocityRef.current));
-
-    if (e?.currentTarget?.releasePointerCapture && g.pointerId !== null) {
-      try {
-        e.currentTarget.releasePointerCapture(g.pointerId);
-      } catch {
-        // ignore
-      }
-    }
-  };
-
-  /*
-   * Desktop mouse wheel & trackpad horizontal scroll support
-   */
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const onWheel = (e) => {
-      // Horizontal wheel or Shift+vertical wheel or prominent horizontal swipe
-      const delta =
-        Math.abs(e.deltaX) > Math.abs(e.deltaY)
-          ? e.deltaX
-          : e.shiftKey
-            ? e.deltaY
-            : 0;
-
-      if (Math.abs(delta) > 1) {
-        e.preventDefault();
-        positionRef.current += delta * 0.85;
-        velocityRef.current = Math.max(-20, Math.min(20, delta * 0.15));
-      }
-    };
-
-    container.addEventListener("wheel", onWheel, { passive: false });
     return () => {
-      container.removeEventListener("wheel", onWheel);
+      document.body.style.overflow = "";
     };
+  }, [isModalOpen]);
+
+  /* --------------------------------------------------------------------------
+     SWIPE ACTIONS
+     -------------------------------------------------------------------------- */
+  const swipeNext = useCallback(() => {
+    setExitDirection(1);
+    setCurrentIndex((prev) => (prev < SERVICES_DATA.length - 1 ? prev + 1 : 0));
   }, []);
 
-  /*
-   * Navigation controls: smooth glide forward and backward
-   */
-  const handlePrev = () => {
-    velocityRef.current = -14;
+  const swipePrev = useCallback(() => {
+    setExitDirection(-1);
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : SERVICES_DATA.length - 1));
+  }, []);
+
+  /* --------------------------------------------------------------------------
+     KEYBOARD NAVIGATION
+     -------------------------------------------------------------------------- */
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isModalOpen) {
+        if (e.key === "Escape") setIsModalOpen(false);
+        return;
+      }
+      if (e.key === "ArrowRight") swipeNext();
+      if (e.key === "ArrowLeft") swipePrev();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [swipeNext, swipePrev, isModalOpen]);
+
+  /* --------------------------------------------------------------------------
+     DRAG / SWIPE HANDLER (Zero Lag GPU Composited)
+     -------------------------------------------------------------------------- */
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipeThreshold = 40;
+    const velocityThreshold = 200;
+
+    if (offset.x < -swipeThreshold || velocity.x < -velocityThreshold) {
+      swipeNext();
+    } else if (offset.x > swipeThreshold || velocity.x > velocityThreshold) {
+      swipePrev();
+    }
   };
 
-  const handleNext = () => {
-    velocityRef.current = 14;
-  };
+  /* Indices for the 2 cards stacked visibly behind the active card */
+  const cardIndex1 = (currentIndex + 1) % SERVICES_DATA.length;
+  const cardIndex2 = (currentIndex + 2) % SERVICES_DATA.length;
 
-  /*
-   * Handle card click (distinguishes clicks from drags)
-   */
-  const handleCardClick = (realIndex) => {
-    if (gestureRef.current.totalMoved > 10) return;
-    setActiveIndex(realIndex);
-  };
+  const peekCard1 = SERVICES_DATA[cardIndex1];
+  const peekCard2 = SERVICES_DATA[cardIndex2];
 
   return (
-    <section ref={sectionRef} className="services-section" id="services">
+    <section id="services" className="services-section" aria-label="Cognolynx Services">
       {/* Background Ambient Orbs */}
       <div className="services-orb services-orb-one" aria-hidden="true" />
       <div className="services-orb services-orb-two" aria-hidden="true" />
 
       <div className="services-container">
-        {/* Section Header */}
+        {/* =================================================================
+            SECTION HEADER
+            ================================================================= */}
         <div className="services-header">
           <div className="services-heading">
             <span className="services-eyebrow">WHAT WE DO</span>
@@ -473,129 +314,364 @@ export default function Services({ headingTag = "h2" }) {
           </div>
 
           <div className="services-description">
-            Technology, design, marketing and business solutions — brought
-            together under one roof.
+            Explore our engineering and digital capabilities. Swipe cards left or right to
+            browse services, or tap any card for specifications and deliverables.
           </div>
         </div>
 
-        {/* Interactive Marquee Carousel Stage */}
-        <div
-          ref={containerRef}
-          className="services-carousel"
-          onMouseEnter={() => {
-            isHoveredRef.current = true;
-          }}
-          onMouseLeave={() => {
-            isHoveredRef.current = false;
-          }}
-          tabIndex={0}
-          role="region"
-          aria-label="Cognolynx Services Marquee Carousel"
-          onKeyDown={(e) => {
-            if (e.key === "ArrowLeft") handlePrev();
-            if (e.key === "ArrowRight") handleNext();
-          }}
-        >
-          <div
-            ref={trackRef}
-            className="services-track"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-          >
-            {marqueeItems.map((service, index) => {
-              const realIndex = index % services.length;
-              const isActive = realIndex === activeIndex;
+        {/* =================================================================
+            INTERACTIVE CARD STACK CONTAINER
+            ================================================================= */}
+        <div className="services-deck-layout">
+          {/* Top Bar: Counter */}
+          <div className="services-deck-topbar">
+            <div className="services-deck-counter">
+              <span className="counter-current">
+                {String(currentIndex + 1).padStart(2, "0")}
+              </span>
+              <span className="counter-divider">/</span>
+              <span className="counter-total">
+                {String(SERVICES_DATA.length).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
 
-              return (
-                <article
-                  key={`${service.id}-${index}`}
-                  className={`service-card ${
-                    isActive ? "service-card-active" : ""
-                  }`}
-                  onClick={() => handleCardClick(realIndex)}
-                >
-                  <div className="card-top">
-                    <span className="card-number">{service.number}</span>
-                    <div
-                      className="card-arrow"
-                      aria-hidden="true"
-                      onClick={(e) => {
-                        if (service.path && gestureRef.current.totalMoved <= 8) {
-                          e.stopPropagation();
-                          navigate(service.path);
-                        }
+          {/* Animated Header for Active Card */}
+          <header className="services-deck-header" key={activeService.id}>
+            <div className="deck-header-meta">
+              <span
+                className="deck-header-category"
+                style={{ color: activeService.accent }}
+              >
+                <Layers size={14} style={{ display: "inline-block", marginRight: "6px" }} />
+                {activeService.category}
+              </span>
+              <span className="deck-header-timeline">
+                <Clock size={13} style={{ display: "inline-block", marginRight: "5px" }} />
+                {activeService.timeline}
+              </span>
+            </div>
+            <h3 className="deck-header-title">{activeService.title}</h3>
+          </header>
+
+          {/* Stacked Cards Deck Stage with Visible Peek Layers */}
+          <div className="services-deck-stage">
+            <div className="services-deck-stack">
+              {/* Stack Tier 3 (Card furthest behind, peeking out on right) */}
+              <div
+                className="services-deck-card services-deck-card-stacked-2"
+                style={{
+                  background: peekCard2.gradient,
+                  zIndex: 8,
+                }}
+                onClick={swipeNext}
+                aria-hidden="true"
+              >
+                <div className="card-ambient-spot" style={{ background: peekCard2.accent }} />
+                <div className="card-stack-shade-2" />
+                <div className="card-peek-badge">
+                  <span>{peekCard2.number}</span>
+                </div>
+              </div>
+
+              {/* Stack Tier 2 (Card directly behind front card, clearly visible) */}
+              <div
+                className="services-deck-card services-deck-card-stacked-1"
+                style={{
+                  background: peekCard1.gradient,
+                  zIndex: 12,
+                }}
+                onClick={swipeNext}
+                role="button"
+                tabIndex={0}
+                aria-label={`Next service: ${peekCard1.title}. Click to view.`}
+              >
+                <div className="card-ambient-spot" style={{ background: peekCard1.accent }} />
+                <div className="card-stack-shade-1" />
+                <div className="card-peek-content">
+                  <div className="card-top-row">
+                    <span className="card-badge-num">{peekCard1.number}</span>
+                    <span className="card-peek-cue">
+                      <span>Next</span>
+                      <ArrowRight size={13} />
+                    </span>
+                  </div>
+                  <div className="card-mid-body">
+                    <span
+                      className="card-category-tag"
+                      style={{
+                        borderColor: `${peekCard1.accent}66`,
+                        color: peekCard1.accent,
                       }}
-                      style={{ cursor: service.path ? "pointer" : "default" }}
                     >
-                      ↗
+                      {peekCard1.category}
+                    </span>
+                    <h4 className="card-title-text">{peekCard1.title}</h4>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stack Tier 1 (Active Front Card with Framer Motion Swipe & Vanish) */}
+              <AnimatePresence initial={false} custom={exitDirection}>
+                <motion.div
+                  key={activeService.id}
+                  className="services-deck-card services-deck-card-front"
+                  style={{
+                    background: activeService.gradient,
+                    zIndex: 20,
+                  }}
+                  custom={exitDirection}
+                  initial={{
+                    x: exitDirection === 1 ? 40 : -40,
+                    scale: 0.94,
+                    opacity: 0.85,
+                  }}
+                  animate={{
+                    x: 0,
+                    scale: 1,
+                    opacity: 1,
+                    rotate: 0,
+                  }}
+                  exit={(dir) => ({
+                    x: dir === 1 ? -650 : 650,
+                    opacity: 0,
+                    rotate: dir === 1 ? -14 : 14,
+                    scale: 0.88,
+                    transition: { duration: 0.28, ease: [0.32, 0.72, 0, 1] },
+                  })}
+                  transition={{
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 26,
+                  }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.75}
+                  onDragEnd={handleDragEnd}
+                  whileDrag={{ scale: 1.01, cursor: "grabbing" }}
+                  onClick={() => setIsModalOpen(true)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Service ${activeService.number}: ${activeService.title}. Click to open details, or swipe to vanish.`}
+                >
+                  <div className="services-deck-card-inner">
+                    {/* Ambient Accent Light */}
+                    <div
+                      className="card-ambient-spot"
+                      style={{ background: activeService.accent }}
+                      aria-hidden="true"
+                    />
+
+                    {/* Card Top Row */}
+                    <div className="card-top-row">
+                      <span className="card-badge-num">{activeService.number}</span>
+                      <span className="card-tap-cue">
+                        <span>Click to expand</span>
+                        <ArrowUpRight size={15} />
+                      </span>
+                    </div>
+
+                    {/* Card Middle Editorial Body */}
+                    <div className="card-mid-body">
+                      <span
+                        className="card-category-tag"
+                        style={{
+                          borderColor: `${activeService.accent}66`,
+                          color: activeService.accent,
+                        }}
+                      >
+                        {activeService.category}
+                      </span>
+                      <h4 className="card-title-text">{activeService.title}</h4>
+                      <p className="card-short-desc">{activeService.short}</p>
+                    </div>
+
+                    {/* Card Bottom Tech Chips */}
+                    <div className="card-bottom-row">
+                      <div className="card-tech-badges">
+                        {activeService.techStack.slice(0, 3).map((tech) => (
+                          <span key={tech} className="card-tech-chip">
+                            {tech}
+                          </span>
+                        ))}
+                        {activeService.techStack.length > 3 && (
+                          <span className="card-tech-chip card-tech-more">
+                            +{activeService.techStack.length - 3}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
 
-                  <div className="card-content">
-                    {headingTag === "h1" ? (
-                      <h2>{service.title}</h2>
-                    ) : (
-                      <h3>{service.title}</h3>
-                    )}
-                    <p>{service.short}</p>
-                  </div>
+          {/* Footer Pagination Dots */}
+          <div className="services-deck-footer">
+            <div className="services-deck-dots">
+              {SERVICES_DATA.map((s, idx) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    setExitDirection(idx > currentIndex ? 1 : -1);
+                    setCurrentIndex(idx);
+                  }}
+                  className={`deck-dot ${idx === currentIndex ? "deck-dot-active" : ""}`}
+                  aria-label={`Jump to ${s.title}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
 
-                  <div className="card-tags">
-                    {service.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
+        {/* =================================================================
+            APPLE DROP-UP (EXPANDABLE DETAIL SHEET)
+            Smooth bottom sheet with pull handle, clear header gap, and scrollable content
+            ================================================================= */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <div
+              className="screen-modal-root"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-service-title"
+            >
+              {/* Backdrop Scrim */}
+              <motion.div
+                className="screen-modal-scrim"
+                onClick={() => setIsModalOpen(false)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22 }}
+                aria-hidden="true"
+              />
 
-                  <div
-                    className="card-bottom"
-                    onClick={(e) => {
-                      if (service.path && gestureRef.current.totalMoved <= 8) {
-                        e.stopPropagation();
-                        navigate(service.path);
-                      }
-                    }}
-                    style={{ cursor: service.path ? "pointer" : "default" }}
+              {/* Apple-style Drop-Up Modal Sheet */}
+              <motion.div
+                className="screen-modal"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 32, stiffness: 360 }}
+              >
+                {/* Apple Drag Handle Pill */}
+                <div className="screen-modal-drag-handle" aria-hidden="true" />
+
+                {/* Modal Top Bar */}
+                <div className="screen-modal-topbar">
+                  <button
+                    type="button"
+                    className="screen-modal-back-btn"
+                    onClick={() => setIsModalOpen(false)}
+                    aria-label="Back to Services"
                   >
-                    <span>Explore Service</span>
-                    <div className="card-line" aria-hidden="true" />
+                    <ArrowLeft size={16} />
+                    <span>Back to Services</span>
+                  </button>
+                  <span className="screen-modal-service-num">
+                    Service {activeService.number} of {SERVICES_DATA.length}
+                  </span>
+                  <button
+                    type="button"
+                    className="screen-modal-close-icon"
+                    onClick={() => setIsModalOpen(false)}
+                    aria-label="Close details"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {/* Modal Scroll Content */}
+                <div className="screen-modal-scroll">
+                  <div className="screen-modal-content">
+                    <div className="modal-header-block">
+                      <div className="modal-meta-row">
+                        <span
+                          className="modal-category-chip"
+                          style={{
+                            background: `${activeService.accent}22`,
+                            color: activeService.accent,
+                            borderColor: `${activeService.accent}44`,
+                          }}
+                        >
+                          <Layers size={13} style={{ display: "inline-block", marginRight: "5px" }} />
+                          {activeService.category}
+                        </span>
+                        <span className="modal-timeline-chip">
+                          <Clock size={13} style={{ display: "inline-block", marginRight: "5px" }} />
+                          {activeService.timeline}
+                        </span>
+                      </div>
+
+                      <h2 id="modal-service-title" className="modal-title">
+                        {activeService.title}
+                      </h2>
+                    </div>
+
+                    {/* Prose Overview */}
+                    <div className="modal-prose">
+                      <p>{activeService.description}</p>
+                    </div>
+
+                    {/* Key Deliverables ("What you get") */}
+                    <div className="modal-deliverables-section">
+                      <h4 className="modal-subheading">
+                        <CheckCircle2 size={16} className="modal-subheading-icon" />
+                        What You Get
+                      </h4>
+                      <div className="modal-deliverables-grid">
+                        {activeService.deliverables.map((item, idx) => (
+                          <div key={idx} className="modal-deliverable-item">
+                            <span className="deliverable-bullet">✓</span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Technologies & Tools */}
+                    <div className="modal-tech-section">
+                      <h4 className="modal-subheading">
+                        <Sparkles size={16} className="modal-subheading-icon" />
+                        Technologies We Use
+                      </h4>
+                      <div className="modal-tech-chips">
+                        {activeService.techStack.map((tech) => (
+                          <span key={tech} className="modal-tech-tag">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action CTAs */}
+                    <div className="modal-actions-row">
+                      <Link
+                        to={activeService.path}
+                        className="modal-primary-btn"
+                        onClick={() => setIsModalOpen(false)}
+                      >
+                        <span>Explore Service Page</span>
+                        <ArrowRight size={16} />
+                      </Link>
+
+                      <Link
+                        to="/contact"
+                        className="modal-secondary-btn"
+                        onClick={() => setIsModalOpen(false)}
+                      >
+                        <span>Talk to our team</span>
+                      </Link>
+                    </div>
                   </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Minimal Controls */}
-        <div className="services-controls">
-          <div className="services-instruction">
-            <div className="instruction-icon" aria-hidden="true">
-              ⇄
+                </div>
+              </motion.div>
             </div>
-            <div>
-              <strong>DRAG OR SWIPE</strong>
-              <span>Explore all 15 capabilities</span>
-            </div>
-          </div>
-
-          <div className="carousel-buttons">
-            <button
-              type="button"
-              onClick={handlePrev}
-              aria-label="Previous service"
-            >
-              ←
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              aria-label="Next service"
-            >
-              →
-            </button>
-          </div>
-        </div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

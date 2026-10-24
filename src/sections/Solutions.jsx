@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   ThreeDBendCarousel,
   BendCarouselItem,
@@ -75,14 +74,6 @@ export default function Solutions({ headingTag = "h2" }) {
   const handleIndexChange = useCallback((newIndex) => {
     setActiveCardIndex(newIndex);
   }, []);
-
-  const handlePrev = () => {
-    carouselRef.current?.prev();
-  };
-
-  const handleNext = () => {
-    carouselRef.current?.next();
-  };
 
   const handleDotClick = (index) => {
     carouselRef.current?.goTo(index);
@@ -161,17 +152,8 @@ export default function Solutions({ headingTag = "h2" }) {
             ))}
           </ThreeDBendCarousel>
 
-          {/* Minimal Controls: ‹ • • ● • • › */}
+          {/* Responsive Pagination Dots: • • ● • • */}
           <div className="solutions-controls-bar">
-            <button
-              type="button"
-              className="sol-nav-btn sol-nav-prev"
-              onClick={handlePrev}
-              aria-label="Previous solution card"
-            >
-              <ChevronLeft size={18} strokeWidth={1.75} />
-            </button>
-
             <div
               className="solutions-dots"
               role="tablist"
@@ -192,15 +174,6 @@ export default function Solutions({ headingTag = "h2" }) {
                 );
               })}
             </div>
-
-            <button
-              type="button"
-              className="sol-nav-btn sol-nav-next"
-              onClick={handleNext}
-              aria-label="Next solution card"
-            >
-              <ChevronRight size={18} strokeWidth={1.75} />
-            </button>
           </div>
         </div>
       </div>

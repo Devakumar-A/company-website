@@ -9,8 +9,6 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
-  content-visibility: auto;
-  contain-intrinsic-size: 850px;
   background: #ffffff;
   color: #080d1a;
   font-family:
@@ -242,53 +240,23 @@
 }
 
 /* =========================================================
-   CONTROLS BAR (Minimal ‹ • • ● • • ›)
+   CONTROLS BAR (Responsive Pagination Dots)
    ========================================================= */
 
 .solutions-controls-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  margin-top: clamp(28px, 4vh, 42px);
-}
-
-.sol-nav-btn {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  color: #0f172a;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
-}
-
-.sol-nav-btn:hover {
-  background: #f8fafc;
-  border-color: rgba(23, 105, 224, 0.4);
-  color: #1769e0;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-}
-
-.sol-nav-btn:active {
-  transform: scale(0.96);
+  margin-top: clamp(24px, 3.5vh, 36px);
+  padding: 8px 0;
 }
 
 /* Circular & Pill Dots with accessible 40px+ touch targets */
 .solutions-dots {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 14px);
 }
 
 .sol-dot {
@@ -297,7 +265,7 @@
   height: 8px;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.35);
-  border: 16px solid transparent;
+  border: 14px solid transparent;
   background-clip: padding-box;
   padding: 0;
   cursor: pointer;
@@ -313,7 +281,7 @@
 }
 
 .sol-dot-active {
-  width: 24px;
+  width: 26px;
   background: #0f172a;
   background-clip: padding-box;
 }
@@ -398,14 +366,7 @@
   }
 
   .solutions-controls-bar {
-    margin-top: 22px;
-    gap: 14px;
-  }
-
-  .sol-nav-btn {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    margin-top: 18px;
+    padding: 6px 0;
   }
 }

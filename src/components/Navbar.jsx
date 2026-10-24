@@ -491,14 +491,30 @@ export default function Navbar() {
           }
         >
           <span className="cg-brand-mark">
-            <picture>
+            {/* Luminous White & Electric Purple Logo for Dark Top Header */}
+            <picture className="cg-brand-logo-dark">
+              <source srcSet="/assets/logo-white.webp" type="image/webp" />
+              <img
+                src="/assets/logo-white.png"
+                alt="Cognolynx Logo"
+                className="cg-brand-icon"
+                width="38"
+                height="38"
+                loading="eager"
+                decoding="async"
+                draggable="false"
+              />
+            </picture>
+
+            {/* Original Black & Electric Purple Logo for Scrolled White Glass Header */}
+            <picture className="cg-brand-logo-light">
               <source srcSet="/assets/logo.webp" type="image/webp" />
               <img
                 src="/assets/logo.png"
                 alt="Cognolynx Logo"
                 className="cg-brand-icon"
-                width="36"
-                height="36"
+                width="38"
+                height="38"
                 loading="eager"
                 decoding="async"
                 draggable="false"
@@ -1101,19 +1117,6 @@ export default function Navbar() {
           </div>
 
 
-          {/* INTERNSHIP */}
-
-          <a
-            href="/internship"
-            className="cg-nav-btn"
-            onClick={(event) =>
-              navigateTo(event, "/internship")
-            }
-          >
-            Internship
-          </a>
-
-
           {/* CAREER */}
 
           <a
@@ -1434,21 +1437,6 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
-              {/* MOBILE INTERNSHIP */}
-              <a
-                href="/internship"
-                className="cg-mobile-direct-link"
-                onClick={(event) =>
-                  navigateTo(
-                    event,
-                    "/internship"
-                  )
-                }
-              >
-                <span>Internship</span>
-                <ArrowUpRight size={17} />
-              </a>
 
               {/* MOBILE CAREER */}
               <a

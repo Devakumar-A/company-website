@@ -302,90 +302,67 @@
 
 
 
-/* Logo container */
-
+/* Logo container — Transparent, borderless, full-size */
 .cg-brand-mark {
-
-  width: 36px;
-
-  height: 36px;
-
-
-
-  flex: 0 0 36px;
-
-
-
-  display: grid;
-
-  place-items: center;
-
-
-
-  padding: 5px;
-
-
-
-  border-radius: 11px;
-
-
-
-  overflow: hidden;
-
-
-
-  background: rgba(255, 255, 255, 0.96);
-
-
-
-  border: 1px solid rgba(255, 255, 255, 0.55);
-
-
-
-  box-shadow:
-
-    0 4px 18px rgba(0, 0, 0, 0.16);
-
-
-
-  transition:
-
-    transform 0.3s var(--cg-ease),
-
-    background 0.3s ease,
-
-    box-shadow 0.3s ease;
-
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  transition: transform 0.3s var(--cg-ease);
 }
-
-
 
 .cg-brand:hover .cg-brand-mark {
-
-  transform: translateY(-1px);
-
+  transform: translateY(-1px) scale(1.05);
 }
 
-
-
 .cg-brand-icon {
-
   display: block;
-
-
-
   width: 100%;
-
   height: 100%;
-
-
-
   object-fit: contain;
-
-
-
   user-select: none;
+  filter: drop-shadow(0 2px 10px rgba(99, 56, 247, 0.42));
+}
 
+/* Dark / Light logo variant toggle */
+.cg-brand-logo-dark {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cg-brand-logo-light {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scrolled state (Light glass navbar): show original dark/purple logo */
+.cg-header-scrolled:not(.cg-header-mobile-open) .cg-brand-logo-dark {
+  display: none;
+}
+
+.cg-header-scrolled:not(.cg-header-mobile-open) .cg-brand-logo-light {
+  display: block;
+}
+
+/* Top state (Dark hero) or Mobile Open: show luminous white/purple logo */
+.cg-header-top .cg-brand-logo-dark,
+.cg-header-mobile-open .cg-brand-logo-dark {
+  display: block;
+}
+
+.cg-header-top .cg-brand-logo-light,
+.cg-header-mobile-open .cg-brand-logo-light {
+  display: none;
 }
 
 
@@ -4144,31 +4121,19 @@
 }
 
 .cg-brand-mark {
-  width: 37px !important;
-  height: 37px !important;
-  flex-basis: 37px !important;
-
-  padding: 5px !important;
-
-  border-radius: 11px !important;
-
-  background:
-    rgba(255, 255, 255, 0.98) !important;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.72) !important;
-
-  box-shadow:
-    0 5px 20px rgba(0, 0, 0, 0.13),
-    0 1px 0 rgba(255, 255, 255, 0.9) inset !important;
+  width: 38px !important;
+  height: 38px !important;
+  flex-basis: 38px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .cg-brand:hover .cg-brand-mark {
-  transform: translateY(-1px) scale(1.015) !important;
-
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.16),
-    0 1px 0 rgba(255, 255, 255, 0.95) inset !important;
+  transform: translateY(-1px) scale(1.04) !important;
+  box-shadow: none !important;
 }
 
 .cg-brand-text {

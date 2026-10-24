@@ -10,7 +10,7 @@
   min-height: 100vh;
   background-color: #ffffff;
   color: #0f172a;
-  padding-top: calc(var(--cg-header-height, 78px) + 36px);
+  padding-top: 36px;
   padding-bottom: 96px;
   box-sizing: border-box;
 }
@@ -847,7 +847,7 @@
 
 @media (max-width: 768px) {
   .faq-page {
-    padding-top: calc(var(--cg-header-height, 70px) + 20px);
+    padding-top: 20px;
     padding-bottom: 64px;
   }
 

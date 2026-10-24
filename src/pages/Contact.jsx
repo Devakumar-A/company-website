@@ -5,6 +5,7 @@ import SEO from "../components/SEO";
 import { seoData } from "../data/seoData";
 import Footer from "../components/Footer";
 import ContactForm from "../components/ContactForm";
+import Breadcrumbs from "../components/Breadcrumbs";
 import "../styles/Contact.css";
 
 function LinkedinIcon({ size = 22, ...props }) {
@@ -27,33 +28,6 @@ function LinkedinIcon({ size = 22, ...props }) {
   );
 }
 
-function GithubIcon({ size = 22, ...props }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-}
-
-function OrcidIcon({ size = 22, ...props }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 256 256" fill="currentColor" {...props}>
-      <path fill="#A6CE39" d="M128 0C57.308 0 0 57.308 0 128s57.308 128 128 128 128-57.308 128-128S198.692 0 128 0z" />
-      <path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 66.8c-5.4 0-9.7-4.4-9.7-9.7s4.3-9.7 9.7-9.7 9.7 4.4 9.7 9.7c0 5.4-4.3 9.7-9.7 9.7zM108.9 79.1h41.6c39.6 0 57.1 28.3 57.1 53.6 0 27.5-20 53.5-56.8 53.5h-41.9V79.1zm15.4 92.4h24.5c34.9 0 43.6-25.2 43.6-38.8 0-20-13.4-38.9-43.2-38.9h-24.9v77.7z" />
-    </svg>
-  );
-}
 
 const currentYear = new Date().getFullYear();
 
@@ -63,48 +37,24 @@ const channels = [
     label: "DIRECT EMAIL",
     title: "Send an Email",
     description: "For project proposals, business inquiries and collaboration requests.",
-    value: "devak9391@gmail.com",
-    href: "mailto:devak9391@gmail.com",
-    ariaLabel: "Email Cognolynx directly at devak9391@gmail.com",
+    value: "cognolynxforge@gmail.com",
+    href: "mailto:cognolynxforge@gmail.com",
+    ariaLabel: "Email Cognolynx directly at cognolynxforge@gmail.com",
     icon: Mail,
     external: false,
-    rel: "me",
+    rel: "noopener noreferrer",
   },
   {
     number: "02",
-    label: "FOUNDER LINKEDIN",
-    title: "Devakumar A",
-    description: "Founder & Chief Executive Officer. Connect for executive partnerships.",
-    value: "linkedin.com/in/devakumar-a",
-    href: "https://www.linkedin.com/in/devakumar-a-129561305/",
-    ariaLabel: "Devakumar A LinkedIn profile",
+    label: "OFFICIAL LINKEDIN",
+    title: "Cognolynx",
+    description: "Follow us for business news, technology insights and hiring announcements.",
+    value: "linkedin.com/company/cognolynx",
+    href: "https://www.linkedin.com/company/133397624/",
+    ariaLabel: "Cognolynx LinkedIn company page",
     icon: LinkedinIcon,
     external: true,
-    rel: "me noopener",
-  },
-  {
-    number: "03",
-    label: "FOUNDER GITHUB",
-    title: "GitHub Repository",
-    description: "Explore open-source engineering, code contributions and technical work.",
-    value: "github.com/Devakumar-A",
-    href: "https://github.com/Devakumar-A",
-    ariaLabel: "Devakumar A GitHub profile",
-    icon: GithubIcon,
-    external: true,
-    rel: "me noopener",
-  },
-  {
-    number: "04",
-    label: "RESEARCH / ORCID",
-    title: "ORCID Record",
-    description: "Verified academic and researcher persistent identifier.",
-    value: "orcid.org/0009-0003-8934-6744",
-    href: "https://orcid.org/0009-0003-8934-6744",
-    ariaLabel: "Devakumar A ORCID profile",
-    icon: OrcidIcon,
-    external: true,
-    rel: "me noopener",
+    rel: "noopener noreferrer",
   },
 ];
 
@@ -213,6 +163,7 @@ export default function ContactPage() {
   return (
     <div className="contact-page">
       <SEO {...seoData["/contact"]} />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Contact Us" }]} />
       {/* ───────────────── HERO ───────────────── */}
       <motion.section
         className="contact-hero"
